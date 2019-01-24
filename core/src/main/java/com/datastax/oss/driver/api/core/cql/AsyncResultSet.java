@@ -15,10 +15,9 @@
  */
 package com.datastax.oss.driver.api.core.cql;
 
+import com.datastax.oss.driver.api.core.AsyncPagingIterable;
 import com.datastax.oss.driver.api.core.CqlSession;
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
-import java.util.Iterator;
 import java.util.concurrent.CompletionStage;
 
 /**
@@ -27,59 +26,20 @@ import java.util.concurrent.CompletionStage;
  * @see CqlSession#executeAsync(Statement)
  * @see CqlSession#executeAsync(String)
  */
-public interface AsyncResultSet {
+public interface AsyncResultSet extends AsyncPagingIterable<Row> {
 
   /** Returns metadata about the {@linkplain ColumnDefinitions columns} contained in this row. */
   @NonNull
   ColumnDefinitions getColumnDefinitions();
 
-  /** Returns {@linkplain ExecutionInfo information about the execution} of this page of results. */
+  // overridden to use a covariant return type:
   @NonNull
-  ExecutionInfo getExecutionInfo();
-
-  /** How many rows are left before the current page is exhausted. */
-  int remaining();
-
-  /**
-   * The rows in the current page. To keep iterating beyond that, use {@link #hasMorePages()} and
-   * {@link #fetchNextPage()}.
-   *
-   * <p>Note that this method always returns the same object, and that that object can only be
-   * iterated once: rows are "consumed" as they are read.
-   */
-  @NonNull
-  Iterable<Row> currentPage();
-
-  /**
-   * Returns the next row, or {@code null} if the result set is exhausted.
-   *
-   * <p>This is convenient for queries that are known to return exactly one row, for example count
-   * queries.
-   */
-  @Nullable
-  default Row one() {
-    Iterator<Row> iterator = currentPage().iterator();
-    return iterator.hasNext() ? iterator.next() : null;
-  }
-
-  /**
-   * Whether there are more pages of results. If so, call {@link #fetchNextPage()} to fetch the next
-   * one asynchronously.
-   */
-  boolean hasMorePages();
-
-  /**
-   * Fetch the next page of results asynchronously.
-   *
-   * @throws IllegalStateException if there are no more pages. Use {@link #hasMorePages()} to check
-   *     if you can call this method.
-   */
-  @NonNull
+  @Override
   CompletionStage<? extends AsyncResultSet> fetchNextPage() throws IllegalStateException;
 
+  // overridden to amend the javadocs:
   /**
-   * If the query that produced this result was a conditional update, indicate whether it was
-   * successfully applied.
+   * {@inheritDoc}
    *
    * <p>This is equivalent to calling:
    *
@@ -98,5 +58,6 @@ public interface AsyncResultSet {
    * href="https://issues.apache.org/jira/browse/CASSANDRA-7337">CASSANDRA-7337</a>) causes this
    * method to always return {@code true} for batches containing conditional queries.
    */
+  @Override
   boolean wasApplied();
 }
