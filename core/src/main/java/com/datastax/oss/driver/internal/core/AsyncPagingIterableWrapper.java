@@ -23,15 +23,16 @@ import java.util.Iterator;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
-public class AsyncPagingIterableWrapper<SourceT, TargetT> implements AsyncPagingIterable<TargetT> {
+public class AsyncPagingIterableWrapper<SourceT, TargetT>
+    implements AsyncPagingIterable<TargetT, AsyncPagingIterableWrapper<SourceT, TargetT>> {
 
-  private final AsyncPagingIterable<SourceT> source;
+  private final AsyncPagingIterable<SourceT, ?> source;
   private final Function<? super SourceT, ? extends TargetT> elementMapper;
 
   private final Iterable<TargetT> currentPage;
 
   public AsyncPagingIterableWrapper(
-      AsyncPagingIterable<SourceT> source,
+      AsyncPagingIterable<SourceT, ?> source,
       Function<? super SourceT, ? extends TargetT> elementMapper) {
     this.source = source;
     this.elementMapper = elementMapper;
@@ -73,7 +74,7 @@ public class AsyncPagingIterableWrapper<SourceT, TargetT> implements AsyncPaging
 
   @NonNull
   @Override
-  public CompletionStage<? extends AsyncPagingIterable<TargetT>> fetchNextPage()
+  public CompletionStage<AsyncPagingIterableWrapper<SourceT, TargetT>> fetchNextPage()
       throws IllegalStateException {
     return source
         .fetchNextPage()

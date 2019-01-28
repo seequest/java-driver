@@ -84,7 +84,7 @@ public class AsyncPagingIterableWrapperTest {
         .thenAnswer(invocation -> CompletableFuture.completedFuture(resultSet2));
 
     // When
-    AsyncPagingIterable<Integer> iterable1 = resultSet1.map(row -> row.getInt("i"));
+    AsyncPagingIterable<Integer, ?> iterable1 = resultSet1.map(row -> row.getInt("i"));
 
     // Then
     for (int i = 0; i < 5; i++) {
@@ -93,7 +93,8 @@ public class AsyncPagingIterableWrapperTest {
     }
     assertThat(iterable1.hasMorePages()).isTrue();
 
-    AsyncPagingIterable<Integer> iterable2 = iterable1.fetchNextPage().toCompletableFuture().get();
+    AsyncPagingIterable<Integer, ?> iterable2 =
+        iterable1.fetchNextPage().toCompletableFuture().get();
     for (int i = 5; i < 10; i++) {
       assertThat(iterable2.one()).isEqualTo(i);
       assertThat(iterable2.remaining()).isEqualTo(resultSet2.remaining()).isEqualTo(9 - i);
@@ -110,7 +111,7 @@ public class AsyncPagingIterableWrapperTest {
             columnDefinitions, mockExecutionInfo(), mockData(0, 10), session, context);
 
     // When
-    AsyncPagingIterable<Integer> iterable = resultSet.map(row -> row.getInt("i"));
+    AsyncPagingIterable<Integer, ?> iterable = resultSet.map(row -> row.getInt("i"));
 
     // Then
     // Consume alternatively from the source and mapped iterable, and check that they stay in sync

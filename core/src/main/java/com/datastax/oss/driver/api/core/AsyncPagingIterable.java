@@ -28,7 +28,7 @@ import java.util.function.Function;
  * An iterable of elements which are fetched asynchronously by the driver, possibly in multiple
  * requests.
  */
-public interface AsyncPagingIterable<ElementT> {
+public interface AsyncPagingIterable<ElementT, SelfT extends AsyncPagingIterable<ElementT, SelfT>> {
 
   /** Returns {@linkplain ExecutionInfo information about the execution} of this page of results. */
   @NonNull
@@ -72,8 +72,7 @@ public interface AsyncPagingIterable<ElementT> {
    *     if you can call this method.
    */
   @NonNull
-  CompletionStage<? extends AsyncPagingIterable<ElementT>> fetchNextPage()
-      throws IllegalStateException;
+  CompletionStage<? extends SelfT> fetchNextPage() throws IllegalStateException;
 
   /**
    * If the query that produced this result was a conditional update, indicate whether it was
@@ -95,7 +94,7 @@ public interface AsyncPagingIterable<ElementT> {
    * <p>Note that both instances share the same underlying data: consuming elements from the
    * transformed iterable will also consume them from this object, and vice-versa.
    */
-  default <TargetT> AsyncPagingIterable<TargetT> map(
+  default <TargetT> AsyncPagingIterable<TargetT, ?> map(
       Function<? super ElementT, ? extends TargetT> elementMapper) {
     return new AsyncPagingIterableWrapper<>(this, elementMapper);
   }

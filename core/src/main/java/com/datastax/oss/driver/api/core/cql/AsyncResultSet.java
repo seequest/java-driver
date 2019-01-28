@@ -26,7 +26,7 @@ import java.util.concurrent.CompletionStage;
  * @see CqlSession#executeAsync(Statement)
  * @see CqlSession#executeAsync(String)
  */
-public interface AsyncResultSet extends AsyncPagingIterable<Row> {
+public interface AsyncResultSet extends AsyncPagingIterable<Row, AsyncResultSet> {
 
   /** Returns metadata about the {@linkplain ColumnDefinitions columns} contained in this row. */
   @NonNull
