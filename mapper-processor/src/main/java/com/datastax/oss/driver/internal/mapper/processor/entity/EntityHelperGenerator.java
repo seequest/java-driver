@@ -15,6 +15,7 @@
  */
 package com.datastax.oss.driver.internal.mapper.processor.entity;
 
+import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
 import com.datastax.oss.driver.api.mapper.entity.EntityHelper;
 import com.datastax.oss.driver.internal.mapper.MapperContext;
@@ -94,7 +95,8 @@ public class EntityHelperGenerator extends SingleFileCodeGenerator {
     List<PartialClassGenerator> methodGenerators =
         ImmutableList.of(
             new EntityHelperSetMethodGenerator(entityDefinition, this, context),
-            new EntityHelperGetMethodGenerator(entityDefinition, this, context));
+            new EntityHelperGetMethodGenerator(entityDefinition, this, context),
+            new EntityHelperInsertMethodGenerator(entityDefinition, this, context));
 
     TypeSpec.Builder classContents =
         TypeSpec.classBuilder(helperName)
@@ -105,6 +107,12 @@ public class EntityHelperGenerator extends SingleFileCodeGenerator {
                     ClassName.get(EntityHelper.class), ClassName.get(classElement)))
             .addField(
                 FieldSpec.builder(MapperContext.class, "context", Modifier.PRIVATE, Modifier.FINAL)
+                    .build())
+            .addField(
+                FieldSpec.builder(
+                        CqlIdentifier.class, "defaultTableId", Modifier.PRIVATE, Modifier.FINAL)
+                    .initializer(
+                        "$T.fromCql($S)", CqlIdentifier.class, entityDefinition.getCqlName())
                     .build());
 
     MethodSpec.Builder constructorContents =

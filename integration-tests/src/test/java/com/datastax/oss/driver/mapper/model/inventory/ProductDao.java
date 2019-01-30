@@ -19,6 +19,7 @@ import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.datastax.oss.driver.api.core.cql.BoundStatementBuilder;
 import com.datastax.oss.driver.api.core.data.UdtValue;
 import com.datastax.oss.driver.api.mapper.annotations.Dao;
+import com.datastax.oss.driver.api.mapper.annotations.Insert;
 import com.datastax.oss.driver.api.mapper.annotations.SetEntity;
 
 @Dao
@@ -32,4 +33,7 @@ public interface ProductDao {
 
   @SetEntity
   void set(Dimensions dimensions, UdtValue udtValue);
+
+  @Insert
+  void save(Product product);
 }
