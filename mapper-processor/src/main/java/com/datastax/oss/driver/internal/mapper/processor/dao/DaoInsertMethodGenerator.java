@@ -24,8 +24,10 @@ import com.datastax.oss.driver.internal.core.util.concurrent.CompletableFutures;
 import com.datastax.oss.driver.internal.mapper.processor.MethodGenerator;
 import com.datastax.oss.driver.internal.mapper.processor.ProcessorContext;
 import com.datastax.oss.driver.internal.mapper.processor.SkipGenerationException;
+import com.datastax.oss.driver.internal.mapper.processor.util.generation.GeneratedCodePatterns;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.lang.model.element.Element;
@@ -41,7 +43,7 @@ import javax.lang.model.type.TypeMirror;
 public class DaoInsertMethodGenerator implements MethodGenerator {
 
   private final ExecutableElement methodElement;
-  private final DaoImplementationGenerator daoImplementationGenerator;
+  private final DaoImplementationGenerator enclosingClass;
   private final ProcessorContext context;
   private final TypeElement entityElement;
   private final boolean isVoid;
@@ -49,10 +51,10 @@ public class DaoInsertMethodGenerator implements MethodGenerator {
 
   public DaoInsertMethodGenerator(
       ExecutableElement methodElement,
-      DaoImplementationGenerator daoImplementationGenerator,
+      DaoImplementationGenerator enclosingClass,
       ProcessorContext context) {
     this.methodElement = methodElement;
-    this.daoImplementationGenerator = daoImplementationGenerator;
+    this.enclosingClass = enclosingClass;
     this.context = context;
 
     // We're accepting:
@@ -145,9 +147,9 @@ public class DaoInsertMethodGenerator implements MethodGenerator {
 
   @Override
   public MethodSpec.Builder generate() {
-    String helperFieldName = daoImplementationGenerator.addEntityHelperField(entityElement);
+    String helperFieldName = enclosingClass.addEntityHelperField(entityElement);
     String statementName =
-        daoImplementationGenerator.addPreparedStatement(
+        enclosingClass.addPreparedStatement(
             methodElement,
             (methodBuilder, requestName) ->
                 generatePrepareRequest(methodBuilder, requestName, helperFieldName));
@@ -157,7 +159,8 @@ public class DaoInsertMethodGenerator implements MethodGenerator {
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)
             .returns(ClassName.get(methodElement.getReturnType()));
-    for (VariableElement parameterElement : methodElement.getParameters()) {
+    List<? extends VariableElement> parameters = methodElement.getParameters();
+    for (VariableElement parameterElement : parameters) {
       insertBuilder.addParameter(
           ClassName.get(parameterElement.asType()), parameterElement.getSimpleName().toString());
     }
@@ -170,12 +173,19 @@ public class DaoInsertMethodGenerator implements MethodGenerator {
         BoundStatementBuilder.class,
         statementName);
 
-    String entityParameterName = methodElement.getParameters().get(0).getSimpleName().toString();
-    insertBuilder
-        .addStatement("$L.set($L, boundStatementBuilder)", helperFieldName, entityParameterName)
-        .addStatement("$T boundStatement = boundStatementBuilder.build()", BoundStatement.class);
+    String entityParameterName = parameters.get(0).getSimpleName().toString();
+    insertBuilder.addStatement(
+        "$L.set($L, boundStatementBuilder)", helperFieldName, entityParameterName);
 
-    // TODO inject other method parameters (convert UDTs)
+    // Handle all remaining parameters as additional bound values
+    if (parameters.size() > 1) {
+      GeneratedCodePatterns.bindParameters(
+          parameters.subList(1, parameters.size()), insertBuilder, enclosingClass);
+    }
+
+    insertBuilder
+        .addCode("\n")
+        .addStatement("$T boundStatement = boundStatementBuilder.build()", BoundStatement.class);
 
     if (isAsync) {
       if (isVoid) {
@@ -201,10 +211,15 @@ public class DaoInsertMethodGenerator implements MethodGenerator {
 
   private void generatePrepareRequest(
       MethodSpec.Builder methodBuilder, String requestName, String helperFieldName) {
-    methodBuilder.addStatement(
-        "$1T $2L = $1T.newInstance($3L.insert().asCql())", // TODO handle custom clause
+    methodBuilder.addCode(
+        "$[$1T $2L = $1T.newInstance($3L.insert().asCql()", // TODO handle custom clause
         SimpleStatement.class,
         requestName,
         helperFieldName);
+    String customClause = methodElement.getAnnotation(Insert.class).customClause();
+    if (!customClause.isEmpty()) {
+      methodBuilder.addCode(" + $S", " " + customClause);
+    }
+    methodBuilder.addCode(")$];\n");
   }
 }

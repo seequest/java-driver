@@ -23,5 +23,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.CLASS)
 public @interface Insert {
-  String customClause = "";
+  String customClause() default "";
 }

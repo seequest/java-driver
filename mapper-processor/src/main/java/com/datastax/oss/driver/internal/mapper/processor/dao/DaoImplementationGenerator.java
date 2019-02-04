@@ -19,7 +19,6 @@ import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.mapper.annotations.Insert;
 import com.datastax.oss.driver.api.mapper.annotations.SetEntity;
-import com.datastax.oss.driver.api.mapper.entity.EntityHelper;
 import com.datastax.oss.driver.internal.core.util.concurrent.BlockingOperation;
 import com.datastax.oss.driver.internal.core.util.concurrent.CompletableFutures;
 import com.datastax.oss.driver.internal.mapper.DaoBase;
@@ -29,6 +28,8 @@ import com.datastax.oss.driver.internal.mapper.processor.ProcessorContext;
 import com.datastax.oss.driver.internal.mapper.processor.SingleFileCodeGenerator;
 import com.datastax.oss.driver.internal.mapper.processor.SkipGenerationException;
 import com.datastax.oss.driver.internal.mapper.processor.util.NameIndex;
+import com.datastax.oss.driver.internal.mapper.processor.util.generation.BindableHandlingSharedCode;
+import com.datastax.oss.driver.internal.mapper.processor.util.generation.GenericTypeConstantGenerator;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
@@ -51,7 +52,8 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-public class DaoImplementationGenerator extends SingleFileCodeGenerator {
+public class DaoImplementationGenerator extends SingleFileCodeGenerator
+    implements BindableHandlingSharedCode {
 
   private static final TypeName PREPARED_STATEMENT_STAGE =
       ParameterizedTypeName.get(CompletionStage.class, PreparedStatement.class);
@@ -59,6 +61,8 @@ public class DaoImplementationGenerator extends SingleFileCodeGenerator {
   private final TypeElement interfaceElement;
   private final ClassName implementationName;
   private final NameIndex nameIndex = new NameIndex();
+  private final GenericTypeConstantGenerator genericTypeConstantGenerator =
+      new GenericTypeConstantGenerator(nameIndex);
   private final Map<ClassName, String> entityHelperFields = new LinkedHashMap<>();
   private final List<GeneratedPreparedStatement> preparedStatements = new ArrayList<>();
 
@@ -68,15 +72,18 @@ public class DaoImplementationGenerator extends SingleFileCodeGenerator {
     implementationName = GeneratedNames.daoImplementation(interfaceElement);
   }
 
-  /**
-   * Requests the generation of a field holding the {@link EntityHelper} that was generated for the
-   * given entity class, along with the initialization code in the constructor.
-   *
-   * <p>If this is called multiple times, only a single field will be created.
-   *
-   * @return the name of the field.
-   */
-  String addEntityHelperField(TypeElement entityClass) {
+  @Override
+  public NameIndex getNameIndex() {
+    return nameIndex;
+  }
+
+  @Override
+  public String addGenericTypeConstant(TypeName type) {
+    return genericTypeConstantGenerator.add(type);
+  }
+
+  @Override
+  public String addEntityHelperField(TypeElement entityClass) {
     ClassName helperClass = GeneratedNames.entityHelper(entityClass);
     return entityHelperFields.computeIfAbsent(
         helperClass,
@@ -138,6 +145,8 @@ public class DaoImplementationGenerator extends SingleFileCodeGenerator {
             .addModifiers(Modifier.PUBLIC)
             .superclass(DaoBase.class)
             .addSuperinterface(ClassName.get(interfaceElement));
+
+    genericTypeConstantGenerator.generate(classBuilder);
 
     MethodSpec.Builder initAsyncBuilder = getInitAsyncContents();
 

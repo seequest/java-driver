@@ -15,6 +15,8 @@
  */
 package com.datastax.oss.driver.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
@@ -26,6 +28,7 @@ import com.datastax.oss.driver.mapper.model.inventory.InventoryMapper;
 import com.datastax.oss.driver.mapper.model.inventory.InventoryMapperBuilder;
 import com.datastax.oss.driver.mapper.model.inventory.Product;
 import com.datastax.oss.driver.mapper.model.inventory.ProductDao;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -57,6 +60,15 @@ public class InsertEntityIT {
     productDao = inventoryMapper.productDao(sessionRule.keyspace());
   }
 
+  @Before
+  public void clearProductData() {
+    CqlSession session = sessionRule.session();
+    session.execute(
+        SimpleStatement.builder("TRUNCATE product")
+            .withExecutionProfile(sessionRule.slowProfile())
+            .build());
+  }
+
   @Test
   public void should_insert_entity() {
     // Given
@@ -73,5 +85,26 @@ public class InsertEntityIT {
 
     // Then
     InventoryFixtures.FLAMETHROWER.assertMatches(row);
+  }
+
+  @Test
+  public void should_insert_entity_with_custom_clause() {
+    // Given
+    CqlSession session = sessionRule.session();
+    long timestamp = 1234;
+
+    // When
+    Product product = InventoryFixtures.FLAMETHROWER.entity;
+    productDao.saveWithBoundTimestamp(product, timestamp);
+    Row row =
+        session
+            .execute(
+                SimpleStatement.newInstance(
+                    "SELECT WRITETIME(description) FROM product WHERE id = ?", product.getId()))
+            .one();
+    long writeTime = row.getLong(0);
+
+    // Then
+    assertThat(writeTime).isEqualTo(timestamp);
   }
 }
