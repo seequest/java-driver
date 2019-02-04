@@ -109,7 +109,14 @@ public class GeneratedCodePatterns {
     // TODO handle collections of UDTs (JAVA-2129)
 
     if (entityElement != null) {
-      // Other entity class: the CQL column is a mapped UDT
+      // Other entity class: the CQL column is a mapped UDT. Example of generated code:
+      //     Dimensions value = entity.getDimensions();
+      //     if (value != null) {
+      //       UserDefinedType udtType = (UserDefinedType) target.getType("dimensions");
+      //       UdtValue udtValue = udtType.newValue();
+      //       dimensionsHelper.set(value, udtValue);
+      //       target = target.setUdtValue("dimensions", udtValue);
+      //     }
 
       // Generate unique names for our temporary variables. Note that they are local so we don't
       // strictly need class-wide uniqueness, but it's simpler to reuse the NameIndex
@@ -117,39 +124,38 @@ public class GeneratedCodePatterns {
       String udtValueName = enclosingClass.getNameIndex().uniqueField("udtValue");
       String valueName = enclosingClass.getNameIndex().uniqueField("value");
 
-      // Extract the child entity, make sure it's not null
       methodBuilder
           .addStatement("$T $L = $L", type, valueName, valueExtractor)
-          .beginControlFlow("if ($L != null)", valueName);
-      // Retrieve the UDT type
-      methodBuilder.addStatement(
-          "$1T $2L = ($1T) $3L.getType($4S)",
-          UserDefinedType.class,
-          udtTypeName,
-          targetName,
-          cqlName);
-      // Create a new UdtValue from it
-      methodBuilder.addStatement(
-          "$T $L = $L.newValue()", UdtValue.class, udtValueName, udtTypeName);
-      // Inject the child entity into the UdtValue
+          .beginControlFlow("if ($L != null)", valueName)
+          .addStatement(
+              "$1T $2L = ($1T) $3L.getType($4S)",
+              UserDefinedType.class,
+              udtTypeName,
+              targetName,
+              cqlName)
+          .addStatement("$T $L = $L.newValue()", UdtValue.class, udtValueName, udtTypeName);
       String childHelper = enclosingClass.addEntityHelperField(entityElement);
-      methodBuilder.addStatement("$L.set($L, $L)", childHelper, valueName, udtValueName);
-      // Set the UdtValue into the target
       methodBuilder
+          .addStatement("$L.set($L, $L)", childHelper, valueName, udtValueName)
           .addStatement("$1L = $1L.setUdtValue($2S, $3L)", targetName, cqlName, udtValueName)
           .endControlFlow();
     } else {
       String primitiveAccessor = GeneratedCodePatterns.PRIMITIVE_ACCESSORS.get(type);
       if (primitiveAccessor != null) {
-        // Primitive type: use dedicated setter, since it is optimized to avoid boxing
+        // Primitive type: use dedicated setter, since it is optimized to avoid boxing.
+        //     target = target.setInt("length", entity.getLength());
         methodBuilder.addStatement(
             "$1L = $1L.set$2L($3S, $4L)", targetName, primitiveAccessor, cqlName, valueExtractor);
       } else if (type instanceof ClassName) {
-        // Unparameterized class: use the generic, class-based setter:
+        // Unparameterized class: use the generic, class-based setter.
+        //     target = target.set("id", entity.getId(), UUID.class);
         methodBuilder.addStatement(
             "$1L = $1L.set($2S, $3L, $4T.class)", targetName, cqlName, valueExtractor, type);
       } else {
-        // Parameterized type: create a GenericType constant
+        // Parameterized type: create a constant and use the GenericType-based setter.
+        //     private static final GenericType<List<String>> GENERIC_TYPE =
+        //         new GenericType<List<String>>(){};
+        //     target = target.set("names", entity.getNames(), GENERIC_TYPE);
         // Note that lists, sets and maps of unparameterized classes also fall under that
         // category. Their setter creates a GenericType under the hood, so there's no performance
         // advantage in calling them instead of the generic set().
