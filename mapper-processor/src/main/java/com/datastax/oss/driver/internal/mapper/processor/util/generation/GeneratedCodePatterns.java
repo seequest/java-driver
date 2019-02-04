@@ -112,7 +112,7 @@ public class GeneratedCodePatterns {
       // Other entity class: the CQL column is a mapped UDT
 
       // Generate unique names for our temporary variables. Note that they are local so we don't
-      // strictly need class-wide unicity, but it's simpler to reuse the NameIndex
+      // strictly need class-wide uniqueness, but it's simpler to reuse the NameIndex
       String udtTypeName = enclosingClass.getNameIndex().uniqueField("udtType");
       String udtValueName = enclosingClass.getNameIndex().uniqueField("udtValue");
       String valueName = enclosingClass.getNameIndex().uniqueField("value");
