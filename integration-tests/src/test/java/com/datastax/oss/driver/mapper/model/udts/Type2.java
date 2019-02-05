@@ -13,17 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datastax.oss.driver.internal.mapper.processor.entity;
+package com.datastax.oss.driver.mapper.model.udts;
 
-import com.datastax.oss.driver.internal.mapper.processor.util.generation.PropertyType;
+import com.datastax.oss.driver.api.mapper.annotations.Entity;
 
-public interface PropertyDefinition {
+@Entity
+public class Type2 {
+  private int i;
 
-  String getCqlName();
+  public Type2() {}
 
-  String getGetterName();
+  public Type2(int i) {
+    this.i = i;
+  }
 
-  String getSetterName();
+  public int getI() {
+    return i;
+  }
 
-  PropertyType getType();
+  public void setI(int i) {
+    this.i = i;
+  }
 }

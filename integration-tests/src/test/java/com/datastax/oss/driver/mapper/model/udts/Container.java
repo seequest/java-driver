@@ -13,26 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datastax.oss.driver.mapper.model.inventory;
+package com.datastax.oss.driver.mapper.model.udts;
 
 import com.datastax.oss.driver.api.mapper.annotations.Entity;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
-public class Product {
+public class Container {
 
   private UUID id;
-  private String description;
-  private Dimensions dimensions;
-  private List<Dimensions> otherDimensions;
+  private List<Type1> list;
+  private Map<String, List<Type1>> map1;
+  private Map<Type1, Set<List<Type2>>> map2;
 
-  public Product() {}
+  public Container() {}
 
-  public Product(UUID id, String description, Dimensions dimensions) {
+  public Container(
+      UUID id, List<Type1> list, Map<String, List<Type1>> map1, Map<Type1, Set<List<Type2>>> map2) {
     this.id = id;
-    this.description = description;
-    this.dimensions = dimensions;
+    this.list = list;
+    this.map1 = map1;
+    this.map2 = map2;
   }
 
   public UUID getId() {
@@ -43,27 +47,27 @@ public class Product {
     this.id = id;
   }
 
-  public String getDescription() {
-    return description;
+  public List<Type1> getList() {
+    return list;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void setList(List<Type1> list) {
+    this.list = list;
   }
 
-  public Dimensions getDimensions() {
-    return dimensions;
+  public Map<String, List<Type1>> getMap1() {
+    return map1;
   }
 
-  public void setDimensions(Dimensions dimensions) {
-    this.dimensions = dimensions;
+  public void setMap1(Map<String, List<Type1>> map1) {
+    this.map1 = map1;
   }
 
-  public List<Dimensions> getOtherDimensions() {
-    return otherDimensions;
+  public Map<Type1, Set<List<Type2>>> getMap2() {
+    return map2;
   }
 
-  public void setOtherDimensions(List<Dimensions> otherDimensions) {
-    this.otherDimensions = otherDimensions;
+  public void setMap2(Map<Type1, Set<List<Type2>>> map2) {
+    this.map2 = map2;
   }
 }
