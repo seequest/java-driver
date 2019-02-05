@@ -37,6 +37,6 @@ public interface ProductDao {
   @Insert
   void save(Product product);
 
-  @Insert(customClause = " USING TIMESTAMP :timestamp")
+  @Insert(customClause = "USING TIMESTAMP :timestamp")
   Product saveWithBoundTimestamp(Product product, long timestamp);
 }
