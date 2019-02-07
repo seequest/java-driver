@@ -23,7 +23,7 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.lang.model.element.Modifier;
 
@@ -36,7 +36,7 @@ public class GenericTypeConstantGenerator {
     this.nameIndex = nameIndex;
   }
 
-  private final Map<TypeName, String> typeConstantNames = new HashMap<>();
+  private final Map<TypeName, String> typeConstantNames = new LinkedHashMap<>();
 
   public String add(TypeName type) {
     return typeConstantNames.computeIfAbsent(
