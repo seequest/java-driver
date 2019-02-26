@@ -253,28 +253,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <annotationProcessors>com.datastax.oss.driver.internal.mapper.processor.MapperProcessor</annotationProcessors>
-          <compilerId>javac-with-errorprone</compilerId>
-          <forceJavacCompilerUse>true</forceJavacCompilerUse>
-          <source>1.8</source>
-          <target>1.8</target>
-          <compilerArgs combine.children="override">
-            <compilerArg>-Xep:FutureReturnValueIgnored:OFF</compilerArg>
-          </compilerArgs>
-          <showWarnings>true</showWarnings>
-          <failOnWarning>true</failOnWarning>
         </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-compiler-javac-errorprone</artifactId>
-            <version>2.8</version>
-          </dependency>
-          <dependency>
-            <groupId>com.google.errorprone</groupId>
-            <artifactId>error_prone_core</artifactId>
-            <version>2.2.0</version>
-          </dependency>
-        </dependencies>
       </plugin>
     </plugins>
   </build>
