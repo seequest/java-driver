@@ -26,6 +26,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.api.testinfra.CassandraRequirement;
 import com.datastax.oss.driver.api.testinfra.ccm.CustomCcmRule;
 import com.datastax.oss.driver.api.testinfra.session.SessionRule;
 import com.datastax.oss.driver.api.testinfra.session.SessionUtils;
@@ -36,8 +37,7 @@ import com.google.common.base.Strings;
 import java.util.List;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
@@ -51,9 +51,11 @@ import org.slf4j.LoggerFactory;
 @RunWith(MockitoJUnitRunner.class)
 public class ExecutionInfoWarningsIT {
 
-  private static final CustomCcmRule CCM = new CustomCcmRule.Builder().build();
-  private static final SessionRule<CqlSession> SESSION_RULE =
-      SessionRule.builder(CCM)
+  private static final String KEY = "test";
+
+  private final CustomCcmRule ccm = new CustomCcmRule.Builder().build();
+  private final SessionRule<CqlSession> sessionRule =
+      SessionRule.builder(ccm)
           .withConfigLoader(
               SessionUtils.configLoaderBuilder()
                   .withInt(DefaultDriverOption.REQUEST_PAGE_SIZE, 20)
@@ -67,36 +69,31 @@ public class ExecutionInfoWarningsIT {
                           .build())
                   .build())
           .build();
-  private static final String KEY = "test";
 
-  @ClassRule public static final TestRule CCM_RULE = RuleChain.outerRule(CCM).around(SESSION_RULE);
+  @Rule public final TestRule ccmRule = RuleChain.outerRule(ccm).around(sessionRule);
 
   @Mock private Appender<ILoggingEvent> appender;
   @Captor private ArgumentCaptor<ILoggingEvent> loggingEventCaptor;
   private Logger logger;
   private Level originalLoggerLevel;
 
-  @BeforeClass
-  public static void setupSchema() {
+  @Before
+  public void setupLogger() {
     // table with simple primary key, single cell.
-    SESSION_RULE
+    sessionRule
         .session()
         .execute(
             SimpleStatement.builder("CREATE TABLE IF NOT EXISTS test (k int primary key, v text)")
-                .withExecutionProfile(SESSION_RULE.slowProfile())
+                .withExecutionProfile(sessionRule.slowProfile())
                 .build());
     for (int i = 0; i < 100; i++) {
-      SESSION_RULE
+      sessionRule
           .session()
           .execute(
               SimpleStatement.builder("INSERT INTO test (k, v) VALUES (?, ?)")
                   .addPositionalValues(KEY, i)
                   .build());
     }
-  }
-
-  @Before
-  public void setupLogger() {
     // setup the log appender
     logger = (Logger) LoggerFactory.getLogger(CqlRequestHandler.class);
     originalLoggerLevel = logger.getLevel();
@@ -111,18 +108,17 @@ public class ExecutionInfoWarningsIT {
   }
 
   @Test
+  @CassandraRequirement(min = "3.0")
   public void should_execute_query_and_log_server_side_warnings() {
     final String query = "SELECT count(*) FROM test;";
     Statement<?> st = SimpleStatement.builder(String.format(query)).build();
-    ResultSet result = SESSION_RULE.session().execute(st);
+    ResultSet result = sessionRule.session().execute(st);
 
     ExecutionInfo executionInfo = result.getExecutionInfo();
     assertThat(executionInfo).isNotNull();
     List<String> warnings = executionInfo.getWarnings();
-    assertThat(warnings).isNotNull();
     assertThat(warnings).isNotEmpty();
     String warning = warnings.get(0);
-    assertThat(warning).isNotNull();
     assertThat(warning).isEqualTo("Aggregation query used without partition key");
     // verify the log was generated
     verify(appender, after(500).times(1)).doAppend(loggingEventCaptor.capture());
@@ -136,27 +132,27 @@ public class ExecutionInfoWarningsIT {
   }
 
   @Test
+  @CassandraRequirement(min = "3.0")
   public void should_execute_query_and_not_log_server_side_warnings() {
     final String query = "SELECT count(*) FROM test;";
     Statement<?> st =
         SimpleStatement.builder(String.format(query))
             .withExecutionProfileName("log-disabled")
             .build();
-    ResultSet result = SESSION_RULE.session().execute(st);
+    ResultSet result = sessionRule.session().execute(st);
 
     ExecutionInfo executionInfo = result.getExecutionInfo();
     assertThat(executionInfo).isNotNull();
     List<String> warnings = executionInfo.getWarnings();
-    assertThat(warnings).isNotNull();
     assertThat(warnings).isNotEmpty();
     String warning = warnings.get(0);
-    assertThat(warning).isNotNull();
     assertThat(warning).isEqualTo("Aggregation query used without partition key");
     // verify the log was NOT generated
     verify(appender, after(500).times(0)).doAppend(loggingEventCaptor.capture());
   }
 
   @Test
+  @CassandraRequirement(min = "2.2")
   public void should_expose_warnings_on_execution_info() {
     // the default batch size warn threshold is 5 * 1024 bytes, but after CASSANDRA-10876 there must
     // be multiple mutations in a batch to trigger this warning so the batch includes 2 different
@@ -169,24 +165,36 @@ public class ExecutionInfoWarningsIT {
                 + "APPLY BATCH",
             Strings.repeat("1", 2 * 1024), Strings.repeat("1", 3 * 1024));
     Statement<?> st = SimpleStatement.builder(String.format(query)).build();
-    ResultSet result = SESSION_RULE.session().execute(st);
+    ResultSet result = sessionRule.session().execute(st);
     ExecutionInfo executionInfo = result.getExecutionInfo();
     assertThat(executionInfo).isNotNull();
     List<String> warnings = executionInfo.getWarnings();
     assertThat(warnings).isNotEmpty();
     // verify the log was generated
-    verify(appender, after(500).times(1)).doAppend(loggingEventCaptor.capture());
+    verify(appender, after(500).atLeast(1)).doAppend(loggingEventCaptor.capture());
     assertThat(loggingEventCaptor.getValue().getMessage()).isNotNull();
-    String logMessage = loggingEventCaptor.getValue().getFormattedMessage();
-    assertThat(logMessage)
-        .startsWith("Query '")
-        // query will only be logged up to MAX_QUERY_LENGTH
-        // characters
-        .contains(query.substring(0, RequestLogger.DEFAULT_REQUEST_LOGGER_MAX_QUERY_LENGTH))
-        .contains("' generated server side warning(s): ")
-        .contains(
-            String.format(
-                "Batch for [%s.test] is of size 5152, exceeding specified threshold of 5120 by 32.",
-                SESSION_RULE.keyspace().asCql(true)));
+    boolean testPassed = false;
+    for (ILoggingEvent log : loggingEventCaptor.getAllValues()) {
+      // some versions of Cassandra return multiple warnings for this query. We're only verifying
+      // the common pieces of the warnings.
+      String logMessage = log.getFormattedMessage();
+      // all logs should start with the driver log prefix
+      assertThat(logMessage)
+          .startsWith("Query '")
+          // query will only be logged up to MAX_QUERY_LENGTH characters
+          .contains(query.substring(0, RequestLogger.DEFAULT_REQUEST_LOGGER_MAX_QUERY_LENGTH))
+          .contains("' generated server side warning(s): ");
+      // we're now only looking for:
+      // "Batch ... for [KS.test] is of size .... exceeding specified threshold"
+      if (logMessage.contains("Batch")) {
+        assertThat(logMessage)
+            .contains(String.format("for [%s.test] is of size", sessionRule.keyspace().asCql(true)))
+            .contains("exceeding specified threshold");
+        // if we have reached this point, the log is good, the test has passed
+        testPassed = true;
+        break;
+      }
+    }
+    assertThat(testPassed).isTrue();
   }
 }
