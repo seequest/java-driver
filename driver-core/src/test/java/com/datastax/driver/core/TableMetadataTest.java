@@ -40,7 +40,10 @@ import org.testng.annotations.Test;
 @CCMConfig(clusterProvider = "createClusterBuilderNoDebouncing")
 public class TableMetadataTest extends CCMTestsSupport {
   static{
-    System.setProperty("ccm.version", "3.0");
+    System.setProperty("dse", "true");
+//    System.setProperty("cassandra.version", "4.8.11");
+    System.setProperty("cassandra.version", "5.0.15");
+
   }
 
   @Test(groups = "short")
@@ -867,8 +870,7 @@ public class TableMetadataTest extends CCMTestsSupport {
     // when
     session().execute(cql);
 
-    session().execute(String.format("ALTER TABLE %s.compact_double_quote\n" +
-        "DROP COMPACT STORAGE;", keyspace));
+    session().execute(String.format("ALTER TABLE %s.compact_double_quote DROP COMPACT STORAGE; ", keyspace));
 
 
     TableMetadata table =
