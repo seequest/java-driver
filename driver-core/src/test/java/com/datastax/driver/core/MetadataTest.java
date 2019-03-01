@@ -172,7 +172,7 @@ public class MetadataTest extends CCMTestsSupport {
 
   @Test(groups = "unit")
   public void should_quote_double_quote_name(){
-    String res = Metadata.quoteIfNecessary("\"\"");
+    String res = Metadata.quoteIfNecessary("");
     System.out.println(res);
   }
 

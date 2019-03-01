@@ -43,6 +43,7 @@ public class TableMetadataTest extends CCMTestsSupport {
     System.setProperty("dse", "true");
 //    System.setProperty("cassandra.version", "4.8.11");
     System.setProperty("cassandra.version", "5.0.15");
+//    System.setProperty("cassandra.version", "6.1.5");
 
   }
 
@@ -871,6 +872,52 @@ public class TableMetadataTest extends CCMTestsSupport {
     session().execute(cql);
 
     session().execute(String.format("ALTER TABLE %s.compact_double_quote DROP COMPACT STORAGE; ", keyspace));
+
+
+    TableMetadata table =
+        cluster().getMetadata().getKeyspace(keyspace).getTable("compact_double_quote");
+
+    // then
+    System.out.println(table.exportAsString());
+    System.out.println(table.columns);
+
+  }
+
+
+  @Test(groups = "short")
+  public void should_handle_double_quote_column_name_dse_67_load() {
+    VersionNumber version = TestUtils.findHost(cluster(), 1).getCassandraVersion();
+    System.out.println("---->" + version);
+
+    // given
+    String cql =
+        String.format(
+    "CREATE TABLE %s.compact_double_quote (\n" +
+        "    key blob,\n" +
+        "    column1 text,\n" +
+        "    value 'empty',\n" +
+        "    PRIMARY KEY (key, column1)\n" +
+        ") WITH CLUSTERING ORDER BY (column1 ASC)\n" +
+        "    AND read_repair_chance = 0.0\n" +
+        "    AND dclocal_read_repair_chance = 0.1\n" +
+        "    AND gc_grace_seconds = 864000\n" +
+        "    AND bloom_filter_fp_chance = 0.01\n" +
+        "    AND caching = { 'keys' : 'ALL', 'rows_per_partition' : 'NONE' }\n" +
+        "    AND comment = ''\n" +
+        "    AND compaction = { 'class' : 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold' : 32, 'min_threshold' : 4 }\n" +
+        "    AND compression = { 'chunk_length_in_kb' : 64, 'class' : 'org.apache.cassandra.io.compress.LZ4Compressor' }\n" +
+        "    AND default_time_to_live = 0\n" +
+        "    AND speculative_retry = '99PERCENTILE'\n" +
+        "    AND min_index_interval = 128\n" +
+        "    AND max_index_interval = 2048\n" +
+        "    AND crc_check_chance = 1.0\n" +
+        "    AND memtable_flush_period_in_ms = 0;",
+            keyspace);
+
+    // when
+    session().execute(cql);
+
+//    session().execute(String.format("ALTER TABLE %s.compact_double_quote DROP COMPACT STORAGE; ", keyspace));
 
 
     TableMetadata table =
