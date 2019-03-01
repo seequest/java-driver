@@ -35,6 +35,9 @@ import org.testng.annotations.Test;
 
 @CCMConfig(clusterProvider = "createClusterBuilderNoDebouncing")
 public class TableMetadataTest extends CCMTestsSupport {
+  static{
+    System.setProperty("ccm.version", "3.0");
+  }
 
   @Test(groups = "short")
   public void should_parse_table_without_clustering_columns() {
@@ -839,5 +842,70 @@ public class TableMetadataTest extends CCMTestsSupport {
         "DROP TABLE \"MyTable2\"",
         table1.asCQLQuery(),
         table2.asCQLQuery());
+  }
+
+  @Test(groups = "short")
+  public void should_handle_double_quote_column_name() {
+    VersionNumber version = TestUtils.findHost(cluster(), 1).getCassandraVersion();
+    System.out.println("---->" + version);
+
+    TestUtils.compactStorageSupportCheck(ccm());
+    // given
+    String cql =
+        String.format(
+          "CREATE TABLE %s.compact_double_quote (\n" +
+              "    key blob,\n" +
+              "    column1 text,\n" +
+              "    column2 blob,\n" +
+              "    \"\" frozen map<blob, blob>,\n" +
+              "    value blob,\n" +
+              "    PRIMARY KEY (key, column1, column2)\n" +
+              ") WITH COMPACT STORAGE",
+            keyspace);
+
+//        String cql =
+//        String.format(
+//          "CREATE TABLE %s.compact_double_quote (\n" +
+//              "    key blob,\n" +
+//              "    column1 text,\n" +
+//              "    value blob,\n" +
+//              "    PRIMARY KEY (key, column1)\n" +
+//              " )   WITH COMPACT STORAGE\n" +
+//              "AND CLUSTERING ORDER BY (column1 ASC)\n",
+//            keyspace);
+    // when
+    session().execute(cql);
+    TableMetadata table =
+        cluster().getMetadata().getKeyspace(keyspace).getTable("compact_double_quote");
+    // then
+    assertThat(table)
+        .isNotNull()
+        .hasName("compact_double_quote")
+        .hasNumberOfColumns(5)
+        .isCompactStorage();
+    assertThat(table.getColumns().get(0)).isNotNull().hasName("k").isPartitionKey().hasType(text());
+    assertThat(table.getColumns().get(1))
+        .isNotNull()
+        .hasName("c1")
+        .isClusteringColumn()
+        .hasClusteringOrder(ASC)
+        .hasType(cint());
+    assertThat(table.getColumns().get(2))
+        .isNotNull()
+        .hasName("c2")
+        .isClusteringColumn()
+        .hasClusteringOrder(ASC)
+        .hasType(cfloat());
+    assertThat(table.getColumns().get(3))
+        .isNotNull()
+        .hasName("c3")
+        .isClusteringColumn()
+        .hasClusteringOrder(ASC)
+        .hasType(cdouble());
+    assertThat(table.getColumns().get(4))
+        .isNotNull()
+        .hasName("v")
+        .isRegularColumn()
+        .hasType(timeuuid());
   }
 }

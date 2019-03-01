@@ -171,6 +171,12 @@ public class MetadataTest extends CCMTestsSupport {
   }
 
   @Test(groups = "unit")
+  public void should_quote_double_quote_name(){
+    String res = Metadata.quoteIfNecessary(" ");
+    System.out.println(res);
+  }
+
+  @Test(groups = "unit")
   public void should_detect_reserved_keywords_in_upper_case() {
     assertThat(Metadata.isReservedCqlKeyword("COLUMNFAMILY")).isTrue();
     assertThat(Metadata.isReservedCqlKeyword("TEST_COLUMNFAMILY")).isFalse();
