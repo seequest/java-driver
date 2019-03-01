@@ -27,10 +27,14 @@ import static com.datastax.driver.core.DataType.map;
 import static com.datastax.driver.core.DataType.text;
 import static com.datastax.driver.core.DataType.timeuuid;
 import static org.assertj.core.api.Assertions.entry;
+import static org.mockito.Mockito.mock;
 
 import com.datastax.driver.core.utils.CassandraVersion;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.nio.ByteBuffer;
+
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 @CCMConfig(clusterProvider = "createClusterBuilderNoDebouncing")
@@ -47,7 +51,7 @@ public class TableMetadataTest extends CCMTestsSupport {
             "CREATE TABLE %s.static (\n"
                 + "    k text,\n"
                 + "    i int,\n"
-                + "    m map<text, timeuuid>,\n"
+                + "    '' map<text, timeuuid>,\n"
                 + "    v int,\n"
                 + "    PRIMARY KEY (k)\n"
                 + ");",
@@ -853,59 +857,39 @@ public class TableMetadataTest extends CCMTestsSupport {
     // given
     String cql =
         String.format(
-          "CREATE TABLE %s.compact_double_quote (\n" +
+          "CREATE TABLE %s.compact_double_quote (" +
               "    key blob,\n" +
               "    column1 text,\n" +
-              "    column2 blob,\n" +
-              "    \"\" frozen map<blob, blob>,\n" +
-              "    value blob,\n" +
-              "    PRIMARY KEY (key, column1, column2)\n" +
-              ") WITH COMPACT STORAGE",
+              "  PRIMARY KEY ((key), column1))" +
+              " WITH COMPACT STORAGE;",
             keyspace);
 
-//        String cql =
-//        String.format(
-//          "CREATE TABLE %s.compact_double_quote (\n" +
-//              "    key blob,\n" +
-//              "    column1 text,\n" +
-//              "    value blob,\n" +
-//              "    PRIMARY KEY (key, column1)\n" +
-//              " )   WITH COMPACT STORAGE\n" +
-//              "AND CLUSTERING ORDER BY (column1 ASC)\n",
-//            keyspace);
     // when
     session().execute(cql);
+
+    session().execute(String.format("ALTER TABLE %s.compact_double_quote\n" +
+        "DROP COMPACT STORAGE;", keyspace));
+
+
     TableMetadata table =
         cluster().getMetadata().getKeyspace(keyspace).getTable("compact_double_quote");
     // then
-    assertThat(table)
-        .isNotNull()
-        .hasName("compact_double_quote")
-        .hasNumberOfColumns(5)
-        .isCompactStorage();
-    assertThat(table.getColumns().get(0)).isNotNull().hasName("k").isPartitionKey().hasType(text());
-    assertThat(table.getColumns().get(1))
-        .isNotNull()
-        .hasName("c1")
-        .isClusteringColumn()
-        .hasClusteringOrder(ASC)
-        .hasType(cint());
-    assertThat(table.getColumns().get(2))
-        .isNotNull()
-        .hasName("c2")
-        .isClusteringColumn()
-        .hasClusteringOrder(ASC)
-        .hasType(cfloat());
-    assertThat(table.getColumns().get(3))
-        .isNotNull()
-        .hasName("c3")
-        .isClusteringColumn()
-        .hasClusteringOrder(ASC)
-        .hasType(cdouble());
-    assertThat(table.getColumns().get(4))
-        .isNotNull()
-        .hasName("v")
-        .isRegularColumn()
-        .hasType(timeuuid());
+    System.out.println(table.columns);
+    System.out.println(table.exportAsString());
+
   }
+
+//  @Test
+//  public void t(){
+//    TableMetadata.build(
+//        new KeyspaceMetadata("k1", true, ImmutableMap.<String, String>of(), false),
+//        mock(Row.class),
+//        ImmutableMap.of("\"\"", mock(ColumnMetadata.Raw.class)),
+//        ImmutableList.<Row>of(),
+//        "n1",
+//        VersionNumber.parse("3.0"),
+//        mock(Cluster.class)
+//    ).exportAsString();
+//
+//  }
 }
