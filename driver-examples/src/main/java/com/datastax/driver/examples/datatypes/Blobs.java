@@ -232,9 +232,7 @@ public class Blobs {
   }
 
   // Note:
-  // - this is written with Java 6 APIs; if you're on a more recent version this can be improved
-  // (try-with-resources,
-  //   new-new io...)
+  // - This can be improved by using new-io
   // - this reads the whole file in memory in one go. If your file does not fit in memory you should
   // probably not
   //   insert it into Cassandra either ;)
