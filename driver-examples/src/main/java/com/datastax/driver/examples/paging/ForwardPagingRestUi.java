@@ -208,7 +208,10 @@ public class ForwardPagingRestUi {
         @PathParam("userid") int userid, @QueryParam("page") String page) {
 
       Statement statement = videosByUser.bind(userid).setPageSize(ITEMS_PER_PAGE);
-      if (page != null) statement.setPagingState(Bytes.fromHexString(page));
+      if (page != null) {
+        // note that Statement is immutable so we need to re-assign
+        statement = statement.setPagingState(Bytes.fromHexString(page));
+      }
 
       ResultSet rs = session.execute(statement);
       String nextPage = Bytes.toHexString(rs.getExecutionInfo().getPagingState());
