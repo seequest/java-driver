@@ -226,7 +226,7 @@ public class RandomPagingRestUi {
       ResultSet rs = pager.skipTo(statement, page);
 
       List<UserVideo> videos;
-      boolean empty = rs.one() == null; // todo shouldn't we expose it as rs.isExhausted()?
+      boolean empty = !rs.iterator().hasNext(); // todo shouldn't we expose it as rs.isExhausted();
       if (empty) {
         videos = Collections.emptyList();
       } else {
