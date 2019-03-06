@@ -176,7 +176,7 @@ public class PlainTextJson {
         selectFrom("examples", "querybuilder_json")
             .column("id")
             .function(CqlIdentifier.fromCql("toJson"), Selector.column("specs"))
-            .as("json_specs")// todo alias not working
+            .as("json_specs") // todo alias not working
             .whereColumn("id")
             .isEqualTo(literal(2))
             .build();
