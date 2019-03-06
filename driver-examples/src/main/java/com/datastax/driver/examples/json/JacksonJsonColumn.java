@@ -60,7 +60,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class JacksonJsonColumn {
 
   // A codec to convert JSON payloads into User instances;
-  private static final TypeCodec<User> USER_CODEC = new JacksonJsonCodec<User>(User.class);
+  private static final TypeCodec<User> USER_CODEC = new JacksonJsonCodec<>(User.class);
 
   public static void main(String[] args) {
     try (CqlSession session = new CqlSessionBuilder().addTypeCodecs(USER_CODEC).build()) {

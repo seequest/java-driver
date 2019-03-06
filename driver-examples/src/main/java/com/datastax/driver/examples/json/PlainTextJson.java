@@ -28,6 +28,7 @@ import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.cql.Statement;
+import com.datastax.oss.driver.api.querybuilder.select.Selector;
 
 /**
  * Illustrates basic JSON support with plain JSON strings. For more advanced examples using complex
@@ -120,8 +121,8 @@ public class PlainTextJson {
   }
 
   /**
-   * Same as {@link #insertWithCoreApi(Session)}, but using {@link
-   * com.datastax.driver.core.querybuilder.QueryBuilder} to construct the queries.
+   * Same as {@link #insertWithCoreApi(CqlSession)}, but using {@link
+   * com.datastax.oss.driver.api.querybuilder.QueryBuilder} to construct the queries.
    */
   private static void insertWithQueryBuilder(CqlSession session) {
     // Simple statement:
@@ -154,8 +155,8 @@ public class PlainTextJson {
   }
 
   /**
-   * Same as {@link #selectWithCoreApi(Session)}, but using {@link
-   * com.datastax.driver.core.querybuilder.QueryBuilder} to construct the queries.
+   * Same as {@link #selectWithCoreApi(CqlSession)}, but using {@link
+   * com.datastax.oss.driver.api.querybuilder.QueryBuilder} to construct the queries.
    */
   private static void selectWithQueryBuilder(CqlSession session) {
     // Reading the whole row as a JSON object:
@@ -174,15 +175,16 @@ public class PlainTextJson {
     stmt =
         selectFrom("examples", "querybuilder_json")
             .column("id")
-            .function(CqlIdentifier.fromCql("toJson"), literal("specs"))
-            .as("json_specs") // todo use alias
-            .all()
+            .function(CqlIdentifier.fromCql("toJson"), Selector.column("specs")) // todo make alias
             .whereColumn("id")
             .isEqualTo(literal(2))
             .build();
 
+    System.out.println(((SimpleStatement) stmt).getQuery());
+
     row = session.execute(stmt).one();
     assert row != null;
+
     System.out.printf(
         "Entry #%d's specs as JSON: %s%n", row.getInt("id"), row.getString("json_specs"));
   }
