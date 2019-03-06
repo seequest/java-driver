@@ -19,14 +19,18 @@ import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.bindMarker;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.function;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.insertInto;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
+import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.selectFrom;
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
+import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.cql.Statement;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
+import com.datastax.oss.driver.api.querybuilder.select.Selector;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -143,39 +147,42 @@ public class JacksonJsonFunction {
   // Retrieving JSON payloads from table columns of arbitrary types,
   // using toJson() function
   private static void selectToJson(CqlSession session) {
-    //
-    //    Statement stmt =
-    //        selectFrom("examples", "json_jackson_function")
-    //            .column("id")
-    //            .function(CqlIdentifier.fromCql("toJson"), Selector.column("user"))
-    //            .as("user")
-    //            .toJson("scores")
-    //            .as("scores")
-    //            .where(in("id", 1, 2));
-    //
-    //    ResultSet rows = session.execute(stmt);
-    //
-    //    for (Row row : rows) {
-    //      int id = row.getInt("id");
-    //      // retrieve the JSON payload and convert it to a User instance
-    //      User user = row.get("user", User.class);
-    //      // it is also possible to retrieve the raw JSON payload
-    //      String userJson = row.getString("user");
-    //      // retrieve the JSON payload and convert it to a JsonNode instance
-    //      // note that the codec requires that the type passed to the get() method
-    //      // be always JsonNode, and not a subclass of it, such as ObjectNode
-    //      JsonNode scores = row.get("scores", JsonNode.class);
-    //      // it is also possible to retrieve the raw JSON payload
-    //      String scoresJson = row.getString("scores");
-    //      System.out.printf(
-    //          "Retrieved row:%n"
-    //              + "id           %d%n"
-    //              + "user         %s%n"
-    //              + "user (raw)   %s%n"
-    //              + "scores       %s%n"
-    //              + "scores (raw) %s%n%n",
-    //          id, user, userJson, scores, scoresJson);
-    //    }
+
+    Statement stmt =
+        selectFrom("examples", "json_jackson_function")
+            .column("id")
+            .function(CqlIdentifier.fromCql("toJson"), Selector.column("user"))
+            .as("user") // todo alias
+            .function(CqlIdentifier.fromCql("toJson"), Selector.column("scores"))
+            .as("scores") // todo alias
+            .whereColumn("id")
+            .in(literal(1), literal(2))
+            .build();
+    System.out.println(((SimpleStatement) stmt).getQuery());
+
+    ResultSet rows = session.execute(stmt);
+
+    for (Row row : rows) {
+      int id = row.getInt("id");
+      // retrieve the JSON payload and convert it to a User instance
+      User user = row.get("user", User.class);
+      // it is also possible to retrieve the raw JSON payload
+      String userJson = row.getString("user");
+      // retrieve the JSON payload and convert it to a JsonNode instance
+      // note that the codec requires that the type passed to the get() method
+      // be always JsonNode, and not a subclass of it, such as ObjectNode
+      JsonNode scores = row.get("scores", JsonNode.class);
+      // it is also possible to retrieve the raw JSON payload
+      String scoresJson = row.getString("scores");
+      System.out.printf(
+          "Retrieved row:%n"
+              + "id           %d%n"
+              + "user         %s%n"
+              + "user (raw)   %s%n"
+              + "scores       %s%n"
+              + "scores (raw) %s%n%n",
+          id, user, userJson, scores, scoresJson);
+    }
   }
 
   @SuppressWarnings("unused")
