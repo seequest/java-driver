@@ -152,9 +152,9 @@ public class JacksonJsonFunction {
         selectFrom("examples", "json_jackson_function")
             .column("id")
             .function(CqlIdentifier.fromCql("toJson"), Selector.column("user"))
-            .as("user") // todo alias
+            .as("user")
             .function(CqlIdentifier.fromCql("toJson"), Selector.column("scores"))
-            .as("scores") // todo alias
+            .as("scores")
             .whereColumn("id")
             .in(literal(1), literal(2))
             .build();

@@ -176,12 +176,10 @@ public class PlainTextJson {
         selectFrom("examples", "querybuilder_json")
             .column("id")
             .function(CqlIdentifier.fromCql("toJson"), Selector.column("specs"))
-            .as("json_specs") // todo alias not working
+            .as("json_specs")
             .whereColumn("id")
             .isEqualTo(literal(2))
             .build();
-
-    System.out.println(((SimpleStatement) stmt).getQuery());
 
     row = session.execute(stmt).one();
     assert row != null;
