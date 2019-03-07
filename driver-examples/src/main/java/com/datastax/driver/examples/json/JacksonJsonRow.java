@@ -91,9 +91,7 @@ public class JacksonJsonRow {
     session.execute(stmt);
 
     // The JSON object can be a bound value if the statement is prepared
-    // (we use a local variable here for the sake of example, but in a real application you would
-    // cache and reuse
-    // the prepared statement)
+    // (subsequent calls to the prepare() method will return cached statement)
     PreparedStatement pst =
         session.prepare(
             insertInto("examples", "json_jackson_row").json(bindMarker("user")).build());
