@@ -42,9 +42,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * href="http://wiki.fasterxml.com/JacksonHome">Jackson</a> library, and leveraging the {@code
  * toJson()} and {@code fromJson()} functions introduced in Cassandra 2.2.
  *
- * <p>This example makes usage of a custom {@link TypeCodec codec}, {@link JacksonJsonCodec}, which
- * is declared in the driver-extras module. If you plan to follow this example, make sure to include
- * the following Maven dependencies in your project:
+ * <p>This example makes usage of a custom {@link TypeCodec codec}, {@link JacksonJsonCodec}. If you
+ * plan to follow this example, make sure to include the following Maven dependencies in your
+ * project:
  *
  * <p><dependency> <groupId>com.fasterxml.jackson.core</groupId>
  * <artifactId>jackson-databind</artifactId> <version>${jackson.version}</version> </dependency> }
