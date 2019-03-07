@@ -128,20 +128,16 @@ public class Jsr353JsonCodec implements TypeCodec<JsonStructure> {
   public ByteBuffer encode(
       @Nullable JsonStructure value, @NonNull ProtocolVersion protocolVersion) {
     if (value == null) return null;
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    try {
-      JsonWriter writer = writerFactory.createWriter(baos);
-      writer.write(value);
-      return ByteBuffer.wrap(baos.toByteArray());
-    } catch (JsonException e) {
-      throw new InvalidTypeException(e.getMessage(), e);
-    } finally {
+    try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
       try {
-        baos.close();
-      } catch (IOException e) {
-        // cannot happen
+        JsonWriter writer = writerFactory.createWriter(baos);
+        writer.write(value);
+        return ByteBuffer.wrap(baos.toByteArray());
+      } catch (JsonException e) {
         throw new InvalidTypeException(e.getMessage(), e);
       }
+    } catch (IOException e) {
+      throw new InvalidTypeException(e.getMessage(), e);
     }
   }
 
@@ -150,19 +146,15 @@ public class Jsr353JsonCodec implements TypeCodec<JsonStructure> {
   public JsonStructure decode(
       @Nullable ByteBuffer bytes, @NonNull ProtocolVersion protocolVersion) {
     if (bytes == null) return null;
-    ByteArrayInputStream bais = new ByteArrayInputStream(Bytes.getArray(bytes));
-    try {
-      JsonReader reader = readerFactory.createReader(bais);
-      return reader.read();
-    } catch (JsonException e) {
-      throw new InvalidTypeException(e.getMessage(), e);
-    } finally {
+    try (ByteArrayInputStream bais = new ByteArrayInputStream(Bytes.getArray(bytes))) {
       try {
-        bais.close();
-      } catch (IOException e) {
-        // cannot happen
+        JsonReader reader = readerFactory.createReader(bais);
+        return reader.read();
+      } catch (JsonException e) {
         throw new InvalidTypeException(e.getMessage(), e);
       }
+    } catch (IOException e) {
+      throw new InvalidTypeException(e.getMessage(), e);
     }
   }
 
@@ -171,20 +163,16 @@ public class Jsr353JsonCodec implements TypeCodec<JsonStructure> {
   public String format(JsonStructure value) throws InvalidTypeException {
     if (value == null) return "NULL";
     String json;
-    StringWriter sw = new StringWriter();
-    try {
-      JsonWriter writer = writerFactory.createWriter(sw);
-      writer.write(value);
-      json = sw.toString();
-    } catch (JsonException e) {
-      throw new InvalidTypeException(e.getMessage(), e);
-    } finally {
+    try (StringWriter sw = new StringWriter()) {
       try {
-        sw.close();
-      } catch (IOException e) {
-        // cannot happen
+        JsonWriter writer = writerFactory.createWriter(sw);
+        writer.write(value);
+        json = sw.toString();
+      } catch (JsonException e) {
         throw new InvalidTypeException(e.getMessage(), e);
       }
+    } catch (IOException e) {
+      throw new InvalidTypeException(e.getMessage(), e);
     }
     return Strings.quote(json);
   }
