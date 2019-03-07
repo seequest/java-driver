@@ -20,6 +20,7 @@ import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.insertInto;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.selectFrom;
 
+import com.datastax.driver.examples.json.codecs.JacksonJsonCodec;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
@@ -84,7 +85,8 @@ public class JacksonJsonRow {
     // Build and execute a simple statement
     Statement stmt =
         insertInto("examples", "json_jackson_row")
-            .json(new User(1, "alice", 30))
+            .json("")
+            //            .json(new User(1, "alice", 30))
             .build(); // todo implement
     session.execute(stmt);
 

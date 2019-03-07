@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datastax.driver.examples.json;
+package com.datastax.driver.examples.json.codecs;
 
+import com.datastax.driver.examples.json.exceptions.InvalidTypeException;
 import com.datastax.oss.driver.api.core.ProtocolVersion;
 import com.datastax.oss.driver.api.core.type.DataType;
 import com.datastax.oss.driver.api.core.type.DataTypes;
@@ -150,16 +151,5 @@ public class JacksonJsonCodec<T> implements TypeCodec<T> {
    */
   private JavaType toJacksonJavaType() {
     return TypeFactory.defaultInstance().constructType(getJavaType().getType());
-  }
-
-  static class InvalidTypeException extends RuntimeException {
-
-    public InvalidTypeException(String message, Throwable e) {
-      super(message, e);
-    }
-
-    public InvalidTypeException(String msg) {
-      super(msg);
-    }
   }
 }
