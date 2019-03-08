@@ -4,7 +4,9 @@
 
 ### 4.0.0 (in progress)
 
-- [bug] Java 2178: QueryBuilder: Alias after function column is not included in a query
+- [improvement] JAVA-2090: Add support for additional_write_policy and read_repair table options
+- [improvement] JAVA-2164: Rename statement builder methods to setXxx
+- [bug] JAVA-2178: QueryBuilder: Alias after function column is not included in a query
 - [improvement] JAVA-2158: Allow BuildableQuery to build statement with values
 - [improvement] JAVA-2150: Improve query builder error message on unsupported literal type
 - [documentation] JAVA-2149: Improve Term javadocs in the query builder
