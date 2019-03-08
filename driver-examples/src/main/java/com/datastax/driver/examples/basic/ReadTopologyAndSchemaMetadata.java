@@ -40,8 +40,7 @@ public class ReadTopologyAndSchemaMetadata {
     try (CqlSession session = new CqlSessionBuilder().build()) {
 
       Metadata metadata = session.getMetadata();
-      System.out.printf(
-          "Connected to cluster: %s%n", session.getName()); // todo metadata.getClusterName()
+      System.out.printf("Connected session: %s%n", session.getName());
 
       for (Node node : metadata.getNodes().values()) {
         System.out.printf(

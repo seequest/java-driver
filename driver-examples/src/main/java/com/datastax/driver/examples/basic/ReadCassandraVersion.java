@@ -49,7 +49,7 @@ public class ReadCassandraVersion {
       String releaseVersion = row.getString("release_version");
       System.out.printf("Cassandra version is: %s%n", releaseVersion);
     }
-    // Close the session after we’re done with it.
+    // The try-with-resources block automatically close the session after we’re done with it.
     // This step is important because it frees underlying resources (TCP connections, thread
     // pools...). In a
     // real application, you would typically do this at shutdown (for example, when undeploying

@@ -58,8 +58,7 @@ public class CreateAndPopulateKeyspace {
 
     session = new CqlSessionBuilder().build();
 
-    System.out.printf(
-        "Connected to session: %s%n", session.getName()); // todo should we get clusterName?
+    System.out.printf("Connected session: %s%n", session.getName());
   }
 
   /** Creates the schema (keyspace) and tables for this example. */
