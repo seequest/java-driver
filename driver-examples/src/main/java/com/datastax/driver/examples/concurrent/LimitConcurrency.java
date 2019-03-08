@@ -23,7 +23,7 @@ import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.cql.AsyncResultSet;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import com.datastax.oss.driver.internal.core.util.concurrent.CompletableFutures;
-import java.util.HashSet;
+import io.netty.util.internal.ConcurrentSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -76,7 +76,7 @@ public class LimitConcurrency {
     // Used to track number of total inserts
     AtomicInteger insertsCounter = new AtomicInteger();
     // Used to track threads that were involved in a processing
-    Set<String> threads = new HashSet<>();
+    Set<String> threads = new ConcurrentSet<>();
 
     // For every i we will insert a record to db
     for (int i = 0; i < TOTAL_NUMBER_OF_INSERTS; i++) {
