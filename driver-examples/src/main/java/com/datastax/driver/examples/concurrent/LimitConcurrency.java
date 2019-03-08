@@ -32,14 +32,28 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Creates a keyspace and tables, and loads data using Async API into them.
+ *
+ * <p>This example makes usage of a {@link CqlSession#executeAsync(String)} method, which is
+ * responsible for executing requests in a non-blocking way. It uses {@link ExecutorService} to
+ * limit number of concurrent request to CONCURRENCY_LEVEL.
+ *
+ * <p>Preconditions: - a Cassandra session is running and accessible through the contacts points
+ * identified by basic.contact-points (see application.conf)
+ *
+ * <p>Side effects: - creates a new keyspace "examples" in the session. If a keyspace with this name
+ * already exists, it will be reused; - creates a table "examples.tbl_sample_kv". If it exist
+ * already, it will be reused; - inserts a TOTAL_NUMBER_OF_INSERTS of rows into the table.
+ *
+ * @see <a href="http://datastax.github.io/java-driver/manual/">Java driver online manual</a>
+ */
 public class LimitConcurrency {
   private static final int CONCURRENCY_LEVEL = 32;
   private static final int TOTAL_NUMBER_OF_INSERTS = 10_000;
 
   public static void main(String[] args) throws InterruptedException {
 
-    // The Session is what you use to execute queries. It is thread-safe and should be
-    // reused.
     try (CqlSession session = new CqlSessionBuilder().build()) {
       createSchema(session);
       insertConcurrent(session);
@@ -53,15 +67,23 @@ public class LimitConcurrency {
                 .value("id", bindMarker("id"))
                 .value("value", bindMarker("value"))
                 .build());
-
+    // Create CountDownLatch that wait for completion of all pending requests
     CountDownLatch requestLatch = new CountDownLatch(TOTAL_NUMBER_OF_INSERTS);
+    // Executor service with CONCURRENCY_LEVEL number of threads that states an upper limit
+    // on number of request in progress.
     ExecutorService executor = Executors.newFixedThreadPool(CONCURRENCY_LEVEL);
 
+    // Used to track number of total inserts
     AtomicInteger insertsCounter = new AtomicInteger();
+    // Used to track threads that were involved in a processing
     Set<String> threads = new HashSet<>();
 
+    // For every i we will insert a record to db
     for (int i = 0; i < TOTAL_NUMBER_OF_INSERTS; i++) {
-      int counter = i;
+      // Copy to final variable for usage in a separate thread
+      final int counter = i;
+
+      // We are running CqlSession.executeAsync in a separate thread pool (executor)
       CompletableFuture.supplyAsync(
           () -> {
             insertsCounter.incrementAndGet();
@@ -73,13 +95,19 @@ public class LimitConcurrency {
                             .set("id", UUID.randomUUID(), UUID.class)
                             .set("value", String.format("Value for: %s", counter), String.class))
                     .toCompletableFuture();
+            // Block the current Thread until the result is ready. When the completableFuture
+            // finishes it means that
+            // this thread is free and can pick up another call to CqlSession.executeAsync()
             AsyncResultSet executedRequest =
                 CompletableFutures.getUninterruptibly(completableFuture);
+            // Signal that processing of this request finishes
             requestLatch.countDown();
             return executedRequest;
           },
+          // Here the separate thread pool is passed as the argument
           executor);
     }
+    // Await for execution of TOTAL_NUMBER_OF_INSERTS
     requestLatch.await();
 
     System.out.println(
