@@ -77,9 +77,9 @@ public class RandomPagingRestUi {
 
   private static final int ITEMS_PER_PAGE = 10;
   // How many rows the driver will retrieve at a time.
-  // This is set artificially low for the sake of this example. Unless your rows are very large, you
-  // can probably use
-  // a much higher value (the driver's default is 5000).
+  // This is set artificially low for the sake of this example.
+  // Unless your rows are very large, you can probably use a much higher value (the driver's default
+  // is 5000).
   private static final int FETCH_SIZE = 60;
 
   private static final URI BASE_URI =

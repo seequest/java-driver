@@ -37,12 +37,12 @@ import com.datastax.oss.driver.api.core.servererrors.UnavailableException;
 import com.datastax.oss.driver.api.core.servererrors.WriteTimeoutException;
 
 /**
- * This example illustrates how implement DowngradingConsistencyRetryPolicy.
+ * This example illustrates how to implement DowngradingConsistencyRetryPolicy.
  *
  * <p>Preconditions:
  *
  * <ul>
- *   <li>An Apache Cassandra cluster is running and accessible through the contacts points
+ *   <li>An Apache Cassandra(R) cluster is running and accessible through the contacts points
  *       identified by basic.contact-points (see application.conf)
  * </ul>
  *

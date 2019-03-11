@@ -70,7 +70,6 @@ import javax.json.JsonStructure;
 public class Jsr353JsonFunction {
 
   // A codec to convert JSON payloads into JsonObject instances;
-  // this codec is declared in the driver-extras module
   private static final Jsr353JsonCodec USER_CODEC = new Jsr353JsonCodec();
 
   public static void main(String[] args) {

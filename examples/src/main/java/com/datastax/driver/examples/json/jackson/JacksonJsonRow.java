@@ -61,7 +61,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class JacksonJsonRow {
   // A codec to convert JSON payloads into User instances;
-  // this codec is declared in the driver-extras module
   private static final TypeCodec<User> USER_CODEC = new JacksonJsonCodec<>(User.class);
 
   public static void main(String[] args) {
