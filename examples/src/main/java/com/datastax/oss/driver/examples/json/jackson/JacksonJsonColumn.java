@@ -42,9 +42,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * <pre>{@code
  * <dependency>
- *     <groupId>com.fasterxml.jackson.core</groupId>
- *     <artifactId>jackson-databind</artifactId>
- *     <version>${jackson.version}</version>
+ *   <groupId>com.fasterxml.jackson.core</groupId>
+ *   <artifactId>jackson-databind</artifactId>
+ *   <version>2.9.8</version>
  * </dependency>
  * }</pre>
  *

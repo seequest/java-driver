@@ -46,13 +46,13 @@ import javax.json.JsonStructure;
  * <dependency>
  *     <groupId>javax.json</groupId>
  *     <artifactId>javax.json-api</artifactId>
- *     <version>${jsr353-api.version}</version>
+ *     <version>1.0</version>
  * </dependency>
  *
  * <dependency>
  *     <groupId>org.glassfish</groupId>
  *     <artifactId>javax.json</artifactId>
- *     <version>${jsr353-ri.version}</version>
+ *     <version>1.1.4</version>
  *     <scope>runtime</scope>
  * </dependency>
  * }</pre>

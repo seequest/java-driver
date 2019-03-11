@@ -45,11 +45,20 @@ import javax.json.JsonStructure;
  * is declared in the driver-extras module. If you plan to follow this example, make sure to include
  * the following Maven dependencies in your project:
  *
- * <p><dependency> <groupId>javax.json</groupId> <artifactId>javax.json-api</artifactId>
- * <version>${jsr353-api.version}</version> </dependency>
+ * <pre>{
+ * <dependency>
+ *     <groupId>javax.json</groupId>
+ *     <artifactId>javax.json-api</artifactId>
+ *     <version>1.0</version>
+ * </dependency>
  *
- * <p><dependency> <groupId>org.glassfish</groupId> <artifactId>javax.json</artifactId>
- * <version>${jsr353-ri.version}</version> <scope>runtime</scope> </dependency> }</pre>
+ * <dependency>
+ *     <groupId>org.glassfish</groupId>
+ *     <artifactId>javax.json</artifactId>
+ *     <version>1.1.4</version>
+ *     <scope>runtime</scope>
+ * </dependency>
+ * }</pre>
  *
  * This example also uses the {@link com.datastax.oss.driver.api.querybuilder.QueryBuilder
  * QueryBuilder}; for examples using the "core" API, see {@link PlainTextJson} (they are easily

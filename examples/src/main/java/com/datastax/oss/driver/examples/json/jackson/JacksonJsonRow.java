@@ -41,9 +41,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * plan to follow this example, make sure to include the following Maven dependencies in your
  * project:
  *
- * <p><dependency> <groupId>com.fasterxml.jackson.core</groupId>
- * <artifactId>jackson-databind</artifactId> <version>${jackson.version}</version> </dependency> }
- * </pre>
+ * <pre>{@code
+ * <dependency>
+ *   <groupId>com.fasterxml.jackson.core</groupId>
+ *   <artifactId>jackson-databind</artifactId>
+ *   <version>2.9.8</version>
+ * </dependency>
+ * }</pre>
  *
  * This example also uses the {@link com.datastax.oss.driver.api.querybuilder.QueryBuilder
  * QueryBuilder}; for examples using the "core" API, see {@link PlainTextJson} (they are easily

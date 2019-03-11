@@ -20,7 +20,6 @@ import com.datastax.oss.driver.api.core.type.DataType;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import com.datastax.oss.driver.examples.json.exceptions.InvalidTypeException;
 import com.datastax.oss.driver.internal.core.util.Strings;
 import com.datastax.oss.protocol.internal.util.Bytes;
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -85,7 +84,7 @@ import javax.json.JsonWriterFactory;
  * <dependency>
  *   <groupId>org.glassfish</groupId>
  *   <artifactId>javax.json</artifactId>
- *   <version>1.0.4</version>
+ *   <version>1.1.4</version>
  * </dependency>
  * }</pre>
  */
@@ -127,17 +126,19 @@ public class Jsr353JsonCodec implements TypeCodec<JsonStructure> {
   @Override
   public ByteBuffer encode(
       @Nullable JsonStructure value, @NonNull ProtocolVersion protocolVersion) {
-    if (value == null) return null;
+    if (value == null) {
+      return null;
+    }
     try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
       try {
         JsonWriter writer = writerFactory.createWriter(baos);
         writer.write(value);
         return ByteBuffer.wrap(baos.toByteArray());
       } catch (JsonException e) {
-        throw new InvalidTypeException(e.getMessage(), e);
+        throw new IllegalArgumentException(e.getMessage(), e);
       }
     } catch (IOException e) {
-      throw new InvalidTypeException(e.getMessage(), e);
+      throw new IllegalArgumentException(e.getMessage(), e);
     }
   }
 
@@ -151,17 +152,19 @@ public class Jsr353JsonCodec implements TypeCodec<JsonStructure> {
         JsonReader reader = readerFactory.createReader(bais);
         return reader.read();
       } catch (JsonException e) {
-        throw new InvalidTypeException(e.getMessage(), e);
+        throw new IllegalArgumentException(e.getMessage(), e);
       }
     } catch (IOException e) {
-      throw new InvalidTypeException(e.getMessage(), e);
+      throw new IllegalArgumentException(e.getMessage(), e);
     }
   }
 
   @NonNull
   @Override
-  public String format(JsonStructure value) throws InvalidTypeException {
-    if (value == null) return "NULL";
+  public String format(JsonStructure value) throws IllegalArgumentException {
+    if (value == null) {
+      return "NULL";
+    }
     String json;
     try (StringWriter sw = new StringWriter()) {
       try {
@@ -169,25 +172,25 @@ public class Jsr353JsonCodec implements TypeCodec<JsonStructure> {
         writer.write(value);
         json = sw.toString();
       } catch (JsonException e) {
-        throw new InvalidTypeException(e.getMessage(), e);
+        throw new IllegalArgumentException(e.getMessage(), e);
       }
     } catch (IOException e) {
-      throw new InvalidTypeException(e.getMessage(), e);
+      throw new IllegalArgumentException(e.getMessage(), e);
     }
     return Strings.quote(json);
   }
 
   @Override
-  public JsonStructure parse(String value) throws InvalidTypeException {
+  public JsonStructure parse(String value) throws IllegalArgumentException {
     if (value == null || value.isEmpty() || value.equalsIgnoreCase("NULL")) return null;
     if (!Strings.isQuoted(value))
-      throw new InvalidTypeException("JSON strings must be enclosed by single quotes");
+      throw new IllegalArgumentException("JSON strings must be enclosed by single quotes");
     String json = Strings.unquote(value);
     try (StringReader sr = new StringReader(json)) {
       JsonReader reader = readerFactory.createReader(sr);
       return reader.read();
     } catch (JsonException e) {
-      throw new InvalidTypeException(e.getMessage(), e);
+      throw new IllegalArgumentException(e.getMessage(), e);
     }
   }
 }

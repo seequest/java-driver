@@ -20,7 +20,6 @@ import com.datastax.oss.driver.api.core.type.DataType;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import com.datastax.oss.driver.examples.json.exceptions.InvalidTypeException;
 import com.datastax.oss.driver.internal.core.util.Strings;
 import com.datastax.oss.protocol.internal.util.Bytes;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -43,13 +42,11 @@ import java.nio.ByteBuffer;
  * <p>Note that this codec requires the presence of Jackson library at runtime. If you use Maven,
  * this can be done by declaring the following dependency in your project:
  *
- * <p>
- *
  * <pre>{@code
  * <dependency>
  *   <groupId>com.fasterxml.jackson.core</groupId>
  *   <artifactId>jackson-databind</artifactId>
- *   <version>2.6.3</version>
+ *   <version>2.9.8</version>
  * </dependency>
  * }</pre>
  */
@@ -94,11 +91,13 @@ public class JacksonJsonCodec<T> implements TypeCodec<T> {
   @Nullable
   @Override
   public ByteBuffer encode(@Nullable T value, @NonNull ProtocolVersion protocolVersion) {
-    if (value == null) return null;
+    if (value == null) {
+      return null;
+    }
     try {
       return ByteBuffer.wrap(objectMapper.writeValueAsBytes(value));
     } catch (JsonProcessingException e) {
-      throw new InvalidTypeException(e.getMessage(), e);
+      throw new IllegalArgumentException(e.getMessage(), e);
     }
   }
 
@@ -109,19 +108,21 @@ public class JacksonJsonCodec<T> implements TypeCodec<T> {
     try {
       return objectMapper.readValue(Bytes.getArray(bytes), toJacksonJavaType());
     } catch (IOException e) {
-      throw new InvalidTypeException(e.getMessage(), e);
+      throw new IllegalArgumentException(e.getMessage(), e);
     }
   }
 
   @NonNull
   @Override
   public String format(T value) {
-    if (value == null) return "NULL";
+    if (value == null) {
+      return "NULL";
+    }
     String json;
     try {
       json = objectMapper.writeValueAsString(value);
     } catch (IOException e) {
-      throw new InvalidTypeException(e.getMessage(), e);
+      throw new IllegalArgumentException(e.getMessage(), e);
     }
     return Strings.quote(json);
   }
@@ -132,19 +133,19 @@ public class JacksonJsonCodec<T> implements TypeCodec<T> {
   public T parse(String value) {
     if (value == null || value.isEmpty() || value.equalsIgnoreCase("NULL")) return null;
     if (!Strings.isQuoted(value))
-      throw new InvalidTypeException("JSON strings must be enclosed by single quotes");
+      throw new IllegalArgumentException("JSON strings must be enclosed by single quotes");
     String json = Strings.unquote(value);
     try {
       return (T) objectMapper.readValue(json, toJacksonJavaType());
     } catch (IOException e) {
-      throw new InvalidTypeException(e.getMessage(), e);
+      throw new IllegalArgumentException(e.getMessage(), e);
     }
   }
 
   /**
-   * This method acts as a bridge between Guava's {@link
-   * com.datastax.oss.driver.api.core.type.reflect.GenericType GenericType} API, which is used by
-   * the driver, and Jackson's {@link JavaType} API.
+   * This method acts as a bridge between the driver's {@link
+   * com.datastax.oss.driver.api.core.type.reflect.GenericType GenericType} API and Jackson's {@link
+   * JavaType} API.
    *
    * @return A {@link JavaType} instance corresponding to the codec's {@link #getJavaType() Java
    *     type}.

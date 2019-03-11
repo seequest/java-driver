@@ -60,7 +60,7 @@ public class Blobs {
       retrieveSimpleColumn(session);
       retrieveMapColumn(session);
       insertConcurrent(session);
-      insertFromAndRetrieveToFile(session);
+      retrieveFromFileAndInsertInto(session);
     }
   }
 
@@ -218,7 +218,7 @@ public class Blobs {
     // required.
   }
 
-  private static void insertFromAndRetrieveToFile(CqlSession session) throws IOException {
+  private static void retrieveFromFileAndInsertInto(CqlSession session) throws IOException {
     ByteBuffer buffer = readAll(FILE);
     PreparedStatement prepared = session.prepare("INSERT INTO examples.blobs (k, b) VALUES (1, ?)");
     session.execute(prepared.bind(buffer));
