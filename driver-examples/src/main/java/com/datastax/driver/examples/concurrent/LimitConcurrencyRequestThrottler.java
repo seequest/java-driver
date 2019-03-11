@@ -33,8 +33,10 @@ import java.util.concurrent.ExecutionException;
  *
  * <p>This example makes usage of a {@link CqlSession#executeAsync(String)} method, which is
  * responsible for executing requests in a non-blocking way. It uses {@link
- * ConcurrencyLimitingRequestThrottler} to limit number of concurrent request to 32. It uses
- * advanced.throttler configuration to limit async concurrency (see application.conf)
+ * ConcurrencyLimitingRequestThrottler} to limit number of concurrent requests to 32. It uses
+ * advanced.throttler configuration to limit async concurrency (max-concurrent-requests = 32) The
+ * max-queue-size is set to 10000 to buffer TOTAL_NUMBER_OF_INSERTS in a queue in a case of initial
+ * delay. (see application.conf)
  *
  * <p>Preconditions: - a Cassandra session is running and accessible through the contacts points
  * identified by basic.contact-points (see application.conf)
