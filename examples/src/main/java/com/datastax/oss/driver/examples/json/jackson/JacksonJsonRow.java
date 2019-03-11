@@ -50,7 +50,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * translatable to the queries in this class).
  *
  * <p>Preconditions: - a Cassandra 2.2+ cluster is running and accessible through the contacts
- * points identified by basic.contact-points (see application.conf);
+ * points identified by basic.contact-points (see application.conf).
  *
  * <p>Side effects: - creates a new keyspace "examples" in the cluster. If a keyspace with this name
  * already exists, it will be reused; - creates a table "examples.json_jackson_row". If it already

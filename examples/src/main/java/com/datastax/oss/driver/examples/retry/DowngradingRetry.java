@@ -43,7 +43,7 @@ import com.datastax.oss.driver.api.core.servererrors.WriteTimeoutException;
  *
  * <ul>
  *   <li>An Apache Cassandra(R) cluster is running and accessible through the contacts points
- *       identified by basic.contact-points (see application.conf)
+ *       identified by basic.contact-points (see application.conf).
  * </ul>
  *
  * Side effects:

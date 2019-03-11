@@ -39,7 +39,7 @@ import java.util.concurrent.ExecutionException;
  * delay. (see application.conf)
  *
  * <p>Preconditions: - a Cassandra session is running and accessible through the contacts points
- * identified by basic.contact-points (see application.conf)
+ * identified by basic.contact-points (see application.conf).
  *
  * <p>Side effects: - creates a new keyspace "examples" in the session. If a keyspace with this name
  * already exists, it will be reused; - creates a table "examples.tbl_sample_kv". If it exist
@@ -69,7 +69,7 @@ public class LimitConcurrencyRequestThrottler {
     // Create list of pending CompletableFutures. We will add every operation returned from
     // executeAsync
     // Next, we will wait for completion of all TOTAL_NUMBER_OF_INSERTS
-    List<CompletableFuture> pending = new ArrayList<>();
+    List<CompletableFuture<?>> pending = new ArrayList<>();
 
     // For every i we will insert a record to db
     for (int i = 0; i < TOTAL_NUMBER_OF_INSERTS; i++) {

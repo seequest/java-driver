@@ -59,7 +59,7 @@ import org.glassfish.jersey.server.ResourceConfig;
  * Cassandra, and encodes it in HTTP URLs.
  *
  * <p>Preconditions: - a Cassandra cluster is running and accessible through the contacts points
- * identified by basic.contact-points (see application.conf)
+ * identified by basic.contact-points (see application.conf).
  *
  * <p>Side effects: - creates a new keyspace "examples" in the cluster. If a keyspace with this name
  * already exists, it will be reused; - creates a table "examples.forward_paging_rest_ui". If it

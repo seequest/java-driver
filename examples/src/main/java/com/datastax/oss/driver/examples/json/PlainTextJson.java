@@ -35,7 +35,7 @@ import com.datastax.oss.driver.api.querybuilder.select.Selector;
  * objects and custom codecs, refer to the other examples in this package.
  *
  * <p>Preconditions: - a Cassandra 2.2+ cluster is running and accessible through the contacts
- * points identified by basic.contact-points (see application.conf);
+ * points identified by basic.contact-points (see application.conf).
  *
  * <p>Side effects: - creates a new keyspace "examples" in the cluster. If a keyspace with this name
  * already exists, it will be reused; - creates a table "examples.querybuilder_json". If it already

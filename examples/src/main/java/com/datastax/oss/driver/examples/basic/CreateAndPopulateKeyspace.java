@@ -24,7 +24,7 @@ import com.datastax.oss.driver.api.core.cql.Row;
  * Creates a keyspace and tables, and loads some data into them.
  *
  * <p>Preconditions: - a Cassandra session is running and accessible through the contacts points
- * identified by basic.contact-points (see application.conf)
+ * identified by basic.contact-points (see application.conf).
  *
  * <p>Side effects: - creates a new keyspace "simplex" in the session. If a keyspace with this name
  * already exists, it will be reused; - creates two tables "simplex.songs" and "simplex.playlists".

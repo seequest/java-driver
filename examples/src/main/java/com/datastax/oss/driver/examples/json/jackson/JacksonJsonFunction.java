@@ -57,7 +57,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * translatable to the queries in this class).
  *
  * <p>Preconditions: - a Cassandra cluster is running and accessible through the contacts points
- * identified by basic.contact-points (see application.conf);
+ * identified by basic.contact-points (see application.conf).
  *
  * <p>Side effects: - creates a new keyspace "examples" in the cluster. If a keyspace with this name
  * already exists, it will be reused; - creates a user-defined type (UDT)

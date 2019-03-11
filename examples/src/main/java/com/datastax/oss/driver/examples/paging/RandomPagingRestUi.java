@@ -65,7 +65,7 @@ import org.glassfish.jersey.server.ResourceConfig;
  * are unlikely to browse past page 10, you only need to retrieve at most 100 rows.
  *
  * <p>Preconditions: - a Cassandra cluster is running and accessible through the contacts points
- * identified by basic.contact-points (see application.conf)
+ * identified by basic.contact-points (see application.conf).
  *
  * <p>Side effects: - creates a new keyspace "examples" in the cluster. If a keyspace with this name
  * already exists, it will be reused; - creates a table "examples.random_paging_rest_ui". If it

@@ -27,7 +27,7 @@ import com.datastax.oss.driver.api.core.metadata.schema.TableMetadata;
  * schema (what keyspaces, tables, etc. exist in this cluster).
  *
  * <p>Preconditions: - a Cassandra cluster is running and accessible through the contacts points
- * identified by basic.contact-points (see application.conf)
+ * identified by basic.contact-points (see application.conf).
  *
  * <p>Side effects: none.
  *
