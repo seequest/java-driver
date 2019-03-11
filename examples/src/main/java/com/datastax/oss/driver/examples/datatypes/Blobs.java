@@ -75,14 +75,14 @@ public class Blobs {
   private static void allocateAndInsert(CqlSession session) {
     // One way to get a byte buffer is to allocate it and fill it yourself:
     ByteBuffer buffer = ByteBuffer.allocate(16);
-    while (buffer.hasRemaining()) buffer.put((byte) 0xFF);
+    while (buffer.hasRemaining()) {
+      buffer.put((byte) 0xFF);
+    }
 
     // Don't forget to flip! The driver expects a buffer that is ready for reading. That is, it will
-    // consider all
-    // the data between buffer.position() and buffer.limit().
+    // consider all the data between buffer.position() and buffer.limit().
     // Right now we are positioned at the end because we just finished writing, so if we passed the
-    // buffer as-is it
-    // would appear to be empty:
+    // buffer as-is it would appear to be empty:
     assert buffer.limit() - buffer.position() == 0;
 
     buffer.flip();
