@@ -110,7 +110,15 @@
             <artifactId>javax.annotation-api</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
     </dependencies>
+
+
 
     <build>
         <plugins>
