@@ -38,7 +38,7 @@
     <module>test-infra</module>
     <module>integration-tests</module>
     <module>distribution</module>
-    <module>driver-examples</module>
+    <module>examples</module>
   </modules>
 
   <properties>
