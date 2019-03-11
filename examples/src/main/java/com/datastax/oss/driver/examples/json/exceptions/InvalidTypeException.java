@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datastax.driver.examples.json.exceptions;
+package com.datastax.oss.driver.examples.json.exceptions;
 
 public class InvalidTypeException extends RuntimeException {
 

@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datastax.driver.examples.json.jsr;
+package com.datastax.oss.driver.examples.json.jsr;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.bindMarker;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.insertInto;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.selectFrom;
 
-import com.datastax.driver.examples.json.PlainTextJson;
-import com.datastax.driver.examples.json.codecs.Jsr353JsonCodec;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
@@ -29,6 +27,8 @@ import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.Statement;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
+import com.datastax.oss.driver.examples.json.PlainTextJson;
+import com.datastax.oss.driver.examples.json.codecs.Jsr353JsonCodec;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonStructure;

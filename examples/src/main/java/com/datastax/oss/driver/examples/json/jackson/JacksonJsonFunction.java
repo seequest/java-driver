@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datastax.driver.examples.json.jsr;
+package com.datastax.oss.driver.examples.json.jackson;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.bindMarker;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.function;
@@ -21,35 +21,36 @@ import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.insertInto;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.selectFrom;
 
-import com.datastax.driver.examples.json.PlainTextJson;
-import com.datastax.driver.examples.json.codecs.Jsr353JsonCodec;
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
+import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.cql.Statement;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.querybuilder.select.Selector;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonStructure;
+import com.datastax.oss.driver.examples.json.PlainTextJson;
+import com.datastax.oss.driver.examples.json.codecs.JacksonJsonCodec;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Illustrates how to map a single table column of an arbitrary type to a Java object using the <a
- * href="https://jcp.org/en/jsr/detail?id=353">Java API for JSON processing</a>, and leveraging the
- * {@code toJson()} and {@code fromJson()} functions introduced in Cassandra 2.2.
+ * href="http://wiki.fasterxml.com/JacksonHome">Jackson</a> library, and leveraging the {@code
+ * toJson()} and {@code fromJson()} functions introduced in Cassandra 2.2.
  *
- * <p>This example makes usage of a custom {@link TypeCodec codec}, {@link Jsr353JsonCodec}, which
- * is declared in the driver-extras module. If you plan to follow this example, make sure to include
- * the following Maven dependencies in your project:
+ * <p>This example makes usage of a custom {@link TypeCodec codec}, {@link JacksonJsonCodec}. If you
+ * plan to follow this example, make sure to include the following Maven dependencies in your
+ * project:
  *
- * <p><dependency> <groupId>javax.json</groupId> <artifactId>javax.json-api</artifactId>
- * <version>${jsr353-api.version}</version> </dependency>
- *
- * <p><dependency> <groupId>org.glassfish</groupId> <artifactId>javax.json</artifactId>
- * <version>${jsr353-ri.version}</version> <scope>runtime</scope> </dependency> }</pre>
+ * <p><dependency> <groupId>com.fasterxml.jackson.core</groupId>
+ * <artifactId>jackson-databind</artifactId> <version>${jackson.version}</version> </dependency> }
+ * </pre>
  *
  * This example also uses the {@link com.datastax.oss.driver.api.querybuilder.QueryBuilder
  * QueryBuilder}; for examples using the "core" API, see {@link PlainTextJson} (they are easily
@@ -60,21 +61,24 @@ import javax.json.JsonStructure;
  *
  * <p>Side effects: - creates a new keyspace "examples" in the cluster. If a keyspace with this name
  * already exists, it will be reused; - creates a user-defined type (UDT)
- * "examples.json_jsr353_function_user". If it already exists, it will be reused; - creates a table
- * "examples.json_jsr353_function". If it already exists, it will be reused; - inserts data in the
+ * "examples.json_jackson_function_user". If it already exists, it will be reused; - creates a table
+ * "examples.json_jackson_function". If it already exists, it will be reused; - inserts data in the
  * table.
  *
  * @see <a href="http://www.datastax.com/dev/blog/whats-new-in-cassandra-2-2-json-support">What’s
  *     New in Cassandra 2.2: JSON Support</a>
  */
-public class Jsr353JsonFunction {
+public class JacksonJsonFunction {
 
-  // A codec to convert JSON payloads into JsonObject instances;
-  private static final Jsr353JsonCodec USER_CODEC = new Jsr353JsonCodec();
+  // A codec to convert JSON payloads into User instances;
+  private static final TypeCodec<User> USER_CODEC = new JacksonJsonCodec<>(User.class);
+  // A codec to convert generic JSON payloads into JsonNode instances
+
+  private static final TypeCodec<JsonNode> JSON_NODE_CODEC = new JacksonJsonCodec<>(JsonNode.class);
 
   public static void main(String[] args) {
-    try (CqlSession session = new CqlSessionBuilder().addTypeCodecs(USER_CODEC).build()) {
-
+    try (CqlSession session =
+        new CqlSessionBuilder().addTypeCodecs(USER_CODEC, JSON_NODE_CODEC).build()) {
       createSchema(session);
       insertFromJson(session);
       selectToJson(session);
@@ -86,59 +90,60 @@ public class Jsr353JsonFunction {
         "CREATE KEYSPACE IF NOT EXISTS examples "
             + "WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}");
     session.execute(
-        "CREATE TYPE IF NOT EXISTS examples.json_jsr353_function_user(" + "name text, age int)");
+        "CREATE TYPE IF NOT EXISTS examples.json_jackson_function_user(" + "name text, age int)");
     session.execute(
-        "CREATE TABLE IF NOT EXISTS examples.json_jsr353_function("
-            + "id int PRIMARY KEY, user frozen<json_jsr353_function_user>, scores map<varchar,float>)");
+        "CREATE TABLE IF NOT EXISTS examples.json_jackson_function("
+            + "id int PRIMARY KEY, user frozen<json_jackson_function_user>, scores map<varchar,float>)");
   }
 
   // Mapping JSON payloads to table columns of arbitrary types,
   // using fromJson() function
   private static void insertFromJson(CqlSession session) {
 
-    JsonObject alice = Json.createObjectBuilder().add("name", "alice").add("age", 30).build();
+    User alice = new User("alice", 30);
+    User bob = new User("bob", 35);
 
-    JsonObject bob = Json.createObjectBuilder().add("name", "bob").add("age", 35).build();
-
-    JsonObject aliceScores =
-        Json.createObjectBuilder().add("call_of_duty", 4.8).add("pokemon_go", 9.7).build();
-
-    JsonObject bobScores =
-        Json.createObjectBuilder().add("zelda", 8.3).add("pokemon_go", 12.4).build();
+    ObjectNode aliceScores =
+        JsonNodeFactory.instance.objectNode().put("call_of_duty", 4.8).put("pokemon_go", 9.7);
+    ObjectNode bobScores =
+        JsonNodeFactory.instance.objectNode().put("zelda", 8.3).put("pokemon_go", 12.4);
 
     // Build and execute a simple statement
     Statement stmt =
-        insertInto("examples", "json_jsr353_function")
+        insertInto("examples", "json_jackson_function")
             .value("id", literal(1))
-            // client-side, the JsonObject will be converted into a JSON String;
+            // client-side, the User object will be converted into a JSON String;
             // then, server-side, the fromJson() function will convert that JSON string
-            // into an instance of the json_jsr353_function_user user-defined type (UDT),
+            // into an instance of the json_jackson_function_user user-defined type (UDT),
             // which will be persisted into the column "user"
             .value("user", function(CqlIdentifier.fromCql("fromJson"), literal(alice, USER_CODEC)))
             // same thing, but this time converting from
-            // a JsonObject to a JSON string, then from this string to a map<varchar,float>
+            // a generic JsonNode to a JSON string, then from this string to a map<varchar,float>
             .value(
                 "scores",
-                function(CqlIdentifier.fromCql("fromJson"), literal(aliceScores, USER_CODEC)))
+                function(CqlIdentifier.fromCql("fromJson"), literal(aliceScores, JSON_NODE_CODEC)))
             .build();
+    System.out.println(((SimpleStatement) stmt).getQuery());
     session.execute(stmt);
+    System.out.println("after");
 
     // The JSON object can be a bound value if the statement is prepared
     // (subsequent calls to the prepare() method will return cached statement)
     PreparedStatement pst =
         session.prepare(
-            insertInto("examples", "json_jsr353_function")
+            insertInto("examples", "json_jackson_function")
                 .value("id", bindMarker("id"))
                 .value("user", function(CqlIdentifier.fromCql("fromJson"), bindMarker("user")))
                 .value("scores", function(CqlIdentifier.fromCql("fromJson"), bindMarker("scores")))
                 .build());
+    System.out.println(pst.getQuery());
     session.execute(
         pst.bind()
             .setInt("id", 2)
+            .set("user", bob, User.class)
             // note that the codec requires that the type passed to the set() method
-            // be always JsonStructure, and not a subclass of it, such as JsonObject
-            .set("user", bob, JsonStructure.class)
-            .set("scores", bobScores, JsonStructure.class));
+            // be always JsonNode, and not a subclass of it, such as ObjectNode
+            .set("scores", bobScores, JsonNode.class));
   }
 
   // Retrieving JSON payloads from table columns of arbitrary types,
@@ -146,7 +151,7 @@ public class Jsr353JsonFunction {
   private static void selectToJson(CqlSession session) {
 
     Statement stmt =
-        selectFrom("examples", "json_jsr353_function")
+        selectFrom("examples", "json_jackson_function")
             .column("id")
             .function(CqlIdentifier.fromCql("toJson"), Selector.column("user"))
             .as("user")
@@ -155,20 +160,20 @@ public class Jsr353JsonFunction {
             .whereColumn("id")
             .in(literal(1), literal(2))
             .build();
+    System.out.println(((SimpleStatement) stmt).getQuery());
 
     ResultSet rows = session.execute(stmt);
 
     for (Row row : rows) {
       int id = row.getInt("id");
-      // retrieve the JSON payload and convert it to a JsonObject instance
-      // note that the codec requires that the type passed to the get() method
-      // be always JsonStructure, and not a subclass of it, such as JsonObject,
-      // hence the need to downcast to JsonObject manually
-      JsonObject user = (JsonObject) row.get("user", JsonStructure.class);
+      // retrieve the JSON payload and convert it to a User instance
+      User user = row.get("user", User.class);
       // it is also possible to retrieve the raw JSON payload
       String userJson = row.getString("user");
-      // retrieve the JSON payload and convert it to a JsonObject instance
-      JsonObject scores = (JsonObject) row.get("scores", JsonStructure.class);
+      // retrieve the JSON payload and convert it to a JsonNode instance
+      // note that the codec requires that the type passed to the get() method
+      // be always JsonNode, and not a subclass of it, such as ObjectNode
+      JsonNode scores = row.get("scores", JsonNode.class);
       // it is also possible to retrieve the raw JSON payload
       String scoresJson = row.getString("scores");
       System.out.printf(
@@ -179,6 +184,33 @@ public class Jsr353JsonFunction {
               + "scores       %s%n"
               + "scores (raw) %s%n%n",
           id, user, userJson, scores, scoresJson);
+    }
+  }
+
+  @SuppressWarnings("unused")
+  public static class User {
+
+    private final String name;
+
+    private final int age;
+
+    @JsonCreator
+    public User(@JsonProperty("name") String name, @JsonProperty("age") int age) {
+      this.name = name;
+      this.age = age;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public int getAge() {
+      return age;
+    }
+
+    @Override
+    public String toString() {
+      return String.format("%s (%s)", name, age);
     }
   }
 }

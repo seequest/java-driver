@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datastax.driver.examples.retry;
+package com.datastax.oss.driver.examples.retry;
 
 import static com.datastax.oss.driver.api.core.DefaultConsistencyLevel.QUORUM;
 import static com.datastax.oss.driver.api.core.cql.DefaultBatchType.UNLOGGED;
