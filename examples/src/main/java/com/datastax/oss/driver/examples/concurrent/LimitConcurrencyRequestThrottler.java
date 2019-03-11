@@ -85,7 +85,7 @@ public class LimitConcurrencyRequestThrottler {
     }
 
     // Wait for completion of all TOTAL_NUMBER_OF_INSERTS pending requests
-    CompletableFuture.allOf(pending.toArray(new CompletableFuture[pending.size()])).get();
+    CompletableFuture.allOf(pending.toArray(new CompletableFuture[0])).get();
 
     System.out.println(
         String.format(
