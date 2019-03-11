@@ -37,8 +37,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * into a Java object using the <a href="http://wiki.fasterxml.com/JacksonHome">Jackson</a> library.
  *
  * <p>This example makes usage of a custom {@link TypeCodec codec}, {@link JacksonJsonCodec}, which
- * is implemented in the examples module. If you plan to follow this example, make sure to include
- * the following Maven dependencies in your project:
+ * is implemented in the java-driver-examples module. If you plan to follow this example, make sure
+ * to include the following Maven dependencies in your project:
  *
  * <pre>{@code
  * <dependency>

@@ -26,9 +26,9 @@
         <version>4.0.0-rc2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>examples</artifactId>
-    <name>DataStax Java Driver for Apache Cassandra - Examples</name>
-    <description>A collection of examples to demonstrate DataStax Java Driver for Apache Cassandra.</description>
+    <artifactId>java-driver-examples</artifactId>
+    <name>DataStax Java driver for Apache Cassandra(R) - examples.</name>
+    <description>A collection of examples to demonstrate DataStax Java Driver for Apache Cassandra(R).</description>
 
 
     <dependencies>
