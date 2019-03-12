@@ -42,8 +42,8 @@ import javax.json.JsonStructure;
  * {@code toJson()} and {@code fromJson()} functions introduced in Cassandra 2.2.
  *
  * <p>This example makes usage of a custom {@link TypeCodec codec}, {@link Jsr353JsonCodec}, which
- * is declared in the driver-extras module. If you plan to follow this example, make sure to include
- * the following Maven dependencies in your project:
+ * is declared in the java-driver-examples module. If you plan to follow this example, make sure to
+ * include the following Maven dependencies in your project:
  *
  * <pre>{
  * <dependency>
@@ -95,7 +95,7 @@ public class Jsr353JsonFunction {
         "CREATE KEYSPACE IF NOT EXISTS examples "
             + "WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}");
     session.execute(
-        "CREATE TYPE IF NOT EXISTS examples.json_jsr353_function_user(" + "name text, age int)");
+        "CREATE TYPE IF NOT EXISTS examples.json_jsr353_function_user(name text, age int)");
     session.execute(
         "CREATE TABLE IF NOT EXISTS examples.json_jsr353_function("
             + "id int PRIMARY KEY, user frozen<json_jsr353_function_user>, scores map<varchar,float>)");

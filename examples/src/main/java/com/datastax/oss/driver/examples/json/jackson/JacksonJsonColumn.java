@@ -128,7 +128,7 @@ public class JacksonJsonColumn {
       // it is also possible to retrieve the raw JSON payload
       String json = row.getString("json");
       System.out.printf(
-          "Retrieved row:%n" + "id           %d%n" + "user         %s%n" + "user (raw)   %s%n%n",
+          "Retrieved row:%n id           %d%n user         %s%n user (raw)   %s%n%n",
           id, user, json);
     }
   }

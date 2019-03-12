@@ -39,8 +39,8 @@ import javax.json.JsonStructure;
  * processing</a>.
  *
  * <p>This example makes usage of a custom {@link TypeCodec codec}, {@link Jsr353JsonCodec}, which
- * is declared in the driver-extras module. If you plan to follow this example, make sure to include
- * the following Maven dependencies in your project:
+ * is declared in the java-driver-examples module. If you plan to follow this example, make sure to
+ * include the following Maven dependencies in your project:
  *
  * <pre>{@code
  * <dependency>
@@ -69,6 +69,7 @@ import javax.json.JsonStructure;
  * exists, it will be reused; - inserts data in the table.
  */
 public class Jsr353JsonColumn {
+
   // A codec to convert JSON payloads into JsonObject instances;
   private static final Jsr353JsonCodec USER_CODEC = new Jsr353JsonCodec();
 
@@ -144,7 +145,7 @@ public class Jsr353JsonColumn {
       // it is also possible to retrieve the raw JSON payload
       String json = row.getString("json");
       System.out.printf(
-          "Retrieved row:%n" + "id           %d%n" + "user         %s%n" + "user (raw)   %s%n%n",
+          "Retrieved row:%n id           %d%n user         %s%n user (raw)   %s%n%n",
           id, user, json);
     }
   }

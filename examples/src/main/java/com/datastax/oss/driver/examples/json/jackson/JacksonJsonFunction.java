@@ -76,8 +76,8 @@ public class JacksonJsonFunction {
 
   // A codec to convert JSON payloads into User instances;
   private static final TypeCodec<User> USER_CODEC = new JacksonJsonCodec<>(User.class);
-  // A codec to convert generic JSON payloads into JsonNode instances
 
+  // A codec to convert generic JSON payloads into JsonNode instances
   private static final TypeCodec<JsonNode> JSON_NODE_CODEC = new JacksonJsonCodec<>(JsonNode.class);
 
   public static void main(String[] args) {

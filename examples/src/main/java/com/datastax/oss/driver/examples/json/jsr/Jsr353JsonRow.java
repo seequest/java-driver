@@ -39,8 +39,8 @@ import javax.json.JsonStructure;
  * {@code SELECT JSON} and {@code INSERT JSON} syntaxes introduced in Cassandra 2.2.
  *
  * <p>This example makes usage of a custom {@link TypeCodec codec}, {@link Jsr353JsonCodec}, which
- * is declared in the driver-extras module. If you plan to follow this example, make sure to include
- * the following Maven dependencies in your project:
+ * is declared in the java-driver-examples module. If you plan to follow this example, make sure to
+ * include the following Maven dependencies in your project:
  *
  * <pre>{@code
  * <dependency>

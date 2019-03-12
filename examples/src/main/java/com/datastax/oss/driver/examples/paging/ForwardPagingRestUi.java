@@ -240,6 +240,7 @@ public class ForwardPagingRestUi {
     }
   }
 
+  @SuppressWarnings("unused")
   public static class UserVideosResponse {
 
     private final List<UserVideo> videos;
@@ -251,17 +252,16 @@ public class ForwardPagingRestUi {
       this.nextPage = nextPage;
     }
 
-    @SuppressWarnings("unused")
     public List<UserVideo> getVideos() {
       return videos;
     }
 
-    @SuppressWarnings("unused")
     public URI getNextPage() {
       return nextPage;
     }
   }
 
+  @SuppressWarnings("unused")
   public static class UserVideo {
 
     private final int videoid;
@@ -276,7 +276,6 @@ public class ForwardPagingRestUi {
       this.added = added;
     }
 
-    @SuppressWarnings("unused")
     public int getVideoid() {
       return videoid;
     }
@@ -285,7 +284,6 @@ public class ForwardPagingRestUi {
       return title;
     }
 
-    @SuppressWarnings("unused")
     public Instant getAdded() {
       return added;
     }

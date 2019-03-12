@@ -252,6 +252,7 @@ public class RandomPagingRestUi {
     return !rs.iterator().hasNext();
   }
 
+  @SuppressWarnings("unused")
   public static class UserVideosResponse {
 
     private final List<UserVideo> videos;
@@ -266,22 +267,20 @@ public class RandomPagingRestUi {
       this.nextPage = nextPage;
     }
 
-    @SuppressWarnings("unused")
     public List<UserVideo> getVideos() {
       return videos;
     }
 
-    @SuppressWarnings("unused")
     public URI getPreviousPage() {
       return previousPage;
     }
 
-    @SuppressWarnings("unused")
     public URI getNextPage() {
       return nextPage;
     }
   }
 
+  @SuppressWarnings("unused")
   public static class UserVideo {
 
     private final int videoid;
@@ -296,7 +295,6 @@ public class RandomPagingRestUi {
       this.added = added;
     }
 
-    @SuppressWarnings("unused")
     public int getVideoid() {
       return videoid;
     }
@@ -305,7 +303,6 @@ public class RandomPagingRestUi {
       return title;
     }
 
-    @SuppressWarnings("unused")
     public Instant getAdded() {
       return added;
     }
