@@ -38,8 +38,12 @@ import java.util.concurrent.ExecutionException;
  * max-queue-size is set to 10000 to buffer TOTAL_NUMBER_OF_INSERTS in a queue in a case of initial
  * delay. (see application.conf)
  *
- * <p>Preconditions: - a Cassandra session is running and accessible through the contacts points
- * identified by basic.contact-points (see application.conf).
+ * <p>Preconditions:
+ *
+ * <ul>
+ *   <li>An Apache Cassandra(R) cluster is running and accessible through the contacts points
+ *       identified by basic.contact-points (see application.conf).
+ * </ul>
  *
  * <p>Side effects:
  *

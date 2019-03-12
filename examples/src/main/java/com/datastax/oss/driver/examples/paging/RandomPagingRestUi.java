@@ -64,8 +64,12 @@ import org.glassfish.jersey.server.ResourceConfig;
  * acceptable for some use cases; for example, if you show 10 results per page and you think users
  * are unlikely to browse past page 10, you only need to retrieve at most 100 rows.
  *
- * <p>Preconditions: - a Cassandra cluster is running and accessible through the contacts points
- * identified by basic.contact-points (see application.conf).
+ * <p>Preconditions:
+ *
+ * <ul>
+ *   <li>An Apache Cassandra(R) cluster is running and accessible through the contacts points
+ *       identified by basic.contact-points (see application.conf).
+ * </ul>
  *
  * <p>Side effects:
  *

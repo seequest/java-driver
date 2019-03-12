@@ -40,8 +40,13 @@ import java.util.Objects;
  * with the capacity, limit and position properties. <a
  * href="http://tutorials.jenkov.com/java-nio/buffers.html">This tutorial</a> might also help.
  *
- * <p>Preconditions: - a Cassandra cluster is running and accessible through the contacts points
- * identified by basic.contact-points (see application.conf) - FILE references an existing file.
+ * <p>Preconditions:
+ *
+ * <ul>
+ *   <li>An Apache Cassandra(R) cluster is running and accessible through the contacts points
+ *       identified by basic.contact-points (see application.conf).
+ *   <li>FILE references an existing file.
+ * </ul>
  *
  * <p>Side effects:
  *

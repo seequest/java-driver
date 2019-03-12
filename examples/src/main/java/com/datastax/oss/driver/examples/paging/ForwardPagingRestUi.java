@@ -58,8 +58,12 @@ import org.glassfish.jersey.server.ResourceConfig;
  * <p>Navigation is forward-only. The implementation relies on the paging state returned by
  * Cassandra, and encodes it in HTTP URLs.
  *
- * <p>Preconditions: - a Cassandra cluster is running and accessible through the contacts points
- * identified by basic.contact-points (see application.conf).
+ * <p>Preconditions:
+ *
+ * <ul>
+ *   <li>An Apache Cassandra(R) cluster is running and accessible through the contacts points
+ *       identified by basic.contact-points (see application.conf).
+ * </ul>
  *
  * <p>Side effects:
  *

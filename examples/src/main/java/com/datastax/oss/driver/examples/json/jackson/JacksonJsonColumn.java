@@ -52,8 +52,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * QueryBuilder}; for examples using the "core" API, see {@link PlainTextJson} (they are easily
  * translatable to the queries in this class).
  *
- * <p>Preconditions: - a Cassandra cluster is running and accessible through the contacts points
- * identified by basic.contact-points (see application.conf).
+ * <p>Preconditions:
+ *
+ * <ul>
+ *   <li>An Apache Cassandra(R) cluster is running and accessible through the contacts points
+ *       identified by basic.contact-points (see application.conf).
+ * </ul>
  *
  * <p>Side effects:
  *

@@ -34,8 +34,12 @@ import com.datastax.oss.driver.api.querybuilder.select.Selector;
  * Illustrates basic JSON support with plain JSON strings. For more advanced examples using complex
  * objects and custom codecs, refer to the other examples in this package.
  *
- * <p>Preconditions: - a Cassandra 2.2+ cluster is running and accessible through the contacts
- * points identified by basic.contact-points (see application.conf).
+ * <p>Preconditions:
+ *
+ * <ul>
+ *   <li>An Apache Cassandra(R) cluster is running and accessible through the contacts points
+ *       identified by basic.contact-points (see application.conf).
+ * </ul>
  *
  * <p>Side effects:
  *

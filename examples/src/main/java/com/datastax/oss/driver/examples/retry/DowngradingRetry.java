@@ -46,7 +46,7 @@ import com.datastax.oss.driver.api.core.servererrors.WriteTimeoutException;
  *       identified by basic.contact-points (see application.conf).
  * </ul>
  *
- * Side effects:
+ * <p>Side effects:
  *
  * <ol>
  *   <li>Creates a new keyspace {@code downgrading} in the cluster, with replication factor 3. If a

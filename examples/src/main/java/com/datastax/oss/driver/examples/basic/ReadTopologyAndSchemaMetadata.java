@@ -26,8 +26,12 @@ import com.datastax.oss.driver.api.core.metadata.schema.TableMetadata;
  * Gathers information about a Cassandra cluster's topology (which nodes belong to the cluster) and
  * schema (what keyspaces, tables, etc. exist in this cluster).
  *
- * <p>Preconditions: - a Cassandra cluster is running and accessible through the contacts points
- * identified by basic.contact-points (see application.conf).
+ * <p>Preconditions:
+ *
+ * <ul>
+ *   <li>An Apache Cassandra(R) cluster is running and accessible through the contacts points
+ *       identified by basic.contact-points (see application.conf).
+ * </ul>
  *
  * <p>Side effects: none.
  *
