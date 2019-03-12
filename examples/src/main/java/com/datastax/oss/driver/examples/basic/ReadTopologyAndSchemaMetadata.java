@@ -49,7 +49,7 @@ public class ReadTopologyAndSchemaMetadata {
       for (Node node : metadata.getNodes().values()) {
         System.out.printf(
             "Datatacenter: %s; Host: %s; Rack: %s%n",
-            node.getDatacenter(), node.getConnectAddress(), node.getRack());
+            node.getDatacenter(), node.getEndPoint(), node.getRack());
       }
 
       for (KeyspaceMetadata keyspace : metadata.getKeyspaces().values()) {

@@ -98,9 +98,8 @@ public class JacksonJsonRow {
     // Build and execute a simple statement
     Statement stmt =
         insertInto("examples", "json_jackson_row")
-            .json("")
-            //            .json(new User(1, "alice", 30))
-            .build(); // todo implement
+            .json(new User(1, "alice", 30), USER_CODEC)
+            .build();
     session.execute(stmt);
 
     // The JSON object can be a bound value if the statement is prepared
