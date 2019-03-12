@@ -146,7 +146,9 @@ public class Jsr353JsonCodec implements TypeCodec<JsonStructure> {
   @Override
   public JsonStructure decode(
       @Nullable ByteBuffer bytes, @NonNull ProtocolVersion protocolVersion) {
-    if (bytes == null) return null;
+    if (bytes == null) {
+      return null;
+    }
     try (ByteArrayInputStream bais = new ByteArrayInputStream(Bytes.getArray(bytes))) {
       try {
         JsonReader reader = readerFactory.createReader(bais);
@@ -182,9 +184,12 @@ public class Jsr353JsonCodec implements TypeCodec<JsonStructure> {
 
   @Override
   public JsonStructure parse(String value) throws IllegalArgumentException {
-    if (value == null || value.isEmpty() || value.equalsIgnoreCase("NULL")) return null;
-    if (!Strings.isQuoted(value))
+    if (value == null || value.isEmpty() || value.equalsIgnoreCase("NULL")) {
+      return null;
+    }
+    if (!Strings.isQuoted(value)) {
       throw new IllegalArgumentException("JSON strings must be enclosed by single quotes");
+    }
     String json = Strings.unquote(value);
     try (StringReader sr = new StringReader(json)) {
       JsonReader reader = readerFactory.createReader(sr);

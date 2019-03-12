@@ -118,8 +118,7 @@ public class Jsr353JsonRow {
 
     // The JSON object can be a bound value if the statement is prepared
     // (we use a local variable here for the sake of example, but in a real application you would
-    // cache and reuse
-    // the prepared statement)
+    // cache and reuse the prepared statement)
     PreparedStatement pst =
         session.prepare(insertInto("examples", "json_jsr353_row").json(bindMarker("user")).build());
     session.execute(

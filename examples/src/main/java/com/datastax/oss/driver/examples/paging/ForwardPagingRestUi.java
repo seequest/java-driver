@@ -237,7 +237,9 @@ public class ForwardPagingRestUi {
 
           // Make sure we don't go past the current page (we don't want the driver to fetch the next
           // one)
-          if (--remaining == 0) break;
+          if (--remaining == 0) {
+            break;
+          }
         }
       }
 

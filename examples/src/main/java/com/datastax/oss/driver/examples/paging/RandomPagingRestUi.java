@@ -231,7 +231,9 @@ public class RandomPagingRestUi {
 
       Statement statement = videosByUser.bind(userid).setPageSize(FETCH_SIZE);
 
-      if (page == null) page = 1;
+      if (page == null) {
+        page = 1;
+      }
       ResultSet rs = pager.skipTo(statement, page);
 
       List<UserVideo> videos;
@@ -246,7 +248,9 @@ public class RandomPagingRestUi {
               new UserVideo(row.getInt("videoid"), row.getString("title"), row.getInstant("added"));
           videos.add(video);
 
-          if (--remaining == 0) break;
+          if (--remaining == 0) {
+            break;
+          }
         }
       }
 
@@ -333,8 +337,7 @@ public class RandomPagingRestUi {
 
     ResultSet skipTo(Statement statement, int displayPage) {
       // Absolute index of the first row we want to display on the web page. Our goal is that
-      // rs.next() returns
-      // that row.
+      // rs.next() returns that row.
       int targetRow = (displayPage - 1) * pageSize;
 
       ResultSet rs = session.execute(statement);
@@ -359,7 +362,9 @@ public class RandomPagingRestUi {
 
       if (currentRow < targetRow) {
         for (@SuppressWarnings("unused") Row row : rs) {
-          if (++currentRow == targetRow) break;
+          if (++currentRow == targetRow) {
+            break;
+          }
         }
       }
       // If targetRow is past the end, rs will be exhausted.

@@ -104,7 +104,9 @@ public class JacksonJsonCodec<T> implements TypeCodec<T> {
   @Nullable
   @Override
   public T decode(@Nullable ByteBuffer bytes, @NonNull ProtocolVersion protocolVersion) {
-    if (bytes == null) return null;
+    if (bytes == null) {
+      return null;
+    }
     try {
       return objectMapper.readValue(Bytes.getArray(bytes), toJacksonJavaType());
     } catch (IOException e) {
@@ -131,9 +133,12 @@ public class JacksonJsonCodec<T> implements TypeCodec<T> {
   @Override
   @SuppressWarnings("unchecked")
   public T parse(String value) {
-    if (value == null || value.isEmpty() || value.equalsIgnoreCase("NULL")) return null;
-    if (!Strings.isQuoted(value))
+    if (value == null || value.isEmpty() || value.equalsIgnoreCase("NULL")) {
+      return null;
+    }
+    if (!Strings.isQuoted(value)) {
       throw new IllegalArgumentException("JSON strings must be enclosed by single quotes");
+    }
     String json = Strings.unquote(value);
     try {
       return (T) objectMapper.readValue(json, toJacksonJavaType());

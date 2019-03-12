@@ -75,8 +75,8 @@ public class LimitConcurrencyRequestThrottler {
                 .value("id", bindMarker("id"))
                 .value("value", bindMarker("value"))
                 .build());
-    // Create list of pending CompletableFutures. We will add every operation returned from
-    // executeAsync
+    // Create list of pending CompletableFutures.
+    // We will add every operation returned from executeAsync.
     // Next, we will wait for completion of all TOTAL_NUMBER_OF_INSERTS
     List<CompletableFuture<?>> pending = new ArrayList<>();
 

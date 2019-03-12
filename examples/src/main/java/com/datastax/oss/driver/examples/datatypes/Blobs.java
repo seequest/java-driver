@@ -119,8 +119,7 @@ public class Blobs {
     assert buffer.limit() - buffer.position() == 16;
 
     // One way to read from the buffer is to use absolute getters. Do NOT start reading at index 0,
-    // as the buffer
-    // might start at a different position (we'll see an example of that later).
+    // as the buffer might start at a different position (we'll see an example of that later).
     for (int i = buffer.position(); i < buffer.limit(); i++) {
       byte b = buffer.get(i);
       assert b == (byte) 0xFF;
@@ -131,15 +130,15 @@ public class Blobs {
       byte b = buffer.get();
       assert b == (byte) 0xFF;
     }
-    // Note that relative getters change the position, so when we're done reading we're at the end
-    // again.
+    // Note that relative getters change the position,
+    // so when we're done reading we're at the end again.
     assert buffer.position() == buffer.limit();
 
     // Reset the position for the next operation.
     buffer.flip();
 
-    // Yet another way is to convert the buffer to a byte array. Do NOT use buffer.array(), because
-    // it returns the
+    // Yet another way is to convert the buffer to a byte array.
+    // Do NOT use buffer.array(), because it returns the
     // buffer's *backing array*, which is not the same thing as its contents:
     // - not all byte buffers have backing arrays
     // - even then, the backing array might be larger than the buffer's contents
@@ -167,8 +166,7 @@ public class Blobs {
     // than 16 bytes.
     // What happens is that the buffer is a "view" of the last 16 of a 32-byte array.
     // This is an implementation detail and you shouldn't have to worry about it if you process the
-    // buffer correctly
-    // (don't iterate from 0, use Bytes.getArray()).
+    // buffer correctly (don't iterate from 0, use Bytes.getArray()).
     assert buffer.position() == 16;
     assert buffer.array().length == 32;
   }
@@ -181,8 +179,7 @@ public class Blobs {
     ByteBuffer buffer = Bytes.fromHexString("0xffffff");
 
     // When you pass a byte buffer to a bound statement, it creates a shallow copy internally with
-    // the
-    // buffer.duplicate() method.
+    // the buffer.duplicate() method.
     BoundStatement boundStatement = preparedStatement.bind();
     boundStatement.setByteBuffer("b", buffer);
 
@@ -198,9 +195,8 @@ public class Blobs {
     buffer.flip();
 
     // HOWEVER duplicate() only performs a shallow copy. The two buffers still share the same
-    // contents. So if you
-    // modify the contents of the original buffer, this will affect another execution of the bound
-    // statement.
+    // contents. So if you modify the contents of the original buffer,
+    // this will affect another execution of the bound statement.
     buffer.put(0, (byte) 0xaa);
     session.execute(boundStatement);
     row = session.execute("SELECT b FROM examples.blobs WHERE k = 1").one();
@@ -208,12 +204,10 @@ public class Blobs {
     assert Objects.equals(Bytes.toHexString(row.getByteBuffer("b")), "0xaaffff");
 
     // This will also happen if you use the async API, e.g. create the bound statement, call
-    // executeAsync() on it
-    // and reuse the buffer immediately.
+    // executeAsync() on it and reuse the buffer immediately.
 
     // If you reuse buffers concurrently and want to avoid those issues, perform a deep copy of the
-    // buffer before
-    // passing it to the bound statement.
+    // buffer before passing it to the bound statement.
     int startPosition = buffer.position();
     ByteBuffer buffer2 = ByteBuffer.allocate(buffer.limit() - startPosition);
     buffer2.put(buffer);
@@ -223,9 +217,8 @@ public class Blobs {
     session.execute(boundStatement);
 
     // Note: unlike BoundStatement, SimpleStatement does not duplicate its arguments, so even the
-    // position will be
-    // affected if you change it before executing the statement. Again, resort to deep copies if
-    // required.
+    // position will be affected if you change it before executing the statement.
+    // Again, resort to deep copies if required.
   }
 
   private static void retrieveFromFileAndInsertInto(CqlSession session) throws IOException {
@@ -244,8 +237,7 @@ public class Blobs {
   // Note:
   // - This can be improved by using new-io
   // - this reads the whole file in memory in one go. If your file does not fit in memory you should
-  // probably not
-  //   insert it into Cassandra either ;)
+  // probably not insert it into Cassandra either ;)
   private static ByteBuffer readAll(File file) throws IOException {
     try (FileInputStream inputStream = new FileInputStream(file)) {
       FileChannel channel = inputStream.getChannel();
