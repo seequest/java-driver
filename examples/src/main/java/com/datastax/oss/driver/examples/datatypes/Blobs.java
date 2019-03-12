@@ -180,8 +180,7 @@ public class Blobs {
 
     // When you pass a byte buffer to a bound statement, it creates a shallow copy internally with
     // the buffer.duplicate() method.
-    BoundStatement boundStatement = preparedStatement.bind();
-    boundStatement.setByteBuffer("b", buffer);
+    BoundStatement boundStatement = preparedStatement.bind().setByteBuffer("b", buffer);
 
     // This means you can now move in the original buffer, without affecting the insertion if it
     // happens later.
@@ -213,7 +212,7 @@ public class Blobs {
     buffer2.put(buffer);
     buffer.position(startPosition);
     buffer2.flip();
-    boundStatement.setByteBuffer("b", buffer2);
+    boundStatement = boundStatement.setByteBuffer("b", buffer2);
     session.execute(boundStatement);
 
     // Note: unlike BoundStatement, SimpleStatement does not duplicate its arguments, so even the
