@@ -365,11 +365,9 @@ public class RandomPagingRestUi {
       }
       // If targetRow is past the end, rs will be exhausted.
       // This means you can request a page past the end in the web UI (e.g. request page 12 while
-      // there are only
-      // 10 pages), and it will show up as empty.
+      // there are only 10 pages), and it will show up as empty.
       // One improvement would be to detect that and take a different action, for example redirect
-      // to page 10 or
-      // show an error message, this is left as an exercise for the reader.
+      // to page 10 or show an error message, this is left as an exercise for the reader.
       return rs;
     }
   }

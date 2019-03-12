@@ -179,7 +179,7 @@ public class DowngradingRetry {
         throw e;
       }
 
-      e = unwrapNoHostAvailableException(e);
+      e = unwrapAllNodesFailedException(e);
 
       System.out.println("Write failed: " + e);
 
@@ -278,7 +278,7 @@ public class DowngradingRetry {
         throw e;
       }
 
-      e = unwrapNoHostAvailableException(e);
+      e = unwrapAllNodesFailedException(e);
 
       System.out.println("Read failed: " + e);
 
@@ -341,9 +341,7 @@ public class DowngradingRetry {
     final int width3 = 30;
     final int width4 = 21;
 
-    String format =
-        "%-" + width1 + "s" + "%-" + width2 + "s" + "%-" + width3 + "s" + "%-" + width4 + "s"
-            + "%n";
+    String format = "%-" + width1 + "s%-" + width2 + "s%-" + width3 + "s%-" + width4 + "s%n";
 
     // headings
     System.out.printf(format, "sensor_id", "date", "timestamp", "value");
@@ -413,7 +411,7 @@ public class DowngradingRetry {
    *     NoNodeAvailableException}.
    * @throws NoNodeAvailableException the original exception, if it cannot be unwrapped.
    */
-  private static DriverException unwrapNoHostAvailableException(DriverException e) {
+  private static DriverException unwrapAllNodesFailedException(DriverException e) {
     if (e instanceof AllNodesFailedException) {
       AllNodesFailedException noHostAvailable = (AllNodesFailedException) e;
       for (Throwable error : noHostAvailable.getErrors().values()) {

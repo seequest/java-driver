@@ -41,9 +41,8 @@ public class ReadCassandraVersion {
     // The Session is what you use to execute queries. It is thread-safe and should be
     // reused.
     try (CqlSession session = new CqlSessionBuilder().build()) {
-      // We use execute to send a query to Cassandra. This returns a ResultSet, which is essentially
-      // a collection
-      // of Row objects.
+      // We use execute to send a query to Cassandra. This returns a ResultSet, which
+      // is essentially a collection of Row objects.
       ResultSet rs = session.execute("select release_version from system.local");
       //  Extract the first row (which is the only one in this case).
       Row row = rs.one();
@@ -55,8 +54,7 @@ public class ReadCassandraVersion {
     }
     // The try-with-resources block automatically close the session after we’re done with it.
     // This step is important because it frees underlying resources (TCP connections, thread
-    // pools...). In a
-    // real application, you would typically do this at shutdown (for example, when undeploying
-    // your webapp).
+    // pools...). In a real application, you would typically do this at shutdown
+    // (for example, when undeploying your webapp).
   }
 }
