@@ -504,13 +504,13 @@ public class DefaultSimpleStatement implements SimpleStatement {
   }
 
   @Override
-  public long getTimestamp() {
+  public long getQueryTimestamp() {
     return timestamp;
   }
 
   @NonNull
   @Override
-  public SimpleStatement setTimestamp(long newTimestamp) {
+  public SimpleStatement setQueryTimestamp(long newTimestamp) {
     return new DefaultSimpleStatement(
         query,
         positionalValues,
@@ -631,6 +631,7 @@ public class DefaultSimpleStatement implements SimpleStatement {
     return consistencyLevel;
   }
 
+  @NonNull
   @Override
   public SimpleStatement setConsistencyLevel(@Nullable ConsistencyLevel newConsistencyLevel) {
     return new DefaultSimpleStatement(

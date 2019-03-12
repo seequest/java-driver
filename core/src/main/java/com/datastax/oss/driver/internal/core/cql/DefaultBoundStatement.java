@@ -499,13 +499,13 @@ public class DefaultBoundStatement implements BoundStatement {
   }
 
   @Override
-  public long getTimestamp() {
+  public long getQueryTimestamp() {
     return timestamp;
   }
 
   @NonNull
   @Override
-  public BoundStatement setTimestamp(long newTimestamp) {
+  public BoundStatement setQueryTimestamp(long newTimestamp) {
     return new DefaultBoundStatement(
         preparedStatement,
         variableDefinitions,
@@ -629,6 +629,7 @@ public class DefaultBoundStatement implements BoundStatement {
     return consistencyLevel;
   }
 
+  @NonNull
   @Override
   public BoundStatement setConsistencyLevel(@Nullable ConsistencyLevel newConsistencyLevel) {
     return new DefaultBoundStatement(

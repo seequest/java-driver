@@ -310,6 +310,7 @@ public class DefaultBatchStatement implements BatchStatement {
     return consistencyLevel;
   }
 
+  @NonNull
   @Override
   public BatchStatement setConsistencyLevel(@Nullable ConsistencyLevel newConsistencyLevel) {
     return new DefaultBatchStatement(
@@ -678,13 +679,13 @@ public class DefaultBatchStatement implements BatchStatement {
   }
 
   @Override
-  public long getTimestamp() {
+  public long getQueryTimestamp() {
     return timestamp;
   }
 
   @NonNull
   @Override
-  public BatchStatement setTimestamp(long newTimestamp) {
+  public BatchStatement setQueryTimestamp(long newTimestamp) {
     return new DefaultBatchStatement(
         batchType,
         statements,
