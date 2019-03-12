@@ -345,11 +345,10 @@ public class RandomPagingRestUi {
 
       // Skip protocol pages until we reach the one that contains our target row.
       // For example, if the first query returned 60 rows and our target is row number 90, we know
-      // we can skip
-      // those 60 rows directly without even iterating through them.
+      // we can skip those 60 rows directly without even iterating through them.
       // This part is optional, we could simply iterate through the rows with the for loop below,
-      // but that's
-      // slightly less efficient because iterating each row involves a bit of internal decoding.
+      // but that's slightly less efficient because iterating each row involves a bit of internal
+      // decoding.
       while (fetchedSize > 0 && nextState != null && currentRow + fetchedSize < targetRow) {
         statement = statement.setPagingState(nextState);
         rs = session.execute(statement);
