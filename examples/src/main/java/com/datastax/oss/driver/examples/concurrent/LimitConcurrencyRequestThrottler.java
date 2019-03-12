@@ -41,9 +41,14 @@ import java.util.concurrent.ExecutionException;
  * <p>Preconditions: - a Cassandra session is running and accessible through the contacts points
  * identified by basic.contact-points (see application.conf).
  *
- * <p>Side effects: - creates a new keyspace "examples" in the session. If a keyspace with this name
- * already exists, it will be reused; - creates a table "examples.tbl_sample_kv". If it exist
- * already, it will be reused; - inserts a TOTAL_NUMBER_OF_INSERTS of rows into the table.
+ * <p>Side effects:
+ *
+ * <ul>
+ *   <li>creates a new keyspace "examples" in the session. If a keyspace with this name already
+ *       exists, it will be reused;
+ *   <li>creates a table "examples.tbl_sample_kv". If it exist already, it will be reused;
+ *   <li>inserts a TOTAL_NUMBER_OF_INSERTS of rows into the table.
+ * </ul>
  *
  * @see <a href="http://datastax.github.io/java-driver/manual/">Java driver online manual</a>
  */

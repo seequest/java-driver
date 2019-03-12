@@ -67,10 +67,15 @@ import org.glassfish.jersey.server.ResourceConfig;
  * <p>Preconditions: - a Cassandra cluster is running and accessible through the contacts points
  * identified by basic.contact-points (see application.conf).
  *
- * <p>Side effects: - creates a new keyspace "examples" in the cluster. If a keyspace with this name
- * already exists, it will be reused; - creates a table "examples.random_paging_rest_ui". If it
- * already exists, it will be reused; - inserts data in the table; - launches a REST server
- * listening on HTTP_PORT.
+ * <p>Side effects:
+ *
+ * <ul>
+ *   <li>creates a new keyspace "examples" in the cluster. If a keyspace with this name already
+ *       exists, it will be reused;
+ *   <li>creates a table "examples.random_paging_rest_ui". If it already exists, it will be reused;
+ *   <li>inserts data in the table;
+ *   <li>launches a REST server listening on HTTP_PORT.
+ * </ul>
  */
 public class RandomPagingRestUi {
   private static final int HTTP_PORT = 8080;

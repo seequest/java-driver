@@ -26,9 +26,15 @@ import com.datastax.oss.driver.api.core.cql.Row;
  * <p>Preconditions: - a Cassandra session is running and accessible through the contacts points
  * identified by basic.contact-points (see application.conf).
  *
- * <p>Side effects: - creates a new keyspace "simplex" in the session. If a keyspace with this name
- * already exists, it will be reused; - creates two tables "simplex.songs" and "simplex.playlists".
- * If they exist already, they will be reused; - inserts a row in each table.
+ * <p>Side effects:
+ *
+ * <ul>
+ *   <li>creates a new keyspace "simplex" in the session. If a keyspace with this name already
+ *       exists, it will be reused;
+ *   <li>creates two tables "simplex.songs" and "simplex.playlists". If they exist already, they
+ *       will be reused;
+ *   <li>inserts a row in each table.
+ * </ul>
  *
  * @see <a href="http://datastax.github.io/java-driver/manual/">Java driver online manual</a>
  */
