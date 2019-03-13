@@ -39,12 +39,21 @@ import java.util.concurrent.atomic.AtomicInteger;
  * responsible for executing requests in a non-blocking way. It uses {@link ExecutorService} to
  * limit number of concurrent request to CONCURRENCY_LEVEL.
  *
- * <p>Preconditions: - a Cassandra session is running and accessible through the contacts points
- * identified by basic.contact-points (see application.conf)
+ * <p>Preconditions:
  *
- * <p>Side effects: - creates a new keyspace "examples" in the session. If a keyspace with this name
- * already exists, it will be reused; - creates a table "examples.tbl_sample_kv". If it exist
- * already, it will be reused; - inserts a TOTAL_NUMBER_OF_INSERTS of rows into the table.
+ * <ul>
+ *   <li>An Apache Cassandra(R) cluster is running and accessible through the contacts points
+ *       identified by basic.contact-points (see application.conf).
+ * </ul>
+ *
+ * <p>Side effects:
+ *
+ * <ul>
+ *   <li>creates a new keyspace "examples" in the session. If a keyspace with this name already
+ *       exists, it will be reused;
+ *   <li>creates a table "examples.tbl_sample_kv". If it exist already, it will be reused;
+ *   <li>inserts a TOTAL_NUMBER_OF_INSERTS of rows into the table.
+ * </ul>
  *
  * @see <a href="http://datastax.github.io/java-driver/manual/">Java driver online manual</a>
  */
@@ -95,8 +104,8 @@ public class LimitConcurrencyCustom {
                             .set("id", UUID.randomUUID(), UUID.class)
                             .set("value", String.format("Value for: %s", counter), String.class))
                     .toCompletableFuture();
-            // Block the current Thread until the result is ready. When the completableFuture
-            // finishes it means that
+            // Block the current Thread until the result is ready.
+            // When the completableFuture finishes it means that
             // this thread is free and can pick up another call to CqlSession.executeAsync()
             AsyncResultSet executedRequest =
                 CompletableFutures.getUninterruptibly(completableFuture);
