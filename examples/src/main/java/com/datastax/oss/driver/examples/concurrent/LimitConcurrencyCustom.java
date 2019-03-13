@@ -30,6 +30,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -37,7 +38,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * <p>This example makes usage of a {@link CqlSession#executeAsync(String)} method, which is
  * responsible for executing requests in a non-blocking way. It uses {@link ExecutorService} to
- * limit number of concurrent request to CONCURRENCY_LEVEL.
+ * limit number of concurrent request to {@code CONCURRENCY_LEVEL}. It maintains at most {@code
+ * IN_FLIGHT_REQUESTS} using {@link Semaphore}.
  *
  * <p>Preconditions:
  *
@@ -60,6 +62,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class LimitConcurrencyCustom {
   private static final int CONCURRENCY_LEVEL = 32;
   private static final int TOTAL_NUMBER_OF_INSERTS = 10_000;
+  private static final int IN_FLIGHT_REQUESTS = 500;
+  // Semaphore for limiting number of in-flight requests.
+  private static final Semaphore SEMAPHORE = new Semaphore(IN_FLIGHT_REQUESTS);
+
+  // Create CountDownLatch that wait for completion of all pending requests
+  private static final CountDownLatch REQUEST_LATCH = new CountDownLatch(TOTAL_NUMBER_OF_INSERTS);
 
   public static void main(String[] args) throws InterruptedException {
 
@@ -76,19 +84,21 @@ public class LimitConcurrencyCustom {
                 .value("id", bindMarker("id"))
                 .value("value", bindMarker("value"))
                 .build());
-    // Create CountDownLatch that wait for completion of all pending requests
-    CountDownLatch requestLatch = new CountDownLatch(TOTAL_NUMBER_OF_INSERTS);
-    // Executor service with CONCURRENCY_LEVEL number of threads that states an upper limit
-    // on number of request in progress.
-    ExecutorService executor = Executors.newFixedThreadPool(CONCURRENCY_LEVEL);
 
     // Used to track number of total inserts
     AtomicInteger insertsCounter = new AtomicInteger();
     // Used to track threads that were involved in a processing
     Set<String> threads = new ConcurrentSkipListSet<>();
 
+    // Executor service with CONCURRENCY_LEVEL number of threads that states an upper limit
+    // on number of request in progress.
+    ExecutorService executor = Executors.newFixedThreadPool(CONCURRENCY_LEVEL);
+
     // For every i we will insert a record to db
     for (int i = 0; i < TOTAL_NUMBER_OF_INSERTS; i++) {
+      // Before submitting a request, we need to acquire 1 permit.
+      // If there is no permits available it blocks caller thread.
+      SEMAPHORE.acquire();
       // Copy to final variable for usage in a separate thread
       final int counter = i;
 
@@ -100,9 +110,7 @@ public class LimitConcurrencyCustom {
             CompletableFuture<? extends AsyncResultSet> completableFuture =
                 session
                     .executeAsync(
-                        pst.bind()
-                            .set("id", UUID.randomUUID(), UUID.class)
-                            .set("value", String.format("Value for: %s", counter), String.class))
+                        pst.bind().setUuid("id", UUID.randomUUID()).setInt("value", counter))
                     .toCompletableFuture();
             // Block the current Thread until the result is ready.
             // When the completableFuture finishes it means that
@@ -110,19 +118,24 @@ public class LimitConcurrencyCustom {
             AsyncResultSet executedRequest =
                 CompletableFutures.getUninterruptibly(completableFuture);
             // Signal that processing of this request finishes
-            requestLatch.countDown();
+            REQUEST_LATCH.countDown();
+            // Once the request is executed, we release 1 permit.
+            // By doing so we allow caller thread to submit another async request.
+            SEMAPHORE.release();
             return executedRequest;
           },
           // Here the separate thread pool is passed as the argument
           executor);
     }
     // Await for execution of TOTAL_NUMBER_OF_INSERTS
-    requestLatch.await();
+    REQUEST_LATCH.await();
 
     System.out.println(
         String.format(
             "Finished executing %s queries with a concurrency level of %s.",
             insertsCounter.get(), threads.size()));
+    // Shutdown executor to free resources
+    executor.shutdown();
   }
 
   private static void createSchema(CqlSession session) {
@@ -131,6 +144,6 @@ public class LimitConcurrencyCustom {
             + "WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}");
 
     session.execute(
-        "CREATE TABLE IF NOT EXISTS examples.tbl_sample_kv (id uuid, value text, PRIMARY KEY (id))");
+        "CREATE TABLE IF NOT EXISTS examples.tbl_sample_kv (id uuid, value int, PRIMARY KEY (id))");
   }
 }

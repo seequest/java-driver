@@ -35,8 +35,8 @@ import java.util.concurrent.ExecutionException;
  * responsible for executing requests in a non-blocking way. It uses {@link
  * ConcurrencyLimitingRequestThrottler} to limit number of concurrent requests to 32. It uses
  * advanced.throttler configuration to limit async concurrency (max-concurrent-requests = 32) The
- * max-queue-size is set to 10000 to buffer TOTAL_NUMBER_OF_INSERTS in a queue in a case of initial
- * delay. (see application.conf)
+ * max-queue-size is set to 10000 to buffer {@code TOTAL_NUMBER_OF_INSERTS} in a queue in a case of
+ * initial delay. (see application.conf)
  *
  * <p>Preconditions:
  *
@@ -84,10 +84,7 @@ public class LimitConcurrencyRequestThrottler {
     for (int i = 0; i < TOTAL_NUMBER_OF_INSERTS; i++) {
       pending.add(
           session
-              .executeAsync(
-                  pst.bind()
-                      .set("id", UUID.randomUUID(), UUID.class)
-                      .set("value", String.format("Value for: %s", i), String.class))
+              .executeAsync(pst.bind().setUuid("id", UUID.randomUUID()).setInt("value", i))
               // Transform CompletionState toCompletableFuture to be able to wait for execution of
               // all using CompletableFuture.allOf
               .toCompletableFuture());
@@ -107,6 +104,6 @@ public class LimitConcurrencyRequestThrottler {
             + "WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}");
 
     session.execute(
-        "CREATE TABLE IF NOT EXISTS examples.tbl_sample_kv (id uuid, value text, PRIMARY KEY (id))");
+        "CREATE TABLE IF NOT EXISTS examples.tbl_sample_kv (id uuid, value int, PRIMARY KEY (id))");
   }
 }
