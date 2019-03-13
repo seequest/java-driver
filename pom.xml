@@ -379,6 +379,7 @@
           </compilerArgs>
           <showWarnings>true</showWarnings>
           <failOnWarning>true</failOnWarning>
+          <useIncrementalCompilation>false</useIncrementalCompilation>
         </configuration>
         <dependencies>
           <dependency>
