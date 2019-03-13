@@ -115,13 +115,17 @@ public class LimitConcurrencyCustom {
             // Block the current Thread until the result is ready.
             // When the completableFuture finishes it means that
             // this thread is free and can pick up another call to CqlSession.executeAsync()
-            AsyncResultSet executedRequest =
-                CompletableFutures.getUninterruptibly(completableFuture);
-            // Signal that processing of this request finishes
-            REQUEST_LATCH.countDown();
-            // Once the request is executed, we release 1 permit.
-            // By doing so we allow caller thread to submit another async request.
-            SEMAPHORE.release();
+            AsyncResultSet executedRequest;
+            try {
+              executedRequest = CompletableFutures.getUninterruptibly(completableFuture);
+            } finally {
+              // Signal that processing of this request finishes
+              REQUEST_LATCH.countDown();
+              // Once the request is executed, we release 1 permit.
+              // By doing so we allow caller thread to submit another async request.
+              SEMAPHORE.release();
+            }
+
             return executedRequest;
           },
           // Here the separate thread pool is passed as the argument
