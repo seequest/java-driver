@@ -20,9 +20,8 @@ import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.insertInto;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
-import com.datastax.oss.driver.api.core.cql.AsyncResultSet;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
-import com.datastax.oss.driver.internal.core.util.concurrent.CompletableFutures;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -34,12 +33,12 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Creates a keyspace and tables, and loads data using Async API into them.
+ * Creates a keyspace and tables, and loads data using Multi-Threaded approach into them.
  *
- * <p>This example makes usage of a {@link CqlSession#executeAsync(String)} method, which is
- * responsible for executing requests in a non-blocking way. It uses {@link ExecutorService} to
- * limit number of concurrent request to {@code CONCURRENCY_LEVEL}. It maintains at most {@code
- * IN_FLIGHT_REQUESTS} using {@link Semaphore}.
+ * <p>This example makes usage of a {@link CqlSession#execute(String)} method, which is responsible
+ * for executing requests in a blocking way. It uses {@link ExecutorService} to limit number of
+ * concurrent request to {@code CONCURRENCY_LEVEL}. It leverages {@link CompletableFuture} to
+ * achieve concurrency. It maintains at most {@code IN_FLIGHT_REQUESTS} using {@link Semaphore}.
  *
  * <p>Preconditions:
  *
@@ -108,17 +107,12 @@ public class LimitConcurrencyCustom {
           () -> {
             insertsCounter.incrementAndGet();
             threads.add(Thread.currentThread().getName());
-            CompletableFuture<? extends AsyncResultSet> completableFuture =
-                session
-                    .executeAsync(
-                        pst.bind().setUuid("id", UUID.randomUUID()).setInt("value", counter))
-                    .toCompletableFuture();
-            // Block the current Thread until the result is ready.
-            // When the completableFuture finishes it means that
-            // this thread is free and can pick up another call to CqlSession.executeAsync()
-            AsyncResultSet executedRequest;
+
+            ResultSet executeRequest;
             try {
-              executedRequest = CompletableFutures.getUninterruptibly(completableFuture);
+              executeRequest =
+                  session.execute(
+                      pst.bind().setUuid("id", UUID.randomUUID()).setInt("value", counter));
             } finally {
               // Signal that processing of this request finishes
               REQUEST_LATCH.countDown();
@@ -127,7 +121,7 @@ public class LimitConcurrencyCustom {
               SEMAPHORE.release();
             }
 
-            return executedRequest;
+            return executeRequest;
           },
           // Here the separate thread pool is passed as the argument
           executor);
