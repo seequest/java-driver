@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
@@ -36,9 +34,8 @@ import java.util.function.BiConsumer;
  * Creates a keyspace and tables, and loads data using Async API into them.
  *
  * <p>This example makes usage of a {@link CqlSession#executeAsync(String)} method, which is
- * responsible for executing requests in a non-blocking way. It uses {@link ExecutorService} to
- * limit number of concurrent request to {@code CONCURRENCY_LEVEL}. It maintains at most {@code
- * IN_FLIGHT_REQUESTS} using {@link Semaphore}.
+ * responsible for executing requests in a non-blocking way. It uses {@link CompletableFuture} to
+ * limit number of concurrent request to {@code CONCURRENCY_LEVEL}.
  *
  * <p>Preconditions:
  *
@@ -81,17 +78,19 @@ public class LimitConcurrencyCustomAsync {
                 .value("value", bindMarker("value"))
                 .build());
 
+    // Construct CONCURRENCY_LEVEL number of ranges.
+    // Each range will be executed independently.
     List<Range> ranges = createRanges(CONCURRENCY_LEVEL, TOTAL_NUMBER_OF_INSERTS);
 
-    // Executor service with CONCURRENCY_LEVEL number of threads that states an upper limit
-    // on number of request in progress.
+    // List of pending CONCURRENCY_LEVEL features that we will wait for at the end of the program.
     List<CompletableFuture<?>> pending = new ArrayList<>();
 
-    // For every i we will insert a record to db
+    // Every range will have dedicated CompletableFuture handling the execution.
     for (Range range : ranges) {
       pending.add(executeOneAtATime(session, pst, range));
     }
 
+    // Wait for completion of all CONCURRENCY_LEVEL pending CompletableFeatures
     CompletableFuture.allOf(pending.toArray(new CompletableFuture[0])).get();
 
     System.out.println(
@@ -100,28 +99,21 @@ public class LimitConcurrencyCustomAsync {
             INSERTS_COUNTER.get(), CONCURRENCY_LEVEL));
   }
 
-  private static List<Range> createRanges(int concurrencyLevel, int totalNumberOfInserts) {
-    ArrayList<Range> ranges = new ArrayList<>();
-    int numberOfElementsInRange = totalNumberOfInserts / concurrencyLevel;
-    for (int i = 0; i < concurrencyLevel; i++) {
-      if (i == concurrencyLevel - 1) {
-        ranges.add(new Range(i * numberOfElementsInRange, totalNumberOfInserts));
-      } else {
-        ranges.add(new Range(i * numberOfElementsInRange, (i + 1) * numberOfElementsInRange));
-      }
-    }
-    return ranges;
-  }
-
   private static CompletableFuture<?> executeOneAtATime(
       CqlSession session, PreparedStatement pst, Range range) {
 
     CompletableFuture<?> lastFeature = null;
     for (int i = range.getFrom(); i < range.getTo(); i++) {
       int counter = i;
+      // If this is a first request init the lastFeature.
       if (lastFeature == null) {
         lastFeature = executeInsert(session, pst, counter);
       } else {
+        // If lastFeature is already created, chain next async action.
+        // The next action will execute only after the lastFeature will finish.
+        // If the lastFeature finishes with failure, the subsequent chained executions
+        // will not be invoked. If you wish to alter that behaviour and recover from failure
+        // add the .exceptionally() call after whenComplete() of lastFeature.
         lastFeature =
             lastFeature.thenComposeAsync((ignored) -> executeInsert(session, pst, counter));
       }
@@ -139,11 +131,31 @@ public class LimitConcurrencyCustomAsync {
             (BiConsumer<AsyncResultSet, Throwable>)
                 (asyncResultSet, throwable) -> {
                   if (throwable == null) {
+                    // When the Feature completes and there is no exception - increment counter.
                     INSERTS_COUNTER.incrementAndGet();
                   } else {
+                    // On production you should leverage logger and use logger.error() method.
                     throwable.printStackTrace();
                   }
                 });
+  }
+
+  private static List<Range> createRanges(int concurrencyLevel, int totalNumberOfInserts) {
+    ArrayList<Range> ranges = new ArrayList<>();
+    int numberOfElementsInRange = totalNumberOfInserts / concurrencyLevel;
+    // Create concurrencyLevel number of Ranges.
+    for (int i = 0; i < concurrencyLevel; i++) {
+      // If this is a last range give it all remaining elements.
+      // It may be longer than numberOfElementsInRange in case of
+      // totalNumberOfInserts / concurrencyLevel will return floating point number.
+      if (i == concurrencyLevel - 1) {
+        ranges.add(new Range(i * numberOfElementsInRange, totalNumberOfInserts));
+      } else {
+        // Construct Ranges with numberOfElementsInRange elements.
+        ranges.add(new Range(i * numberOfElementsInRange, (i + 1) * numberOfElementsInRange));
+      }
+    }
+    return ranges;
   }
 
   private static void createSchema(CqlSession session) {
