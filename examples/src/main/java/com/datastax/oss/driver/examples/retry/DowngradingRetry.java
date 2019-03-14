@@ -37,7 +37,10 @@ import com.datastax.oss.driver.api.core.servererrors.UnavailableException;
 import com.datastax.oss.driver.api.core.servererrors.WriteTimeoutException;
 
 /**
- * This example illustrates how to implement DowngradingConsistencyRetryPolicy.
+ * This example illustrates how to implement a downgrading retry strategy from application code.
+ *
+ * <p>This was provided as a built-in policy in driver 3 ({@code DowngradingConsistencyRetryPolicy}), but has been
+ * removed from driver 4. See the <a href="https://docs.datastax.com/en/developer/java-driver/4.0/faq/#where-is-downgrading-consistency-retry-policy">FAQ</a>.
  *
  * <p>Preconditions:
  *
