@@ -103,7 +103,7 @@ public class JacksonJsonColumn {
             .value("id", literal(1))
             // the User object will be converted into a String and persisted into the VARCHAR column
             // "json"
-            .value("json", literal(alice, USER_CODEC))
+            .value("json", literal(alice, session.getContext().getCodecRegistry()))
             .build();
     session.execute(stmt);
 
