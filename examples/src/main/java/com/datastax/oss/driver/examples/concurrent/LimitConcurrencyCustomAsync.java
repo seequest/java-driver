@@ -113,7 +113,7 @@ public class LimitConcurrencyCustomAsync {
         // The next action will execute only after the lastFeature will finish.
         // If the lastFeature finishes with failure, the subsequent chained executions
         // will not be invoked. If you wish to alter that behaviour and recover from failure
-        // add the .exceptionally() call after whenComplete() of lastFeature.
+        // add the exceptionally() call after whenComplete() of lastFeature.
         lastFeature =
             lastFeature.thenComposeAsync((ignored) -> executeInsert(session, pst, counter));
       }
