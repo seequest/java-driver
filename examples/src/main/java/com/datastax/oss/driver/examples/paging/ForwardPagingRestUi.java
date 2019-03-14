@@ -17,10 +17,10 @@ package com.datastax.oss.driver.examples.paging;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
+import com.datastax.oss.driver.api.core.cql.BoundStatementBuilder;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
-import com.datastax.oss.driver.api.core.cql.Statement;
 import com.datastax.oss.driver.internal.core.type.codec.DateCodec;
 import com.datastax.oss.protocol.internal.util.Bytes;
 import com.sun.net.httpserver.HttpServer;
@@ -216,13 +216,13 @@ public class ForwardPagingRestUi {
     public UserVideosResponse getUserVideos(
         @PathParam("userid") int userid, @QueryParam("page") String page) {
 
-      Statement statement = videosByUser.bind(userid).setPageSize(ITEMS_PER_PAGE);
+      BoundStatementBuilder statementBuilder =
+          videosByUser.boundStatementBuilder(userid).setPageSize(ITEMS_PER_PAGE);
       if (page != null) {
-        // note that Statement is immutable so we need to re-assign
-        statement = statement.setPagingState(Bytes.fromHexString(page));
+        statementBuilder.setPagingState(Bytes.fromHexString(page));
       }
 
-      ResultSet rs = session.execute(statement);
+      ResultSet rs = session.execute(statementBuilder.build());
       String nextPage = Bytes.toHexString(rs.getExecutionInfo().getPagingState());
 
       int remaining = rs.getAvailableWithoutFetching();

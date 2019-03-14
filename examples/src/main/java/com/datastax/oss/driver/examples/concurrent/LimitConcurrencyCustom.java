@@ -57,7 +57,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  *   <li>inserts a TOTAL_NUMBER_OF_INSERTS of rows into the table.
  * </ul>
  *
- * @see <a href="http://datastax.github.io/java-driver/manual/">Java driver online manual</a>
+ * @see <a href="https://docs.datastax.com/en/developer/java-driver/4.0">Java driver online
+ *     manual</a>
  */
 public class LimitConcurrencyCustom {
   private static final int CONCURRENCY_LEVEL = 32;

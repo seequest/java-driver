@@ -70,7 +70,8 @@ import com.datastax.oss.driver.api.core.servererrors.WriteTimeoutException;
  *       idempotence for more information.
  * </ul>
  *
- * @see <a href="http://datastax.github.io/java-driver/manual/">Java driver online manual</a>
+ * @see <a href="https://docs.datastax.com/en/developer/java-driver/4.0">Java driver online
+ *     manual</a>
  */
 public class DowngradingRetry {
   /** The maximum number of retries to attempt. */

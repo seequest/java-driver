@@ -20,6 +20,7 @@ import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.insertInto;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import com.datastax.oss.driver.internal.core.session.throttling.ConcurrencyLimitingRequestThrottler;
 import java.util.ArrayList;
@@ -54,7 +55,8 @@ import java.util.concurrent.ExecutionException;
  *   <li>inserts {@code TOTAL_NUMBER_OF_INSERTS} rows into the table.
  * </ul>
  *
- * @see <a href="http://datastax.github.io/java-driver/manual/">Java driver online manual</a>
+ * @see <a href="https://docs.datastax.com/en/developer/java-driver/4.0">Java driver online
+ *     manual</a>
  */
 public class LimitConcurrencyRequestThrottler {
   private static final int TOTAL_NUMBER_OF_INSERTS = 10_000;
@@ -95,7 +97,13 @@ public class LimitConcurrencyRequestThrottler {
 
     System.out.println(
         String.format(
-            "Finished executing %s queries with a concurrency level of 32.", pending.size()));
+            "Finished executing %s queries with a concurrency level of %s.",
+            pending.size(),
+            session
+                .getContext()
+                .getConfig()
+                .getDefaultProfile()
+                .getInt(DefaultDriverOption.REQUEST_THROTTLER_MAX_CONCURRENT_REQUESTS)));
   }
 
   private static void createSchema(CqlSession session) {
