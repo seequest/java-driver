@@ -102,7 +102,7 @@ public class LimitConcurrencyCustom {
       // Copy to final variable for usage in a separate thread
       final int counter = i;
 
-      // We are running CqlSession.executeAsync in a separate thread pool (executor)
+      // We are running CqlSession.execute in a separate thread pool (executor)
       CompletableFuture.supplyAsync(
           () -> {
             insertsCounter.incrementAndGet();
