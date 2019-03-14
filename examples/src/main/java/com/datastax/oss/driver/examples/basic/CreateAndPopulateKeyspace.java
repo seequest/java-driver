@@ -16,7 +16,6 @@
 package com.datastax.oss.driver.examples.basic;
 
 import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 
@@ -66,7 +65,7 @@ public class CreateAndPopulateKeyspace {
   /** Initiates a connection to the session specified by the application.conf. */
   public void connect() {
 
-    session = new CqlSessionBuilder().build();
+    session = CqlSession.builder().build();
 
     System.out.printf("Connected session: %s%n", session.getName());
   }
@@ -143,7 +142,7 @@ public class CreateAndPopulateKeyspace {
     }
   }
 
-  /** Closes the session and the session. */
+  /** Closes the session. */
   public void close() {
     if (session != null) {
       session.close();

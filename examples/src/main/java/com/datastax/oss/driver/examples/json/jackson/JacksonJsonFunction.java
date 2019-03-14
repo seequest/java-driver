@@ -129,12 +129,18 @@ public class JacksonJsonFunction {
             // then, server-side, the fromJson() function will convert that JSON string
             // into an instance of the json_jackson_function_user user-defined type (UDT),
             // which will be persisted into the column "user"
-            .value("user", function(CqlIdentifier.fromCql("fromJson"), literal(alice, USER_CODEC)))
+            .value(
+                "user",
+                function(
+                    CqlIdentifier.fromCql("fromJson"),
+                    literal(alice, session.getContext().getCodecRegistry())))
             // same thing, but this time converting from
             // a generic JsonNode to a JSON string, then from this string to a map<varchar,float>
             .value(
                 "scores",
-                function(CqlIdentifier.fromCql("fromJson"), literal(aliceScores, JSON_NODE_CODEC)))
+                function(
+                    CqlIdentifier.fromCql("fromJson"),
+                    literal(aliceScores, session.getContext().getCodecRegistry())))
             .build();
     System.out.println(((SimpleStatement) stmt).getQuery());
     session.execute(stmt);

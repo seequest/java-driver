@@ -21,7 +21,6 @@ import static com.datastax.oss.driver.api.core.cql.DefaultBatchType.UNLOGGED;
 import com.datastax.oss.driver.api.core.AllNodesFailedException;
 import com.datastax.oss.driver.api.core.ConsistencyLevel;
 import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.DefaultConsistencyLevel;
 import com.datastax.oss.driver.api.core.DriverException;
 import com.datastax.oss.driver.api.core.NoNodeAvailableException;
@@ -39,8 +38,9 @@ import com.datastax.oss.driver.api.core.servererrors.WriteTimeoutException;
 /**
  * This example illustrates how to implement a downgrading retry strategy from application code.
  *
- * <p>This was provided as a built-in policy in driver 3 ({@code DowngradingConsistencyRetryPolicy}), but has been
- * removed from driver 4. See the <a href="https://docs.datastax.com/en/developer/java-driver/4.0/faq/#where-is-downgrading-consistency-retry-policy">FAQ</a>.
+ * <p>This was provided as a built-in policy in driver 3 ({@code
+ * DowngradingConsistencyRetryPolicy}), but has been removed from driver 4. See the <a
+ * href="https://docs.datastax.com/en/developer/java-driver/4.0/faq/#where-is-downgrading-consistency-retry-policy">FAQ</a>.
  *
  * <p>Preconditions:
  *
@@ -106,7 +106,7 @@ public class DowngradingRetry {
 
   /** Initiates a connection to the session specified by the application.conf. */
   private void connect() {
-    session = new CqlSessionBuilder().build();
+    session = CqlSession.builder().build();
 
     System.out.printf("Connected to session: %s%n", session.getName());
   }

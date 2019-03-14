@@ -237,7 +237,7 @@ public class RandomPagingRestUi {
       ResultSet rs = pager.skipTo(statement, page);
 
       List<UserVideo> videos;
-      boolean empty = isExhausted(rs);
+      boolean empty = !rs.iterator().hasNext();
       if (empty) {
         videos = Collections.emptyList();
       } else {
@@ -259,10 +259,6 @@ public class RandomPagingRestUi {
       URI next = (empty) ? null : uri.getAbsolutePathBuilder().queryParam("page", page + 1).build();
       return new UserVideosResponse(videos, previous, next);
     }
-  }
-
-  private static boolean isExhausted(ResultSet rs) {
-    return !rs.iterator().hasNext();
   }
 
   @SuppressWarnings("unused")

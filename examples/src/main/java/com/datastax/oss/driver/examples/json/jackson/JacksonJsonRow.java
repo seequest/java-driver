@@ -98,7 +98,7 @@ public class JacksonJsonRow {
     // Build and execute a simple statement
     Statement stmt =
         insertInto("examples", "json_jackson_row")
-            .json(new User(1, "alice", 30), USER_CODEC)
+            .json(new User(1, "alice", 30), session.getContext().getCodecRegistry())
             .build();
     session.execute(stmt);
 

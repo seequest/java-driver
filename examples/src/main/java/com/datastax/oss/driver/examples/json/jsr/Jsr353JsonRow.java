@@ -112,7 +112,10 @@ public class Jsr353JsonRow {
         Json.createObjectBuilder().add("id", 2).add("name", "bob").add("age", 35).build();
 
     // Build and execute a simple statement
-    Statement stmt = insertInto("examples", "json_jsr353_row").json(alice, USER_CODEC).build();
+    Statement stmt =
+        insertInto("examples", "json_jsr353_row")
+            .json(alice, session.getContext().getCodecRegistry())
+            .build();
     session.execute(stmt);
 
     // The JSON object can be a bound value if the statement is prepared
