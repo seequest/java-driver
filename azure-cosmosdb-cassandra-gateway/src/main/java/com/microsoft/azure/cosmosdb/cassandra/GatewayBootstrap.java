@@ -16,66 +16,66 @@
 
 package com.microsoft.azure.cosmosdb.cassandra;
 
-import com.google.common.util.concurrent.Service;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import java.net.SocketAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.SocketAddress;
-
 public final class GatewayBootstrap extends Bootstrap {
 
-    private static final Logger logger = LoggerFactory.getLogger(GatewayBootstrap.class);
-    private static final GatewayService service = new GatewayService();
+  private static final Logger logger = LoggerFactory.getLogger(GatewayBootstrap.class);
+  private static final GatewayService service = new GatewayService();
 
-    /**
-     * Connect a {@link Channel} to the remote peer.
-     *
-     * @param remoteAddress address of gateway to which this {@link GatewayBootstrap} should connect a
-     *                      channel
-     */
-    @Override
-    public ChannelFuture connect(SocketAddress remoteAddress) {
-        this.ensureRunning();
-        return super.connect(remoteAddress);
+  /**
+   * Connect a {@link Channel} to the remote peer.
+   *
+   * @param remoteAddress address of gateway to which this {@link GatewayBootstrap} should connect a
+   *     channel
+   */
+  @Override
+  public ChannelFuture connect(SocketAddress remoteAddress) {
+    this.ensureRunning();
+    return super.connect(remoteAddress);
+  }
+
+  /**
+   * Connect a {@link Channel} to the remote peer.
+   *
+   * @param remoteAddress address of gateway to which this {@link GatewayBootstrap} should connect a
+   *     channel
+   * @param localAddress local address to which the connected channel should bind
+   */
+  @Override
+  public ChannelFuture connect(SocketAddress remoteAddress, SocketAddress localAddress) {
+    this.ensureRunning();
+    return super.connect(remoteAddress, localAddress);
+  }
+
+  private void ensureRunning() {
+
+    switch (service.state()) {
+      case FAILED:
+        String message =
+            String.format(
+                "%s has encountered a problem and may not be operational", service.name());
+        logger.error(message);
+        throw new IllegalStateException();
+      case NEW:
+        break;
+      case RUNNING:
+        return;
+      case STARTING:
+        service.awaitRunning();
+        return;
+      case STOPPING:
+        service.awaitTerminated();
+        break;
+      case TERMINATED:
+        break;
     }
 
-    /**
-     * Connect a {@link Channel} to the remote peer.
-     *
-     * @param remoteAddress address of gateway to which this {@link GatewayBootstrap} should connect a
-     *                      channel
-     * @param localAddress  local address to which the connected channel should bind
-     */
-    @Override
-    public ChannelFuture connect(SocketAddress remoteAddress, SocketAddress localAddress) {
-        this.ensureRunning();
-        return super.connect(remoteAddress, localAddress);
-    }
-
-    private void ensureRunning() {
-
-        switch (service.state()) {
-            case FAILED:
-                String message = String.format("%s has encountered a problem and may not be operational", service.name());
-                logger.error(message);
-                throw new IllegalStateException();
-            case NEW:
-                break;
-            case RUNNING:
-                return;
-            case STARTING:
-                service.awaitRunning();
-                return;
-            case STOPPING:
-                service.awaitTerminated();
-                break;
-            case TERMINATED:
-                break;
-        }
-
-        service.startAsync().awaitRunning();
-    }
+    service.startAsync().awaitRunning();
+  }
 }
