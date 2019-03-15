@@ -65,6 +65,7 @@ import io.netty.util.Timer;
 import io.netty.util.TimerTask;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Constructor;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1028,7 +1029,54 @@ class Connection {
     }
 
     private Bootstrap newBootstrap() {
-      Bootstrap b = new Bootstrap();
+
+      final String bootstrapClassName =
+          System.getProperty(
+              "com.datastax.cassandra.BootstrapClass", "io.netty.bootstrap.Bootstrap");
+
+      Class<?> bootstrapClass;
+
+      try {
+        bootstrapClass = Class.forName(bootstrapClassName);
+      } catch (ClassNotFoundException error) {
+        logger.error(
+            "client bootstrap class '{}' not found; defaulting to '{}'",
+            bootstrapClassName,
+            Bootstrap.class);
+        bootstrapClass = Bootstrap.class;
+      }
+
+      Constructor<?> bootstrapConstructor;
+
+      try {
+        bootstrapConstructor = bootstrapClass.getConstructor();
+      } catch (NoSuchMethodException error) {
+        String message =
+            String.format(
+                "no default constructor for client bootstrap class '%s'", bootstrapClassName);
+        logger.error(message);
+        throw new RuntimeException(message, error);
+      }
+
+      Bootstrap b;
+
+      try {
+        b = (Bootstrap) bootstrapConstructor.newInstance();
+      } catch (ReflectiveOperationException error) {
+        String message =
+            String.format(
+                "could not construct client bootstrap class '%s': %s", bootstrapClassName, error);
+        logger.error(message);
+        throw new RuntimeException(message, error);
+      } catch (ClassCastException error) {
+        String message =
+            String.format(
+                "client bootstrap class '%s' is not derived from '%s'",
+                bootstrapClassName, Bootstrap.class);
+        logger.error(message);
+        throw new RuntimeException(message, error);
+      }
+
       b.group(eventLoopGroup).channel(channelClass);
 
       SocketOptions options = configuration.getSocketOptions();

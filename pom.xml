@@ -32,8 +32,8 @@
     <url>https://github.com/datastax/java-driver</url>
 
     <inceptionYear>2012</inceptionYear>
-
     <modules>
+        <module>azure-cosmosdb-cassandra-gateway</module>
         <module>driver-core</module>
         <module>driver-mapping</module>
         <module>driver-extras</module>
@@ -92,6 +92,12 @@
     <dependencyManagement>
 
         <dependencies>
+
+            <dependency>
+                <groupId>com.microsoft.azure.cosmosdb</groupId>
+                <artifactId>azure-cosmosdb-cassandra-gateway</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.datastax.cassandra</groupId>
@@ -578,7 +584,7 @@
                     <configuration>
                         <instructions>
                             <Bundle-Version>${project.version}</Bundle-Version>
-                            <_include>-osgi.bnd</_include>
+                            <!--_include>-osgi.bnd</_include-->
                         </instructions>
                         <supportedProjectTypes>
                             <supportedProjectType>jar</supportedProjectType>
