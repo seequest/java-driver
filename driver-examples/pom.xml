@@ -34,6 +34,11 @@
         <!-- driver dependencies -->
 
         <dependency>
+            <groupId>com.microsoft.azure.cosmosdb</groupId>
+            <artifactId>azure-cosmosdb-cassandra-gateway</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.datastax.cassandra</groupId>
             <artifactId>cassandra-driver-core</artifactId>
         </dependency>
