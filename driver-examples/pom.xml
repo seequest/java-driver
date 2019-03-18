@@ -35,7 +35,14 @@
 
         <dependency>
             <groupId>com.microsoft.azure.cosmosdb</groupId>
+            <artifactId>azure-cosmosdb-cassandra-bootstrap</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.microsoft.azure.cosmosdb</groupId>
             <artifactId>azure-cosmosdb-cassandra-gateway</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

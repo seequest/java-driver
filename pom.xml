@@ -33,6 +33,7 @@
 
     <inceptionYear>2012</inceptionYear>
     <modules>
+        <module>azure-cosmosdb-cassandra-bootstrap</module>
         <module>azure-cosmosdb-cassandra-gateway</module>
         <module>driver-core</module>
         <module>driver-mapping</module>
@@ -46,7 +47,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <cassandra.version>3.11.2</cassandra.version>
-        <java.version>1.6</java.version>
+        <java.version>1.8</java.version>
         <log4j.version>1.2.17</log4j.version>
         <slf4j.version>1.7.25</slf4j.version>
         <slf4j-log4j12.version>1.7.25</slf4j-log4j12.version>
@@ -718,6 +719,7 @@ limitations under the License.
                     <artifactId>animal-sniffer-maven-plugin</artifactId>
                     <version>1.15</version>
                     <executions>
+<!--
                         <execution>
                             <id>check-jdk6</id>
                             <phase>process-classes</phase>
@@ -736,6 +738,7 @@ limitations under the License.
                                 </annotations>
                             </configuration>
                         </execution>
+-->
                         <execution>
                             <id>check-jdk8</id>
                             <goals>

@@ -33,6 +33,13 @@
     </difference>
 
     <difference>
+        <differenceType>7012</differenceType> <!-- method added to interface -->
+        <className>com/datastax/driver/core/ResultSet</className>
+        <method>java.lang.Object one()</method>
+        <justification>False positive that only appears when compiled with JDK 8</justification>
+    </difference>
+
+    <difference>
         <differenceType>8001</differenceType> <!-- class removed -->
         <className>com/datastax/driver/extras/codecs/jdk8/InstantCodec</className>
         <justification>This class is only present if the project was compiled with JDK 8+</justification>
