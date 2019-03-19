@@ -17,33 +17,33 @@
 package com.microsoft.azure.cosmosdb.cassandra;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import com.google.common.util.concurrent.AbstractService;
 import com.google.common.util.concurrent.Service;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import java.io.IOException;
-import java.net.URL;
-import java.util.Map;
+import java.nio.file.Paths;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 final class GatewayService extends AbstractService {
 
-  private static final Logger logger = LoggerFactory.getLogger(GatewayService.class);
+  private static final String className = GatewayService.class.getName();
+  private static final Logger logger = getLogger(className);
   private static final String name = "Cosmos Cassandra Gateway service";
+
   private static final ProcessBuilder command;
 
   static {
-    final String gatewayServicePropertyName =
-        GatewayService.class.getPackage().getName() + ".GatewayService";
-    final URL script = GatewayService.class.getResource("/Start-CassandraGatewayService");
-    command = new ProcessBuilder(script.getPath());
-
-    Map<String, String> environment = command.environment();
-    environment.put("JAVA_HOME", System.getProperty("java.home"));
-    environment.put("CASSANDRA_GATEWAY_SERVICE", System.getProperty(gatewayServicePropertyName));
-
-    command.inheritIO();
+    String path =
+        Paths.get(
+                System.getProperty(GatewayService.className),
+                "bin",
+                "azure-cosmosdb-cassandra-gateway")
+            .normalize()
+            .toAbsolutePath()
+            .toString();
+    command = new ProcessBuilder(path).inheritIO();
   }
 
   private Process process;

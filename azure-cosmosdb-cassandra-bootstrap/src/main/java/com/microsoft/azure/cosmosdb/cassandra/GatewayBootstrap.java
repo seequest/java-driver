@@ -58,8 +58,7 @@ public final class GatewayBootstrap extends Bootstrap {
     switch (service.state()) {
       case FAILED:
         String message =
-            String.format(
-                "%s has encountered a problem and may not be operational", service.name());
+            String.format("%s encountered a problem and may not be operational", service.name());
         logger.error(message);
         throw new IllegalStateException();
       case NEW:
