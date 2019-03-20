@@ -30,20 +30,22 @@ final class GatewayService extends AbstractService {
 
   private static final String className = GatewayService.class.getName();
   private static final Logger logger = getLogger(className);
-  private static final String name = "Cosmos Cassandra Gateway service";
+  private static final String name = "Cosmos DB Cassandra Gateway service";
 
   private static final ProcessBuilder command;
 
   static {
+    String home = System.getProperty(GatewayService.className);
+    String os = System.getProperty("os.name");
     String path =
-        Paths.get(
-                System.getProperty(GatewayService.className),
-                "bin",
-                "azure-cosmosdb-cassandra-gateway")
+        Paths.get(home, "bin", "azure-cosmosdb-cassandra-gateway")
             .normalize()
             .toAbsolutePath()
             .toString();
-    command = new ProcessBuilder(path).inheritIO();
+    command =
+        os.startsWith("Windows")
+            ? new ProcessBuilder("cmd.exe", "/c", path).inheritIO()
+            : new ProcessBuilder(path).inheritIO();
   }
 
   private Process process;

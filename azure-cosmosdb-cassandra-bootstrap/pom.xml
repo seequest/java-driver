@@ -29,7 +29,7 @@
     <artifactId>azure-cosmosdb-cassandra-bootstrap</artifactId>
     <name>Microsoft Azure Cosmos DB Gateway Bootstrap for Apache Cassandra</name>
     <description>
-        A Cosmos DB Driver Extension for Apache Cassandra 1.2+ that works exclusively with the Cassandra Query Language
+        A Cosmos Driver Extension for Apache Cassandra 1.2+  that works exclusively with the Cassandra Query Language
         version 3 (CQL3) and Cassandra's binary protocol.
     </description>
 

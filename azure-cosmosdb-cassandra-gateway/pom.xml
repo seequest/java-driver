@@ -93,6 +93,7 @@
 
     <plugins>
 
+      <!-- Application assembly -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>appassembler-maven-plugin</artifactId>
@@ -104,12 +105,6 @@
             <goals>
               <goal>assemble</goal>
             </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/lib</outputDirectory>
-              <overWriteReleases>false</overWriteReleases>
-              <overWriteSnapshots>false</overWriteSnapshots>
-              <overWriteIfNewer>true</overWriteIfNewer>
-            </configuration>
           </execution>
         </executions>
         <configuration>
@@ -127,6 +122,7 @@
         </configuration>
       </plugin>
 
+      <!-- Jar (the standard one) -->
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <executions>
@@ -138,45 +134,17 @@
           </execution>
         </executions>
         <configuration>
-          <outputDirectory>${project.build.directory}/lib</outputDirectory>
+          <outputDirectory>${project.build.directory}</outputDirectory>
           <archive>
             <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
           </archive>
         </configuration>
       </plugin>
 
-      <!--
-      We avoid packaging bundle because it does not play nicely with the shade plugin, see
-      https://stackoverflow.com/questions/31262032/maven-shade-plugin-and-custom-packaging-type
-      -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-test-sources</id>
-            <goals>
-              <goal>test-jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+      <!-- Manifests (for standard + shaded jars) -->
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <configuration>
-          <instructions>
-            <Bundle-SymbolicName>com.microsoft.azure.cosmosdb.cassandra</Bundle-SymbolicName>
-            <Main-Class>com.microsoft.azure.cosmosdb.cassandra.GatewayProxyHost</Main-Class>
-          </instructions>
-          <!--
-          Prevent customized manifest entries from the project's maven-jar-plugin configuration from being read, see
-          http://apache-felix.18485.x6.nabble.com/how-lt-manifestLocation-gt-is-used-in-maven-bundle-plugin-td4835566.html
-          -->
-          <archive>
-            <forced>true</forced>
-          </archive>
-        </configuration>
         <executions>
           <!-- Default execution -->
           <execution>
@@ -211,6 +179,36 @@
                 <Private-Package>com.datastax.shaded.*</Private-Package>
               </instructions>
             </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <instructions>
+            <Bundle-SymbolicName>com.microsoft.azure.cosmosdb.cassandra</Bundle-SymbolicName>
+            <Main-Class>com.microsoft.azure.cosmosdb.cassandra.GatewayProxyHost</Main-Class>
+          </instructions>
+          <!--
+          Prevent customized manifest entries from the project's maven-jar-plugin configuration from being read, see
+          http://apache-felix.18485.x6.nabble.com/how-lt-manifestLocation-gt-is-used-in-maven-bundle-plugin-td4835566.html
+          -->
+          <archive>
+            <forced>true</forced>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <!--
+      We avoid packaging bundle because it does not play nicely with the shade plugin, see
+      https://stackoverflow.com/questions/31262032/maven-shade-plugin-and-custom-packaging-type
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-test-sources</id>
+            <goals>
+              <goal>test-jar-no-fork</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
