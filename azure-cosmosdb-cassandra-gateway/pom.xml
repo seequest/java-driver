@@ -100,7 +100,7 @@
         <version>2.0.0</version>
         <executions>
           <execution>
-            <id>create-app</id>
+            <id>assemble-service</id>
             <phase>package</phase>
             <goals>
               <goal>assemble</goal>
@@ -122,97 +122,37 @@
         </configuration>
       </plugin>
 
-      <!-- Jar (the standard one) -->
+      <!-- Application assembly package -->
       <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.1.1</version>
         <executions>
           <execution>
-            <id>test-jar</id>
+            <id>package-service-assembly</id>
+            <phase>package</phase>
             <goals>
-              <goal>test-jar</goal>
+              <goal>single</goal>
             </goals>
           </execution>
         </executions>
         <configuration>
-          <outputDirectory>${project.build.directory}</outputDirectory>
+          <descriptors>
+            <descriptor>src/assembly.xml</descriptor>
+          </descriptors>
+        </configuration>
+      </plugin>
+
+      <!-- Jar (the standard one) -->
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
           <archive>
             <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
           </archive>
         </configuration>
       </plugin>
 
-      <!-- Manifests (for standard + shaded jars) -->
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <executions>
-          <!-- Default execution -->
-          <execution>
-            <id>bundle-manifest</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>manifest</goal>
-            </goals>
-            <configuration>
-              <manifestLocation>${project.build.outputDirectory}/META-INF</manifestLocation>
-              <instructions>
-                <!-- JNR does not provide OSGi bundles, so exclude it; the driver can live without it -->
-                <Import-Package><![CDATA[com.google.common.*;version="16.0.1",!jnr.*,io.netty.channel.epoll,*]]></Import-Package>
-              </instructions>
-            </configuration>
-          </execution>
-          <!-- Alternate execution to generate the shaded JAR's manifest -->
-          <execution>
-            <id>bundle-manifest-shaded</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>manifest</goal>
-            </goals>
-            <configuration>
-              <manifestLocation>${project.build.directory}/META-INF-shaded</manifestLocation>
-              <instructions>
-                <!--
-                JNR does not provide OSGi bundles, so exclude it; the driver can live without it
-                Explicitly import javax.security.cert because it's required by Netty, but Netty has been explicitly excluded
-                -->
-                <Import-Package><![CDATA[com.google.common.*;version="16.0.1",!jnr.*,!io.netty.*,javax.security.cert,*]]></Import-Package>
-                <Private-Package>com.datastax.shaded.*</Private-Package>
-              </instructions>
-            </configuration>
-          </execution>
-        </executions>
-        <configuration>
-          <instructions>
-            <Bundle-SymbolicName>com.microsoft.azure.cosmosdb.cassandra</Bundle-SymbolicName>
-            <Main-Class>com.microsoft.azure.cosmosdb.cassandra.GatewayProxyHost</Main-Class>
-          </instructions>
-          <!--
-          Prevent customized manifest entries from the project's maven-jar-plugin configuration from being read, see
-          http://apache-felix.18485.x6.nabble.com/how-lt-manifestLocation-gt-is-used-in-maven-bundle-plugin-td4835566.html
-          -->
-          <archive>
-            <forced>true</forced>
-          </archive>
-        </configuration>
-      </plugin>
-
-      <!--
-      We avoid packaging bundle because it does not play nicely with the shade plugin, see
-      https://stackoverflow.com/questions/31262032/maven-shade-plugin-and-custom-packaging-type
-      -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-test-sources</id>
-            <goals>
-              <goal>test-jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
+      <!-- Shaded Jar -->
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
         <configuration>
@@ -264,12 +204,84 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <source>8</source>
           <target>8</target>
+        </configuration>
+      </plugin>
+
+      <!-- Sources Jar -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-test-sources</id>
+            <goals>
+              <goal>test-jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Manifests (for standard + shaded jars) -->
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <executions>
+          <!-- Default execution -->
+          <execution>
+            <id>bundle-manifest</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>manifest</goal>
+            </goals>
+            <configuration>
+              <manifestLocation>${project.build.outputDirectory}/META-INF</manifestLocation>
+              <instructions>
+                <!-- JNR does not provide OSGi bundles, so exclude it; the driver can live without it -->
+                <Import-Package>
+                  <![CDATA[com.google.common.*;version="16.0.1",!jnr.*,io.netty.channel.epoll,*]]></Import-Package>
+              </instructions>
+            </configuration>
+          </execution>
+          <!-- Alternate execution to generate the shaded JAR's manifest -->
+          <execution>
+            <id>bundle-manifest-shaded</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>manifest</goal>
+            </goals>
+            <configuration>
+              <manifestLocation>${project.build.directory}/META-INF-shaded</manifestLocation>
+              <instructions>
+                <!--
+                JNR does not provide OSGi bundles, so exclude it; the driver can live without it
+                Explicitly import javax.security.cert because it's required by Netty, but Netty has been explicitly excluded
+                -->
+                <Import-Package>
+                  <![CDATA[com.google.common.*;version="16.0.1",!jnr.*,!io.netty.*,javax.security.cert,*]]></Import-Package>
+                <Private-Package>com.datastax.shaded.*</Private-Package>
+              </instructions>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <instructions>
+            <Bundle-SymbolicName>com.microsoft.azure.cosmosdb.cassandra</Bundle-SymbolicName>
+            <Main-Class>com.microsoft.azure.cosmosdb.cassandra.GatewayProxyHost</Main-Class>
+          </instructions>
+          <!--
+          Prevent customized manifest entries from the project's maven-jar-plugin configuration from being read, see
+          http://apache-felix.18485.x6.nabble.com/how-lt-manifestLocation-gt-is-used-in-maven-bundle-plugin-td4835566.html
+          -->
+          <archive>
+            <forced>true</forced>
+          </archive>
         </configuration>
       </plugin>
 

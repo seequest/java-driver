@@ -22,30 +22,128 @@ import static org.slf4j.LoggerFactory.getLogger;
 import com.google.common.util.concurrent.AbstractService;
 import com.google.common.util.concurrent.Service;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Set;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.slf4j.Logger;
 
 final class GatewayService extends AbstractService {
 
-  private static final String className = GatewayService.class.getName();
-  private static final Logger logger = getLogger(className);
-  private static final String name = "Cosmos DB Cassandra Gateway service";
-
-  private static final ProcessBuilder command;
+  private static final String className = GatewayService.class.getCanonicalName();
+  private static final String displayName = "Cosmos DB Cassandra Gateway service";
+  private static final Logger logger = getLogger(GatewayService.className);
+  private static final String name = "azure-cosmosdb-cassandra-gateway";
+  private static final ProcessBuilder startupCommand;
 
   static {
-    String home = System.getProperty(GatewayService.className);
-    String os = System.getProperty("os.name");
-    String path =
-        Paths.get(home, "bin", "azure-cosmosdb-cassandra-gateway")
+    final File classesRoot =
+        new File(
+            GatewayService.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+
+    final String[] names =
+        classesRoot.list(
+            (dir, name) ->
+                name.startsWith(GatewayService.name) && name.endsWith("-service.tar.gz"));
+
+    checkState(names != null && names.length == 1);
+
+    final String filename = names[0].substring(0, names[0].length() - "-service.tar.gz".length());
+    final String defaultHome = Paths.get(classesRoot.toString(), filename).toString();
+    final String os = System.getProperty("os.name");
+    final String resourceName = '/' + names[0];
+
+    final File home = Paths.get(System.getProperty(GatewayService.className, defaultHome)).toFile();
+
+    final String path =
+        Paths.get(home.toString(), "bin", GatewayService.name)
             .normalize()
             .toAbsolutePath()
             .toString();
-    command =
+
+    startupCommand =
         os.startsWith("Windows")
             ? new ProcessBuilder("cmd.exe", "/c", path).inheritIO()
             : new ProcessBuilder(path).inheritIO();
+
+    if (!home.isDirectory()) {
+
+      try (TarArchiveInputStream archive =
+          new TarArchiveInputStream(
+              new GzipCompressorInputStream(
+                  GatewayService.class.getResourceAsStream(resourceName)))) {
+
+        final Set<PosixFilePermission> permissions = EnumSet.noneOf(PosixFilePermission.class);
+        TarArchiveEntry entry;
+
+        while ((entry = archive.getNextTarEntry()) != null) {
+
+          if (entry.isDirectory()) {
+            continue;
+          }
+
+          File file = new File(classesRoot, entry.getName());
+          File parent = file.getParentFile();
+
+          if (!parent.exists()) {
+            parent.mkdirs();
+          }
+
+          final Path target = file.toPath();
+          final int mode = entry.getMode();
+
+          final int owner = (mode & 0700) >> 6;
+
+          if ((owner & 1) != 0) {
+            permissions.add(PosixFilePermission.OWNER_EXECUTE);
+          }
+          if ((owner & 2) != 0) {
+            permissions.add(PosixFilePermission.OWNER_WRITE);
+          }
+          if ((owner & 4) != 0) {
+            permissions.add(PosixFilePermission.OWNER_READ);
+          }
+
+          final int group = (mode & 0070) >> 3;
+
+          if ((group & 1) != 0) {
+            permissions.add(PosixFilePermission.GROUP_EXECUTE);
+          }
+          if ((group & 2) != 0) {
+            permissions.add(PosixFilePermission.GROUP_WRITE);
+          }
+          if ((group & 4) != 0) {
+            permissions.add(PosixFilePermission.GROUP_READ);
+          }
+
+          final int others = (mode & 0007);
+
+          if ((others & 1) != 0) {
+            permissions.add(PosixFilePermission.OTHERS_EXECUTE);
+          }
+          if ((others & 2) != 0) {
+            permissions.add(PosixFilePermission.OTHERS_WRITE);
+          }
+          if ((others & 4) != 0) {
+            permissions.add(PosixFilePermission.OTHERS_READ);
+          }
+
+          Files.copy(archive, target);
+          Files.setPosixFilePermissions(target, permissions);
+          permissions.clear();
+        }
+      } catch (final IOException error) {
+        logger.error("cannot decompress {} due to {}", resourceName, error.toString());
+      }
+    }
   }
 
   private Process process;
@@ -53,10 +151,6 @@ final class GatewayService extends AbstractService {
   GatewayService() {
     this.addListener(new GatewayService.Listener(), GlobalEventExecutor.INSTANCE);
     process = null;
-  }
-
-  String name() {
-    return GatewayService.name;
   }
 
   /**
@@ -77,7 +171,7 @@ final class GatewayService extends AbstractService {
             () -> {
               synchronized (this) {
                 try {
-                  this.process = command.start();
+                  this.process = startupCommand.start();
                   this.notifyStarted();
                 } catch (IOException error) {
                   this.notifyFailed(error);
@@ -122,31 +216,11 @@ final class GatewayService extends AbstractService {
     return super.toString();
   }
 
+  String name() {
+    return GatewayService.displayName;
+  }
+
   static class Listener extends Service.Listener {
-
-    /**
-     * Called when the service transitions to the {@linkplain State#FAILED FAILED} state. The
-     * {@linkplain State#FAILED FAILED} state is a terminal state in the transition diagram.
-     * Therefore, if this method is called, no other methods will be called on the {@link Listener}.
-     *
-     * @param from The previous state that is being transitioned from. Failure can occur in any
-     *     state with the exception of {@linkplain State#NEW NEW} or {@linkplain State#TERMINATED
-     *     TERMINATED}.
-     * @param failure The exception that caused the failure.
-     */
-    @Override
-    public void failed(State from, Throwable failure) {
-      GatewayService.logger.error("{} failed in {} state: {}", name, from, failure);
-    }
-
-    /**
-     * Called when the service transitions from {@linkplain State#STARTING STARTING} to {@linkplain
-     * State#RUNNING RUNNING}. This occurs when a service has successfully started.
-     */
-    @Override
-    public void running() {
-      GatewayService.logger.debug("{} is running", name);
-    }
 
     /**
      * Called when the service transitions from {@linkplain State#NEW NEW} to {@linkplain
@@ -155,7 +229,16 @@ final class GatewayService extends AbstractService {
      */
     @Override
     public void starting() {
-      GatewayService.logger.debug("{} is starting", name);
+      GatewayService.logger.debug("{} is starting", displayName);
+    }
+
+    /**
+     * Called when the service transitions from {@linkplain State#STARTING STARTING} to {@linkplain
+     * State#RUNNING RUNNING}. This occurs when a service has successfully started.
+     */
+    @Override
+    public void running() {
+      GatewayService.logger.debug("{} is running", displayName);
     }
 
     /**
@@ -167,7 +250,7 @@ final class GatewayService extends AbstractService {
      */
     @Override
     public void stopping(State from) {
-      GatewayService.logger.debug("{} is stopping", name);
+      GatewayService.logger.debug("{} is stopping", displayName);
     }
 
     /**
@@ -182,7 +265,22 @@ final class GatewayService extends AbstractService {
      */
     @Override
     public void terminated(State from) {
-      GatewayService.logger.debug("{} is terminated", name);
+      GatewayService.logger.debug("{} is terminated", displayName);
+    }
+
+    /**
+     * Called when the service transitions to the {@linkplain State#FAILED FAILED} state. The
+     * {@linkplain State#FAILED FAILED} state is a terminal state in the transition diagram.
+     * Therefore, if this method is called, no other methods will be called on the {@link Listener}.
+     *
+     * @param from The previous state that is being transitioned from. Failure can occur in any
+     *     state with the exception of {@linkplain State#NEW NEW} or {@linkplain State#TERMINATED
+     *     TERMINATED}.
+     * @param failure The exception that caused the failure.
+     */
+    @Override
+    public void failed(State from, Throwable failure) {
+      GatewayService.logger.error("{} failed in {} state: {}", displayName, from, failure);
     }
   }
 }

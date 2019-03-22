@@ -15,276 +15,319 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.datastax.cassandra</groupId>
-        <artifactId>cassandra-driver-parent</artifactId>
-        <version>3.7.2-SNAPSHOT</version>
-    </parent>
+  <parent>
+    <groupId>com.datastax.cassandra</groupId>
+    <artifactId>cassandra-driver-parent</artifactId>
+    <version>3.7.2-SNAPSHOT</version>
+  </parent>
 
-    <groupId>com.microsoft.azure.cosmosdb</groupId>
-    <artifactId>azure-cosmosdb-cassandra-bootstrap</artifactId>
-    <name>Microsoft Azure Cosmos DB Gateway Bootstrap for Apache Cassandra</name>
-    <description>
-        A Cosmos Driver Extension for Apache Cassandra 1.2+  that works exclusively with the Cassandra Query Language
-        version 3 (CQL3) and Cassandra's binary protocol.
-    </description>
+  <groupId>com.microsoft.azure.cosmosdb</groupId>
+  <artifactId>azure-cosmosdb-cassandra-bootstrap</artifactId>
+  <name>Microsoft Azure Cosmos DB Gateway Bootstrap for Apache Cassandra</name>
+  <description>
+    A Cosmos Driver Extension for Apache Cassandra 1.2+ that works exclusively with the Cassandra Query Language
+    version 3 (CQL3) and Cassandra's binary protocol.
+  </description>
 
-    <dependencies>
+  <dependencies>
 
-        <dependency>
-            <groupId>com.microsoft.azure.cosmosdb</groupId>
-            <artifactId>azure-cosmosdb-cassandra-gateway</artifactId>
-        </dependency>
+    <dependency>
+      <groupId>com.microsoft.azure.cosmosdb</groupId>
+      <artifactId>azure-cosmosdb-cassandra-gateway</artifactId>
+    </dependency>
 
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler</artifactId>
-        </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-handler</artifactId>
+    </dependency>
 
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <version>3.24.1-GA</version>
+    </dependency>
 
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport-native-epoll</artifactId>
-            <optional>true</optional>
-        </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
 
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-transport-native-epoll</artifactId>
+      <optional>true</optional>
+    </dependency>
 
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-compress</artifactId>
+      <version>1.18</version>
+    </dependency>
 
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-exec</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-exec</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-    </dependencies>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-    <build>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
+  </dependencies>
 
-        <plugins>
+  <build>
 
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-                    </archive>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>test-jar</id>
-                        <goals>
-                            <goal>test-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
 
-            <!--
-            We avoid packaging bundle because it does not play nicely with the shade plugin, see
-            https://stackoverflow.com/questions/31262032/maven-shade-plugin-and-custom-packaging-type
-            -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-test-sources</id>
-                        <goals>
-                            <goal>test-jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <configuration>
-                    <instructions>
-                        <Bundle-SymbolicName>com.datastax.driver.core</Bundle-SymbolicName>
-                    </instructions>
-                    <!--
-                    Prevent customized manifest entries from the project's maven-jar-plugin configuration from being read, see
-                    http://apache-felix.18485.x6.nabble.com/how-lt-manifestLocation-gt-is-used-in-maven-bundle-plugin-td4835566.html
-                    -->
-                    <archive>
-                        <forced>true</forced>
-                    </archive>
-                </configuration>
-                <executions>
-                    <!-- Default execution -->
-                    <execution>
-                        <id>bundle-manifest</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>manifest</goal>
-                        </goals>
-                        <configuration>
-                            <manifestLocation>${project.build.outputDirectory}/META-INF</manifestLocation>
-                            <instructions>
-                                <!-- JNR does not provide OSGi bundles, so exclude it; the driver can live without it -->
-                                <Import-Package><![CDATA[com.google.common.*;version="16.0.1",!jnr.*,io.netty.channel.epoll,*]]></Import-Package>
-                            </instructions>
-                        </configuration>
-                    </execution>
-                    <!-- Alternate execution to generate the shaded JAR's manifest -->
-                    <execution>
-                        <id>bundle-manifest-shaded</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>manifest</goal>
-                        </goals>
-                        <configuration>
-                            <manifestLocation>${project.build.directory}/META-INF-shaded</manifestLocation>
-                            <instructions>
-                                <!--
-                                JNR does not provide OSGi bundles, so exclude it; the driver can live without it
-                                Explicitly import javax.security.cert because it's required by Netty, but Netty has been explicitly excluded
-                                -->
-                                <Import-Package><![CDATA[com.google.common.*;version="16.0.1",!jnr.*,!io.netty.*,javax.security.cert,*]]></Import-Package>
-                                <Private-Package>com.datastax.shaded.*</Private-Package>
-                            </instructions>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+    <plugins>
 
-            <plugin>
-                <artifactId>maven-shade-plugin</artifactId>
-                <configuration>
-                    <shadedArtifactAttached>true</shadedArtifactAttached>
-                    <artifactSet>
-                        <includes>
-                            <include>io.netty:*</include>
-                        </includes>
-                        <excludes>
-                            <exclude>io.netty:netty-transport-native-epoll</exclude>
-                        </excludes>
-                    </artifactSet>
-                    <relocations>
-                        <relocation>
-                            <pattern>io.netty</pattern>
-                            <shadedPattern>com.datastax.shaded.netty</shadedPattern>
-                        </relocation>
-                    </relocations>
-                    <transformers>
-                        <transformer implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
-                            <resources>
-                                <resource>META-INF/MANIFEST.MF</resource>
-                                <resource>META-INF/io.netty.versions.properties</resource>
-                                <resource>META-INF/maven/io.netty/netty-buffer/pom.properties</resource>
-                                <resource>META-INF/maven/io.netty/netty-buffer/pom.xml</resource>
-                                <resource>META-INF/maven/io.netty/netty-codec/pom.properties</resource>
-                                <resource>META-INF/maven/io.netty/netty-codec/pom.xml</resource>
-                                <resource>META-INF/maven/io.netty/netty-common/pom.properties</resource>
-                                <resource>META-INF/maven/io.netty/netty-common/pom.xml</resource>
-                                <resource>META-INF/maven/io.netty/netty-handler/pom.properties</resource>
-                                <resource>META-INF/maven/io.netty/netty-handler/pom.xml</resource>
-                                <resource>META-INF/maven/io.netty/netty-transport/pom.properties</resource>
-                                <resource>META-INF/maven/io.netty/netty-transport/pom.xml</resource>
-                            </resources>
-                        </transformer>
-                        <!-- Pick up the alternate manifest that was generated by the alternate execution of the bundle plugin -->
-                        <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
-                            <resource>META-INF/MANIFEST.MF</resource>
-                            <file>${project.build.directory}/META-INF-shaded/MANIFEST.MF</file>
-                        </transformer>
-                    </transformers>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
+      <!-- Jar -->
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <!-- Manifests (for standard + shaded jars) -->
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+            <Export-Package>com.microsoft.azure.cosmosdb.cassandra</Export-Package>
+            <Specification-Title>${project.name}</Specification-Title>
+            <Implementation-Title>${project.artifactId}</Implementation-Title>
+            <Implementation-Version>${project.version}</Implementation-Version>
+            <Implementation-Vendor>Microsoft Corporation</Implementation-Vendor>
+            <Agent-Class>com.microsoft.azure.cosmosdb.cassandra.GatewayBootstrap</Agent-Class>
+            <Premain-Class>com.microsoft.azure.cosmosdb.cassandra.GatewayBootstrap</Premain-Class>
+          </instructions>
+          <!--
+          Prevent customized manifest entries from the project's maven-jar-plugin configuration from being read, see
+          http://apache-felix.18485.x6.nabble.com/how-lt-manifestLocation-gt-is-used-in-maven-bundle-plugin-td4835566.html
+          -->
+          <archive>
+            <forced>true</forced>
+          </archive>
+        </configuration>
+        <executions>
+          <!-- Default execution -->
+          <execution>
+            <id>bundle-manifest</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>manifest</goal>
+            </goals>
             <configuration>
-              <source>8</source>
-              <target>8</target>
+              <manifestLocation>${project.build.outputDirectory}/META-INF</manifestLocation>
+              <instructions>
+                <!-- JNR does not provide OSGi bundles, so exclude it; the driver can live without it -->
+                <Import-Package>
+                  <![CDATA[com.google.common.*;version="16.0.1",!jnr.*,io.netty.channel.epoll,*]]></Import-Package>
+              </instructions>
+            </configuration>
+          </execution>
+          <!-- Alternate execution to generate the shaded JAR's manifest -->
+          <execution>
+            <id>bundle-manifest-shaded</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>manifest</goal>
+            </goals>
+            <configuration>
+              <manifestLocation>${project.build.directory}/META-INF-shaded</manifestLocation>
+              <instructions>
+                <!--
+                JNR does not provide OSGi bundles, so exclude it; the driver can live without it
+                Explicitly import javax.security.cert because it's required by Netty, but Netty has been explicitly excluded
+                -->
+                <Import-Package>
+                  <![CDATA[com.google.common.*;version="16.0.1",!jnr.*,!io.netty.*,javax.security.cert,*]]></Import-Package>
+                <Private-Package>com.datastax.shaded.*</Private-Package>
+              </instructions>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Cosmos DB Cassandra Gateway service -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>resource-dependencies</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>../azure-cosmosdb-cassandra-gateway/target/</directory>
+                  <includes>
+                    <include>*.tar.gz</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!--
+      We avoid packaging bundle because it does not play nicely with the shade plugin, see
+      https://stackoverflow.com/questions/31262032/maven-shade-plugin-and-custom-packaging-type
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-test-sources</id>
+            <goals>
+              <goal>test-jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <configuration>
+          <shadedArtifactAttached>true</shadedArtifactAttached>
+          <artifactSet>
+            <includes>
+              <include>io.netty:*</include>
+            </includes>
+            <excludes>
+              <exclude>io.netty:netty-transport-native-epoll</exclude>
+            </excludes>
+          </artifactSet>
+          <relocations>
+            <relocation>
+              <pattern>io.netty</pattern>
+              <shadedPattern>com.datastax.shaded.netty</shadedPattern>
+            </relocation>
+          </relocations>
+          <transformers>
+            <transformer implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
+              <resources>
+                <resource>META-INF/MANIFEST.MF</resource>
+                <resource>META-INF/io.netty.versions.properties</resource>
+                <resource>META-INF/maven/io.netty/netty-buffer/pom.properties</resource>
+                <resource>META-INF/maven/io.netty/netty-buffer/pom.xml</resource>
+                <resource>META-INF/maven/io.netty/netty-codec/pom.properties</resource>
+                <resource>META-INF/maven/io.netty/netty-codec/pom.xml</resource>
+                <resource>META-INF/maven/io.netty/netty-common/pom.properties</resource>
+                <resource>META-INF/maven/io.netty/netty-common/pom.xml</resource>
+                <resource>META-INF/maven/io.netty/netty-handler/pom.properties</resource>
+                <resource>META-INF/maven/io.netty/netty-handler/pom.xml</resource>
+                <resource>META-INF/maven/io.netty/netty-transport/pom.properties</resource>
+                <resource>META-INF/maven/io.netty/netty-transport/pom.xml</resource>
+              </resources>
+            </transformer>
+            <!-- Pick up the alternate manifest that was generated by the alternate execution of the bundle plugin -->
+            <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+              <resource>META-INF/MANIFEST.MF</resource>
+              <file>${project.build.directory}/META-INF-shaded/MANIFEST.MF</file>
+            </transformer>
+          </transformers>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
+        </configuration>
+      </plugin>
+
+    </plugins>
+
+  </build>
+
+  <profiles>
+
+    <profile>
+      <id>isolated</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <skip>false</skip>
+              <includes>
+                <include>**/SSL*Test.java</include>
+                <include>**/ControlConnectionTest.java</include>
+                <include>**/ExtendedPeerCheckDisabledTest.java</include>
+                <include>**/UUIDsPID*.java</include>
+                <include>**/FrameLengthTest.java</include>
+                <include>**/HeapCompressionTest.java</include>
+              </includes>
             </configuration>
           </plugin>
-
         </plugins>
+      </build>
+    </profile>
 
-    </build>
-
-    <profiles>
-
-        <profile>
-            <id>isolated</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <skip>false</skip>
-                            <includes>
-                                <include>**/SSL*Test.java</include>
-                                <include>**/ControlConnectionTest.java</include>
-                                <include>**/ExtendedPeerCheckDisabledTest.java</include>
-                                <include>**/UUIDsPID*.java</include>
-                                <include>**/FrameLengthTest.java</include>
-                                <include>**/HeapCompressionTest.java</include>
-                            </includes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-    </profiles>
+  </profiles>
 
 </project>
 

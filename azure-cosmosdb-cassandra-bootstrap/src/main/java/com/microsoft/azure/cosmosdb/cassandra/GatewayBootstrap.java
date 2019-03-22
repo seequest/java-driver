@@ -19,6 +19,7 @@ package com.microsoft.azure.cosmosdb.cassandra;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import java.lang.instrument.Instrumentation;
 import java.net.SocketAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,10 @@ public final class GatewayBootstrap extends Bootstrap {
 
   private static final Logger logger = LoggerFactory.getLogger(GatewayBootstrap.class);
   private static final GatewayService service = new GatewayService();
+
+  public static void agentmain(String agentArgs, Instrumentation instrumentation) {}
+
+  public static void premain(String agentArgs, Instrumentation instrumentation) {}
 
   /**
    * Connect a {@link Channel} to the remote peer.
