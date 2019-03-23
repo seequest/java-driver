@@ -23,10 +23,8 @@ import java.lang.instrument.Instrumentation;
 import java.net.SocketAddress;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
-import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,6 +87,8 @@ public final class GatewayBootstrap extends Bootstrap {
 
     private static final String className = JavaAgent.class.getName();
 
+    private JavaAgent() {}
+
     public static void agentmain(String args, Instrumentation instrumentation) {
       logger.info("{}.agentmain args: {}", JavaAgent.className, args);
       premain(args, instrumentation);
@@ -106,7 +106,10 @@ public final class GatewayBootstrap extends Bootstrap {
         method = pool.getMethod(className, methodName);
       } catch (NotFoundException error) {
         logger.error(
-            "failed to enable {} because method {}.{} could not be found", GatewayService.name, className, methodName);
+            "failed to enable {} because method {}.{} could not be found",
+            GatewayService.name,
+            className,
+            methodName);
         return;
       }
 
@@ -115,7 +118,11 @@ public final class GatewayBootstrap extends Bootstrap {
       try {
         wrapped = pool.getMethod(JavaAgent.className, methodName);
       } catch (NotFoundException error) {
-        logger.error("failed to enable {} because {}.{} could not be found", GatewayService.name, JavaAgent.className, methodName);
+        logger.error(
+            "failed to enable {} because {}.{} could not be found",
+            GatewayService.name,
+            JavaAgent.className,
+            methodName);
         return;
       }
 
@@ -123,11 +130,16 @@ public final class GatewayBootstrap extends Bootstrap {
         method.setBody(wrapped, null);
         method.getDeclaringClass().toClass();
       } catch (CannotCompileException error) {
-        logger.error("failed to enable {} because {}.{} could not be wrapped", GatewayService.name, JavaAgent.className, methodName);
+        logger.error(
+            "failed to enable {} because {}.{} could not be wrapped",
+            GatewayService.name,
+            JavaAgent.className,
+            methodName);
         return;
       }
 
-      logger.info("enabled {} by updating {}.{}", GatewayService.name, method.getLongName());
+      logger.info(
+          "enabled {} connections by updating {}", GatewayService.name, method.getLongName());
     }
 
     private Bootstrap newBootstrap() {
