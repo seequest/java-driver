@@ -21,6 +21,12 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import java.lang.instrument.Instrumentation;
 import java.net.SocketAddress;
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.NotFoundException;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,10 +34,6 @@ public final class GatewayBootstrap extends Bootstrap {
 
   private static final Logger logger = LoggerFactory.getLogger(GatewayBootstrap.class);
   private static final GatewayService service = new GatewayService();
-
-  public static void agentmain(String agentArgs, Instrumentation instrumentation) {}
-
-  public static void premain(String agentArgs, Instrumentation instrumentation) {}
 
   /**
    * Connect a {@link Channel} to the remote peer.
@@ -81,5 +83,56 @@ public final class GatewayBootstrap extends Bootstrap {
     }
 
     service.startAsync().awaitRunning();
+  }
+
+  public static final class JavaAgent {
+
+    private static final String className = JavaAgent.class.getName();
+
+    public static void agentmain(String args, Instrumentation instrumentation) {
+      logger.info("{}.agentmain args: {}", JavaAgent.className, args);
+      premain(args, instrumentation);
+    }
+
+    public static void premain(String args, Instrumentation instrumentation) {
+
+      final ClassPool pool = ClassPool.getDefault();
+
+      final String className = "com.datastax.driver.core.Connection$Factory";
+      final String methodName = "newBootstrap";
+      final CtMethod method;
+
+      try {
+        method = pool.getMethod(className, methodName);
+      } catch (NotFoundException error) {
+        logger.error(
+            "failed to enable {} because method {}.{} could not be found", GatewayService.name, className, methodName);
+        return;
+      }
+
+      final CtMethod wrapped;
+
+      try {
+        wrapped = pool.getMethod(JavaAgent.className, methodName);
+      } catch (NotFoundException error) {
+        logger.error("failed to enable {} because {}.{} could not be found", GatewayService.name, JavaAgent.className, methodName);
+        return;
+      }
+
+      try {
+        method.setBody(wrapped, null);
+        method.getDeclaringClass().toClass();
+      } catch (CannotCompileException error) {
+        logger.error("failed to enable {} because {}.{} could not be wrapped", GatewayService.name, JavaAgent.className, methodName);
+        return;
+      }
+
+      logger.info("enabled {} by updating {}.{}", GatewayService.name, method.getLongName());
+    }
+
+    private Bootstrap newBootstrap() {
+      System.out.println("Foo");
+      throw new UnsupportedOperationException("Foo!");
+    }
   }
 }

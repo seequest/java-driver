@@ -15,68 +15,138 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>com.datastax.cassandra</groupId>
-    <artifactId>cassandra-driver-parent</artifactId>
-    <version>3.7.2-SNAPSHOT</version>
-  </parent>
+  <!--
+    <parent>
+      <groupId>com.datastax.cassandra</groupId>
+      <artifactId>cassandra-driver-parent</artifactId>
+      <version>3.7.2-SNAPSHOT</version>
+    </parent>
+  -->
 
+  <name>Microsoft Azure Cosmos DB Gateway for Apache Cassandra</name>
   <groupId>com.microsoft.azure.cosmosdb</groupId>
   <artifactId>azure-cosmosdb-cassandra-gateway</artifactId>
-  <name>Microsoft Azure Cosmos DB Gateway for Apache Cassandra</name>
+  <version>3.7.2-SNAPSHOT</version>
+  
   <description>
     A Cosmos DB Driver Extension for Apache Cassandra 1.2+ that works exclusively with the Cassandra Query Language
     version 3 (CQL3) and Cassandra's binary protocol.
   </description>
 
+  <profiles>
+    <profile>
+      <id>modern-jdks</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <properties>
+        <javadoc.opts>-Xdoclint:none</javadoc.opts>
+      </properties>
+      <build>
+        <plugins>
+          <!-- only activate for jdk8+ since requires java 8 -->
+          <plugin>
+            <groupId>com.coveo</groupId>
+            <artifactId>fmt-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>check-format</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <properties>
+
+    <!-- Project build and reporting options -->
+
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <test.osgi.skip>true</test.osgi.skip>
+    <test.groups>unit</test.groups>
+    <java.version>1.8</java.version>
+    <javadoc.opts/>
+
+    <!-- Project dependency version info -->
+
+    <assertj.version>1.7.0</assertj.version>
+    <cassandra.version>3.11.2</cassandra.version>
+    <felix.version>4.4.1</felix.version>
+    <guava.version>19.0</guava.version>
+    <log4j.version>1.2.17</log4j.version>
+    <mockito.version>1.10.19</mockito.version>
+    <netty.version>4.1.34.Final</netty.version>
+    <slf4j.version>1.7.26</slf4j.version>
+    <testng.version>6.14.3</testng.version>
+
+  </properties>
+
   <dependencies>
 
-    <dependency>
-      <groupId>io.netty</groupId>
-      <artifactId>netty-all</artifactId>
-      <version>4.1.34.Final</version>
-    </dependency>
+    <!-- Product dependencies -->
 
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+      <version>${netty.version}</version>
     </dependency>
 
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
+      <version>${log4j.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>org.testng</groupId>
-      <artifactId>testng</artifactId>
-      <scope>test</scope>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${slf4j.version}</version>
     </dependency>
+
+    <!-- Test dependencies -->
 
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
+      <version>${assertj.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-exec</artifactId>
+      <groupId>org.testng</groupId>
+      <version>${testng.version}</version>
+      <artifactId>testng</artifactId>
       <scope>test</scope>
     </dependency>
 
@@ -92,6 +162,16 @@
     </resources>
 
     <plugins>
+
+      <!-- Compiler configuration -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
+        </configuration>
+      </plugin>
 
       <!-- Application assembly -->
       <plugin>
@@ -122,7 +202,7 @@
         </configuration>
       </plugin>
 
-      <!-- Application assembly package -->
+      <!-- Application package -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.1.1</version>
@@ -205,15 +285,6 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>8</source>
-          <target>8</target>
-        </configuration>
-      </plugin>
-
       <!-- Sources Jar -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -222,7 +293,7 @@
           <execution>
             <id>attach-test-sources</id>
             <goals>
-              <goal>test-jar-no-fork</goal>
+              <goal>jar-no-fork</goal>
             </goals>
           </execution>
         </executions>
@@ -288,32 +359,6 @@
     </plugins>
 
   </build>
-
-  <profiles>
-
-    <profile>
-      <id>isolated</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <skip>false</skip>
-              <includes>
-                <include>**/SSL*Test.java</include>
-                <include>**/ControlConnectionTest.java</include>
-                <include>**/ExtendedPeerCheckDisabledTest.java</include>
-                <include>**/UUIDsPID*.java</include>
-                <include>**/FrameLengthTest.java</include>
-                <include>**/HeapCompressionTest.java</include>
-              </includes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-  </profiles>
 
 </project>
 

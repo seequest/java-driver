@@ -34,7 +34,9 @@
     <inceptionYear>2012</inceptionYear>
     <modules>
         <module>azure-cosmosdb-cassandra-bootstrap</module>
+<!--
         <module>azure-cosmosdb-cassandra-gateway</module>
+-->
         <module>driver-core</module>
         <module>driver-mapping</module>
         <module>driver-extras</module>

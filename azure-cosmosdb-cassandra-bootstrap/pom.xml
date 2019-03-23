@@ -15,6 +15,7 @@
     limitations under the License.
 
 -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -34,16 +35,17 @@
     version 3 (CQL3) and Cassandra's binary protocol.
   </description>
 
+  <properties>
+    <javassist.version>3.24.1-GA</javassist.version>
+  </properties>
+
   <dependencies>
+
+    <!-- Product dependencies -->
 
     <dependency>
       <groupId>com.microsoft.azure.cosmosdb</groupId>
       <artifactId>azure-cosmosdb-cassandra-gateway</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.netty</groupId>
-      <artifactId>netty-handler</artifactId>
     </dependency>
 
     <dependency>
@@ -52,14 +54,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.javassist</groupId>
-      <artifactId>javassist</artifactId>
-      <version>3.24.1-GA</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-handler</artifactId>
     </dependency>
 
     <dependency>
@@ -75,10 +71,17 @@
     </dependency>
 
     <dependency>
-      <groupId>org.testng</groupId>
-      <artifactId>testng</artifactId>
-      <scope>test</scope>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <version>${javassist.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <!-- Test dependencies -->
 
     <dependency>
       <groupId>org.assertj</groupId>
@@ -93,20 +96,14 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-exec</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
       <scope>test</scope>
     </dependency>
 
@@ -145,8 +142,8 @@
             <Implementation-Title>${project.artifactId}</Implementation-Title>
             <Implementation-Version>${project.version}</Implementation-Version>
             <Implementation-Vendor>Microsoft Corporation</Implementation-Vendor>
-            <Agent-Class>com.microsoft.azure.cosmosdb.cassandra.GatewayBootstrap</Agent-Class>
-            <Premain-Class>com.microsoft.azure.cosmosdb.cassandra.GatewayBootstrap</Premain-Class>
+            <Agent-Class>com.microsoft.azure.cosmosdb.cassandra.GatewayBootstrap$JavaAgent</Agent-Class>
+            <Premain-Class>com.microsoft.azure.cosmosdb.cassandra.GatewayBootstrap$JavaAgent</Premain-Class>
           </instructions>
           <!--
           Prevent customized manifest entries from the project's maven-jar-plugin configuration from being read, see

@@ -29,7 +29,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.Set;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -38,11 +37,12 @@ import org.slf4j.Logger;
 
 final class GatewayService extends AbstractService {
 
+  public static final String name = "azure-cosmosdb-cassandra-gateway";
+
   private static final String className = GatewayService.class.getCanonicalName();
   private static final String displayName = "Cosmos DB Cassandra Gateway service";
   private static final Logger logger = getLogger(GatewayService.className);
-  private static final String name = "azure-cosmosdb-cassandra-gateway";
-  private static final ProcessBuilder startupCommand;
+  private static final ProcessBuilder serviceProcess;
 
   static {
     final File classesRoot =
@@ -56,25 +56,30 @@ final class GatewayService extends AbstractService {
 
     checkState(names != null && names.length == 1);
 
-    final String filename = names[0].substring(0, names[0].length() - "-service.tar.gz".length());
-    final String defaultHome = Paths.get(classesRoot.toString(), filename).toString();
+    final String defaultInstallDirectory =
+        Paths.get(System.getProperty("user.home"), "local", "opt").toString();
+
+    final String installRoot =
+        Paths.get(System.getProperty(GatewayService.className, defaultInstallDirectory)).toString();
+
+    final String serviceHome =
+        names[0].substring(0, names[0].length() - "-service.tar.gz".length());
+
+    final File servicePath =
+        Paths.get(installRoot, serviceHome, "bin", GatewayService.name)
+            .normalize()
+            .toAbsolutePath()
+            .toFile();
+
     final String os = System.getProperty("os.name");
     final String resourceName = '/' + names[0];
 
-    final File home = Paths.get(System.getProperty(GatewayService.className, defaultHome)).toFile();
-
-    final String path =
-        Paths.get(home.toString(), "bin", GatewayService.name)
-            .normalize()
-            .toAbsolutePath()
-            .toString();
-
-    startupCommand =
+    serviceProcess =
         os.startsWith("Windows")
-            ? new ProcessBuilder("cmd.exe", "/c", path).inheritIO()
-            : new ProcessBuilder(path).inheritIO();
+            ? new ProcessBuilder("cmd.exe", "/c", servicePath.toString()).inheritIO()
+            : new ProcessBuilder(servicePath.toString()).inheritIO();
 
-    if (!home.isDirectory()) {
+    if (!servicePath.exists()) {
 
       try (TarArchiveInputStream archive =
           new TarArchiveInputStream(
@@ -90,7 +95,7 @@ final class GatewayService extends AbstractService {
             continue;
           }
 
-          File file = new File(classesRoot, entry.getName());
+          File file = new File(installRoot, entry.getName());
           File parent = file.getParentFile();
 
           if (!parent.exists()) {
@@ -171,7 +176,7 @@ final class GatewayService extends AbstractService {
             () -> {
               synchronized (this) {
                 try {
-                  this.process = startupCommand.start();
+                  this.process = serviceProcess.start();
                   this.notifyStarted();
                 } catch (IOException error) {
                   this.notifyFailed(error);
