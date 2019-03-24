@@ -20,11 +20,14 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import java.lang.instrument.Instrumentation;
+import java.lang.reflect.Method;
 import java.net.SocketAddress;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtMethod;
 import javassist.NotFoundException;
+import javassist.expr.ExprEditor;
+import javassist.expr.NewExpr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +35,10 @@ public final class GatewayBootstrap extends Bootstrap {
 
   private static final Logger logger = LoggerFactory.getLogger(GatewayBootstrap.class);
   private static final GatewayService service = new GatewayService();
+
+  public GatewayBootstrap() {
+    super();
+  }
 
   /**
    * Connect a {@link Channel} to the remote peer.
@@ -104,7 +111,7 @@ public final class GatewayBootstrap extends Bootstrap {
 
       try {
         method = pool.getMethod(className, methodName);
-      } catch (NotFoundException error) {
+      } catch (final NotFoundException error) {
         logger.error(
             "failed to enable {} because method {}.{} could not be found",
             GatewayService.name,
@@ -113,38 +120,26 @@ public final class GatewayBootstrap extends Bootstrap {
         return;
       }
 
-      final CtMethod wrapped;
+      pool.importPackage("com.microsoft.azure.cosmosdb.cassandra");
+      pool.importPackage("io.netty.bootstrap");
 
       try {
-        wrapped = pool.getMethod(JavaAgent.className, methodName);
-      } catch (NotFoundException error) {
-        logger.error(
-            "failed to enable {} because {}.{} could not be found",
-            GatewayService.name,
-            JavaAgent.className,
-            methodName);
-        return;
-      }
-
-      try {
-        method.setBody(wrapped, null);
+        method.instrument(
+            new ExprEditor() {
+              public void edit(NewExpr expression) throws CannotCompileException {
+                if (expression.getClassName().equals("io.netty.bootstrap.Bootstrap")) {
+                  expression.replace("$_ = new GatewayBootstrap();");
+                }
+              }
+            });
         method.getDeclaringClass().toClass();
-      } catch (CannotCompileException error) {
-        logger.error(
-            "failed to enable {} because {}.{} could not be wrapped",
-            GatewayService.name,
-            JavaAgent.className,
-            methodName);
+      } catch (final CannotCompileException error) {
+        logger.error("failed to enable {} due to {}", GatewayService.name, error);
         return;
       }
 
       logger.info(
           "enabled {} connections by updating {}", GatewayService.name, method.getLongName());
-    }
-
-    private Bootstrap newBootstrap() {
-      System.out.println("Foo");
-      throw new UnsupportedOperationException("Foo!");
     }
   }
 }
