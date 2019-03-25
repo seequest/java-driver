@@ -158,6 +158,14 @@ final class GatewayService extends AbstractService {
     process = null;
   }
 
+  String displayName() {
+    return displayName;
+  }
+
+  String name() {
+    return name;
+  }
+
   /**
    * This method is called by {@link #startAsync} to initiate service startup. The invocation of
    * this method should cause a call to {@link #notifyStarted()}, either during this method's run,
@@ -221,10 +229,6 @@ final class GatewayService extends AbstractService {
     return super.toString();
   }
 
-  String name() {
-    return GatewayService.displayName;
-  }
-
   static class Listener extends Service.Listener {
 
     /**
@@ -234,7 +238,7 @@ final class GatewayService extends AbstractService {
      */
     @Override
     public void starting() {
-      GatewayService.logger.debug("{} is starting", displayName);
+      logger.debug("{} is starting", displayName);
     }
 
     /**
@@ -243,7 +247,7 @@ final class GatewayService extends AbstractService {
      */
     @Override
     public void running() {
-      GatewayService.logger.debug("{} is running", displayName);
+      logger.debug("{} is running", displayName);
     }
 
     /**
@@ -255,7 +259,7 @@ final class GatewayService extends AbstractService {
      */
     @Override
     public void stopping(State from) {
-      GatewayService.logger.debug("{} is stopping", displayName);
+      logger.debug("{} is stopping", displayName);
     }
 
     /**
@@ -270,7 +274,7 @@ final class GatewayService extends AbstractService {
      */
     @Override
     public void terminated(State from) {
-      GatewayService.logger.debug("{} is terminated", displayName);
+      logger.debug("{} is terminated", displayName);
     }
 
     /**
@@ -285,7 +289,7 @@ final class GatewayService extends AbstractService {
      */
     @Override
     public void failed(State from, Throwable failure) {
-      GatewayService.logger.error("{} failed in {} state: {}", displayName, from, failure);
+      logger.error("{} failed in {} state: {}", displayName, from, failure.toString());
     }
   }
 }

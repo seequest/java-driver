@@ -20,7 +20,6 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import java.lang.instrument.Instrumentation;
-import java.lang.reflect.Method;
 import java.net.SocketAddress;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -70,7 +69,8 @@ public final class GatewayBootstrap extends Bootstrap {
     switch (service.state()) {
       case FAILED:
         String message =
-            String.format("%s encountered a problem and may not be operational", service.name());
+            String.format(
+                "%s encountered a problem and may not be operational", service.displayName());
         logger.error(message);
         throw new IllegalStateException();
       case NEW:
@@ -134,12 +134,16 @@ public final class GatewayBootstrap extends Bootstrap {
             });
         method.getDeclaringClass().toClass();
       } catch (final CannotCompileException error) {
-        logger.error("failed to enable {} due to {}", GatewayService.name, error);
+        logger.error(
+            "failed to enable {} because {}.{} failed to compile due to {}",
+            GatewayService.name,
+            className,
+            methodName,
+            error.toString());
         return;
       }
 
-      logger.info(
-          "enabled {} connections by updating {}", GatewayService.name, method.getLongName());
+      logger.info("enabled {} by updating {}", GatewayService.name, method.getLongName());
     }
   }
 }

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+declare -r script_root="$(cd "$(dirname "$1")" && pwd)"
+
+declare -r source=$(ls ${script_root}/target/azure-cosmosdb-cassandra-gateway-*-service.tar.gz)
+declare -r target=~/local/opt/${source%-service.tar.gz}
+
+rm -rf "${target}"
+cd ~/local/opt
+tar -xvf "${source}"

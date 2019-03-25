@@ -42,7 +42,6 @@ import io.netty.util.concurrent.Promise;
 import io.netty.util.concurrent.PromiseCombiner;
 import java.net.SocketAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +81,7 @@ class GatewayProxy implements AutoCloseable {
                       logger.debug("shutdown");
                       return;
                     }
-                    logger.error("shutdown failed due to {}", future.cause());
+                    logger.error("shutdown failed due to {}", future.cause().toString());
                   });
             });
   }
@@ -126,11 +125,12 @@ class GatewayProxy implements AutoCloseable {
                           if (closed.isSuccess()) {
                             logger.debug("{} closed", closed.channel());
                           } else {
-                            logger.error("{} closed due to {}", closed.channel(), closed.cause());
+                            logger.error(
+                                "{} closed due to {}", closed.channel(), closed.cause().toString());
                           }
                         });
               } else {
-                logger.error("bind failed due to {}", bind.cause());
+                logger.error("bind failed due to {}", bind.cause().toString());
               }
             });
   }
@@ -143,14 +143,13 @@ class GatewayProxy implements AutoCloseable {
 
   private static class SourceHandler extends ChannelInboundHandlerAdapter {
 
+    private final SocketAddress serviceAddress;
     private final SslContext sslContext;
-    private final SocketAddress targetAddress;
-
     private Channel outboundChannel;
 
     SourceHandler(SocketAddress targetAddress, SslContext sslContext) {
+      this.serviceAddress = targetAddress;
       this.sslContext = sslContext;
-      this.targetAddress = targetAddress;
     }
 
     public void channelActive(final ChannelHandlerContext context) {
@@ -165,17 +164,17 @@ class GatewayProxy implements AutoCloseable {
               .handler(
                   new ChannelInitializer<SocketChannel>() {
                     @Override
-                    protected void initChannel(SocketChannel targetChannel) throws Exception {
-                      final SSLEngine engine = sslContext.newEngine(targetChannel.alloc());
-                      targetChannel
+                    protected void initChannel(SocketChannel outboundChannel) throws Exception {
+                      outboundChannel.pipeline().removeFirst();
+                      outboundChannel
                           .pipeline()
-                          .addLast(new TargetHandler(inboundChannel))
-                          .addLast(new SslHandler(engine));
+                          .addFirst(new TargetHandler(inboundChannel))
+                          .addFirst(new SslHandler(sslContext.newEngine(outboundChannel.alloc())));
                     }
                   })
               .option(ChannelOption.AUTO_READ, false);
 
-      ChannelFuture connect = bootstrap.connect(this.targetAddress);
+      ChannelFuture connect = bootstrap.connect(this.serviceAddress);
       this.outboundChannel = connect.channel();
 
       connect.addListener(
@@ -217,7 +216,7 @@ class GatewayProxy implements AutoCloseable {
 
     @Override
     public void exceptionCaught(final ChannelHandlerContext context, final Throwable cause) {
-      logger.error("{} closing due to {}", context.channel(), cause);
+      logger.error("{} closing due to {}", context.channel(), cause.toString());
       flushAndClose(context.channel());
     }
   }
@@ -260,7 +259,7 @@ class GatewayProxy implements AutoCloseable {
 
     @Override
     public void exceptionCaught(final ChannelHandlerContext context, final Throwable cause) {
-      logger.error("{} closing due to {}", context.channel(), cause);
+      logger.error("{} closing due to {}", context.channel(), cause.toString());
       flushAndClose(context.channel());
     }
   }

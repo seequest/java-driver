@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+declare -r script_root="$(cd "$(dirname "$1")" && pwd)"
+
+declare -r service_home=$(ls -d ~/local/opt/azure-cosmosdb-cassandra-gateway-*)
+"${service_home}/bin/azure-cosmosdb-cassandra-gateway"

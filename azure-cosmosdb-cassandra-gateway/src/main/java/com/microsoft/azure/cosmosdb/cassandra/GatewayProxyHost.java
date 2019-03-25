@@ -36,11 +36,13 @@ public final class GatewayProxyHost {
     SocketAddress serviceAddress = getSocketAddress("cassandra.GatewayService", 9142);
     SocketAddress proxyAddress = getSocketAddress("cassandra.GatewayProxy", 9042);
 
+    logger.info("starting listener for CQL clients on {}", proxyAddress);
+    logger.info("inbound messages will pass-through to Cassandra node on {}", serviceAddress);
+
     try (GatewayProxy proxy = new GatewayProxy()) {
       proxy.start(proxyAddress, serviceAddress);
       while (System.in.read() > 0) {}
     } catch (IOException error) {
-      logger.error("{}", error);
       exit(1);
     }
 
