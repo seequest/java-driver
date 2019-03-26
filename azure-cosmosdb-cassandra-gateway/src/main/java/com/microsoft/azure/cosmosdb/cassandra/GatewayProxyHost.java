@@ -40,6 +40,7 @@ public final class GatewayProxyHost {
 
     try (GatewayProxy proxy = new GatewayProxy()) {
       proxy.start(proxyAddresses, serviceAddress).sync();
+      //noinspection StatementWithEmptyBody
       while (System.in.read() > 0) {}
     } catch (IOException | InterruptedException error) {
       exit(1);
