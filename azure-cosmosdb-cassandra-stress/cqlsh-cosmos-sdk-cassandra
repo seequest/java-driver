@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+export SSL_VERSION=TLSv1_2
+export SSL_VALIDATE=false
+
+~/local/opt/cassandra/bin/cqlsh cosmos-sdk-cassandra.cassandra.cosmos.azure.com 10350 -u cosmos-sdk-cassandra -p "obMFvyk4rPKevxVVLEkTLCPnCP0PlDL26N7e0MFTYxZMuKixcaMdpwiSxM1mQIpZCk5wpDacVh2NGU8zaLPJXw==" --ssl
