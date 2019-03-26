@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+declare -r script_root="$(cd "$(dirname "$1")" && pwd)"
+set -o errexit -o nounset
+
+declare -r cassandra_package_home=~/local/opt/packages/cassandra
+declare -r cassandra_package_version=3.11.4
+declare -r cassandra_package="apache-cassandra-${cassandra_package_version}"
+declare -r cassandra_tarball="${cassandra_package}-bin.tar.gz"
+
+mkdir -p "${cassandra_package_home}"
+cd "${cassandra_package_home}"
+curl --out "${cassandra_tarball}" http://apache.claz.org/cassandra/${cassandra_package_version}/${cassandra_tarball}
+
+rm -rf "${cassandra_package}" && tar -xvf "${cassandra_tarball}"
+rm ${cassandra_tarball}
+cd ${cassandra_package}
+
+cat >cassandra.local.cert-config <<EOF
+[CA_default]
+copy_extensions = copy
+
+[req]
+default_bits = 4096
+prompt = no
+default_md = sha256
+distinguished_name = req_distinguished_name
+x509_extensions = v3_ca
+
+[req_distinguished_name]
+C = US
+ST = Washington
+L = Redmond
+O = Microsoft Corporation
+OU = Azure Cosmos DB
+CN = cassandra.local
+emailAddress = David-Noble@microsoft.com
+
+[v3_ca]
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyEncipherment
+subjectAltName = @subject_alternative_names
+
+[subject_alternative_names]
+DNS.1 = localhost
+IP.1 = 127.0.0.1
+IP.2 = ::1
+EOF
+
+openssl req -x509 -newkey rsa:4096 -sha256 -utf8 -days 730 -nodes \
+    -out ./cassandra.local.cert \
+    -keyout ./cassandra.local.key \
+    -config ./cassandra.local.cert-config
+
+openssl pkcs12 -export -in cassandra.local.cert -inkey cassandra.local.key -name cassandra.local -out cassandra.local.pfx
+keytool -importkeystore -deststorepass cassandra.local -deststoretype PKCS12 -destkeystore conf/cassandra-keystore.PKCS12 -srckeystore cassandra.local.pfx -srcstorepass cassandra.local -srcstoretype PKCS12
+
+mv conf/cassandra.yaml conf/cassandra.default.yaml
+cp "${script_root}/cassandra.yaml" conf
+cd ~/local/opt
+ln -fs packages/cassandra/${cassandra_package} cassandra

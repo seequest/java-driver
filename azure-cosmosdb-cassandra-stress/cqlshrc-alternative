@@ -1,0 +1,39 @@
+[cql]
+;; A version of CQL to use (this should almost never be set)
+; version = 3.2.1
+
+[authentication]
+;; If Cassandra has auth enabled, fill out these options
+; username = fred
+; password = !!bang!!$
+; keyspace = ks1
+
+[connection]
+hostname = localhost
+port = 9042
+ssl = false
+
+;; A timeout in seconds for opening new connections
+; timeout = 10
+
+;; A timeout in seconds for executing queries
+; request_timeout = 10
+
+[ssl]
+certfile = ~/local/opt/cassandra/cassandra.local.cert
+validate = false
+
+;; To be provided when require_client_auth=true
+;userkey = ~/key.pem
+
+;; To be provided when require_client_auth=true
+;usercert = ~/cert.pem
+
+;; Optional section, overrides default certfile in [ssl] section, if present
+; [certfiles]
+; 192.168.1.3 = ~/keys/cassandra01.cert
+; 192.168.1.4 = ~/keys/cassandra02.cert
+
+[tracing]
+;; The max number of seconds to wait for a trace to complete
+; max_trace_wait = 10.0
