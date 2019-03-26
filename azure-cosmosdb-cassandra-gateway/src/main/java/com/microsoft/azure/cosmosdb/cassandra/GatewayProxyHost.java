@@ -29,27 +29,26 @@ import org.slf4j.LoggerFactory;
 public final class GatewayProxyHost {
 
   private static final Logger logger = LoggerFactory.getLogger(GatewayProxyHost.class);
-  private static final String name = "Cosmos Cassandra Gateway service host";
 
   public static void main(String[] args) {
 
-    SocketAddress serviceAddress = getSocketAddress("cassandra.GatewayService", 9142);
-    SocketAddress proxyAddress = getSocketAddress("cassandra.GatewayProxy", 9042);
+    SocketAddress serviceAddress = getSocketAddresses("cassandra.GatewayService", 9142)[0];
+    SocketAddress[] proxyAddresses = getSocketAddresses("cassandra.GatewayProxy", 9042);
 
-    logger.info("starting listener for CQL clients on {}", proxyAddress);
-    logger.info("inbound messages will pass-through to Cassandra node on {}", serviceAddress);
+    logger.info("Starting listener for CQL clients on {}", (Object)proxyAddresses);
+    logger.info("Proxy services will be provided for Cassandra node at {}", serviceAddress);
 
     try (GatewayProxy proxy = new GatewayProxy()) {
-      proxy.start(proxyAddress, serviceAddress);
+      proxy.start(proxyAddresses, serviceAddress).sync();
       while (System.in.read() > 0) {}
-    } catch (IOException error) {
+    } catch (IOException | InterruptedException error) {
       exit(1);
     }
 
     exit(0);
   }
 
-  private static SocketAddress getSocketAddress(final String name, int defaultPort) {
+  private static SocketAddress[] getSocketAddresses(final String name, int defaultPort) {
 
     final String host = System.getProperty(name + ".host", "localhost");
     InetAddress[] inetAddresses = null;
@@ -71,15 +70,19 @@ public final class GatewayProxyHost {
       exit(1);
     }
 
-    SocketAddress socketAddress = null;
+    SocketAddress[] socketAddresses = new SocketAddress[inetAddresses.length];
 
     try {
-      socketAddress = new InetSocketAddress(inetAddresses[0], portNumber);
+      int i = 0;
+      for (InetAddress inetAddress : inetAddresses) {
+        //noinspection ObjectAllocationInLoop
+        socketAddresses[i++] = new InetSocketAddress(inetAddress, portNumber);
+      }
     } catch (IllegalArgumentException error) {
       logger.error("{}.port: Expected integer value in range of [0, 65535], not {}", name, port);
       exit(1);
     }
 
-    return socketAddress;
+    return socketAddresses;
   }
 }

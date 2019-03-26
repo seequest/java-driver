@@ -37,6 +37,7 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.SslHandler;
+import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import io.netty.util.concurrent.Promise;
 import io.netty.util.concurrent.PromiseCombiner;
@@ -86,12 +87,12 @@ class GatewayProxy implements AutoCloseable {
             });
   }
 
-  void start(SocketAddress proxyAddress, SocketAddress serviceAddress) {
+  Future start(SocketAddress[] proxyAddresses, SocketAddress serviceAddress) {
 
     checkState(
         !this.closed.get(),
         "cannot start listener on %s because gateway proxy is closed",
-        proxyAddress);
+        (Object)proxyAddresses);
 
     final ServerBootstrap bootstrap =
         new ServerBootstrap()
@@ -111,28 +112,42 @@ class GatewayProxy implements AutoCloseable {
                 })
             .childOption(ChannelOption.AUTO_READ, false);
 
-    bootstrap
-        .bind(proxyAddress)
-        .addListener(
-            (ChannelFuture bind) -> {
-              if (bind.isSuccess()) {
-                final Channel channel = bind.channel();
-                logger.info("{} listening", channel);
-                channel
-                    .closeFuture()
-                    .addListener(
-                        (ChannelFuture closed) -> {
-                          if (closed.isSuccess()) {
-                            logger.debug("{} closed", closed.channel());
-                          } else {
-                            logger.error(
-                                "{} closed due to {}", closed.channel(), closed.cause().toString());
-                          }
-                        });
-              } else {
-                logger.error("bind failed due to {}", bind.cause().toString());
-              }
-            });
+    final PromiseCombiner combiner = new PromiseCombiner(GlobalEventExecutor.INSTANCE);
+    Promise<Void> promise = GlobalEventExecutor.INSTANCE.newPromise();
+
+    GlobalEventExecutor.INSTANCE.next().execute(() -> {
+
+      for (SocketAddress proxyAddress : proxyAddresses) {
+        combiner.add(bootstrap
+            .bind(proxyAddress)
+            .addListener(
+                (ChannelFuture bind) -> {
+                  if (bind.isSuccess()) {
+                    final Channel channel = bind.channel();
+                    logger.info("{} listening", channel);
+                    channel
+                        .closeFuture()
+                        .addListener(
+                            (ChannelFuture closed) -> {
+                              if (closed.isSuccess()) {
+                                logger.debug("{} closed", closed.channel());
+                              } else {
+                                logger.error(
+                                    "{} closed due to {}",
+                                    closed.channel(),
+                                    closed.cause().toString());
+                              }
+                            });
+                  } else {
+                    logger.error("bind failed due to {}", bind.cause().toString());
+                  }
+                }));
+      }
+
+      combiner.finish(promise);
+    });
+
+    return promise;
   }
 
   private static void flushAndClose(Channel channel) {
