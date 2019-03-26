@@ -92,7 +92,7 @@ class GatewayProxy implements AutoCloseable {
     checkState(
         !this.closed.get(),
         "cannot start listener on %s because gateway proxy is closed",
-        (Object)proxyAddresses);
+        (Object) proxyAddresses);
 
     final ServerBootstrap bootstrap =
         new ServerBootstrap()
@@ -115,37 +115,40 @@ class GatewayProxy implements AutoCloseable {
     final PromiseCombiner combiner = new PromiseCombiner(GlobalEventExecutor.INSTANCE);
     Promise<Void> promise = GlobalEventExecutor.INSTANCE.newPromise();
 
-    GlobalEventExecutor.INSTANCE.next().execute(() -> {
-
-      for (SocketAddress proxyAddress : proxyAddresses) {
-        combiner.add(bootstrap
-            .bind(proxyAddress)
-            .addListener(
-                (ChannelFuture bind) -> {
-                  if (bind.isSuccess()) {
-                    final Channel channel = bind.channel();
-                    logger.info("{} listening", channel);
-                    channel
-                        .closeFuture()
+    GlobalEventExecutor.INSTANCE
+        .next()
+        .execute(
+            () -> {
+              for (SocketAddress proxyAddress : proxyAddresses) {
+                combiner.add(
+                    bootstrap
+                        .bind(proxyAddress)
                         .addListener(
-                            (ChannelFuture closed) -> {
-                              if (closed.isSuccess()) {
-                                logger.debug("{} closed", closed.channel());
+                            (ChannelFuture bind) -> {
+                              if (bind.isSuccess()) {
+                                final Channel channel = bind.channel();
+                                logger.info("{} listening", channel);
+                                channel
+                                    .closeFuture()
+                                    .addListener(
+                                        (ChannelFuture closed) -> {
+                                          if (closed.isSuccess()) {
+                                            logger.debug("{} closed", closed.channel());
+                                          } else {
+                                            logger.error(
+                                                "{} closed due to {}",
+                                                closed.channel(),
+                                                closed.cause().toString());
+                                          }
+                                        });
                               } else {
-                                logger.error(
-                                    "{} closed due to {}",
-                                    closed.channel(),
-                                    closed.cause().toString());
+                                logger.error("bind failed due to {}", bind.cause().toString());
                               }
-                            });
-                  } else {
-                    logger.error("bind failed due to {}", bind.cause().toString());
-                  }
-                }));
-      }
+                            }));
+              }
 
-      combiner.finish(promise);
-    });
+              combiner.finish(promise);
+            });
 
     return promise;
   }

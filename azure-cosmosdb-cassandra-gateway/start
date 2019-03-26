@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 declare -r script_root="$(cd "$(dirname "$1")" && pwd)"
-
 declare -r service_home=$(ls -d ~/local/opt/azure-cosmosdb-cassandra-gateway-*)
+
+JAVA_TOOL_OPTIONS="-Djavax.net.ssl.trustStore=/Users/david-noble/cacerts -Djavax.net.ssl.trustStorePassword=password -Djavax.net.ssl.trustStoreType=PKCS12" \
 "${service_home}/bin/azure-cosmosdb-cassandra-gateway"
