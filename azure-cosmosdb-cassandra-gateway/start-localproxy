@@ -3,5 +3,8 @@
 declare -r script_root="$(cd "$(dirname "$1")" && pwd)"
 declare -r service_home=$(ls -d ~/local/opt/azure-cosmosdb-cassandra-gateway-*)
 
+declare -r cassandra_host=cosmos-sdk-cassandra.cassandra.cosmos.azure.com
+declare -r cassandra_port=10350
+
 JAVA_TOOL_OPTIONS="-Djavax.net.ssl.trustStore='$service_home/etc/azure-cosmosdb-cassandra-gateway.truststore.PKCS12' -Djavax.net.ssl.trustStorePassword=cassandra.localproxy -Djavax.net.ssl.trustStoreType=PKCS12" \
-"${service_home}/bin/azure-cosmosdb-cassandra-gateway"
+"${service_home}/bin/azure-cosmosdb-cassandra-gateway" -Dcassandra.GatewayService.host=${cassandra_host} -Dcassandra.GatwayService.port=${cassandra_port}
