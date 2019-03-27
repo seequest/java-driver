@@ -155,6 +155,7 @@ class GatewayProxy implements AutoCloseable {
 
   private static void flushAndClose(Channel channel) {
     if (channel.isActive()) {
+      logger.info("{} FLUSH AND CLOSE", channel);
       channel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
     }
   }
@@ -199,8 +200,10 @@ class GatewayProxy implements AutoCloseable {
           (ChannelFutureListener)
               future -> {
                 if (future.isSuccess()) {
+                  logger.info("{} READ from {}", future.channel(), inboundChannel);
                   inboundChannel.read();
                 } else {
+                  logger.info("{} CLOSE due to {}", future.channel(), future.cause().toString());
                   inboundChannel.close();
                 }
               });
@@ -262,14 +265,21 @@ class GatewayProxy implements AutoCloseable {
     @Override
     public void channelRead(final ChannelHandlerContext context, final Object message) {
       logger.trace("{} channelRead", context.channel());
+      logger.info("{} WRITE to {}", context.channel(), this.inboundChannel);
       this.inboundChannel
           .writeAndFlush(message)
           .addListener(
               (ChannelFutureListener)
                   future -> {
                     if (future.isSuccess()) {
+                      logger.info("{} READ", future.channel());
                       context.channel().read();
                     } else {
+                      logger.info(
+                          "{} WRITE to {} failed due to {}",
+                          future.channel(),
+                          this.inboundChannel,
+                          future.cause().toString());
                       future.channel().close();
                     }
                   });
