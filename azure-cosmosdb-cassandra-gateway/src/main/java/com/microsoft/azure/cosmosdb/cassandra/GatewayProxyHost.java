@@ -32,11 +32,11 @@ public final class GatewayProxyHost {
 
   public static void main(String[] args) {
 
-    final SocketAddress[] proxyAddresses = getSocketAddresses("cassandra.GatewayProxy", 9042);
+    final SocketAddress[] proxyAddresses = getSocketAddresses("cassandra.gatewayProxy", 9042);
     logger.info("Starting listener for CQL clients on {}", (Object) proxyAddresses);
 
-    final SocketAddress serviceAddress = getSocketAddresses("cassandra.GatewayService", 9142)[0];
-    logger.info("Proxy services will be provided for Cassandra node at {}", serviceAddress);
+    final SocketAddress serviceAddress = getSocketAddresses("cosmos.gatewayService", 9142)[0];
+    logger.info("Providing proxy services for Cassandra node at {}", serviceAddress);
 
     try (GatewayProxy proxy = new GatewayProxy()) {
       proxy.start(proxyAddresses, serviceAddress).sync();

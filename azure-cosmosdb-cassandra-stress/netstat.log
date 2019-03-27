@@ -1,0 +1,765 @@
+Active Internet connections (including servers)
+Proto Recv-Q Send-Q  Local Address          Foreign Address        (state)    
+tcp4       0      0  localhost.61181        localhost.50058        ESTABLISHED
+tcp4       0      0  localhost.50058        localhost.61181        ESTABLISHED
+tcp4       0      0  192.168.144.237.50057  ec2-54-242-248-9.https ESTABLISHED
+tcp6       0      0  2601:600:967f:c0.50054 2603:1030:7::660.https SYN_SENT   
+tcp4       0      0  192.168.144.237.50050  40.97.133.130.https    ESTABLISHED
+tcp4       0      0  192.168.144.237.50045  40.97.140.34.https     ESTABLISHED
+tcp4       0      0  192.168.144.237.50044  40.97.140.34.https     ESTABLISHED
+tcp4       0      0  192.168.144.237.50043  40.97.140.34.https     ESTABLISHED
+tcp4       0      0  192.168.144.237.50040  40.97.140.34.https     ESTABLISHED
+tcp4       0      0  192.168.144.237.50007  40.97.140.34.https     ESTABLISHED
+tcp4       0      0  192.168.144.237.49967  52.165.175.144.https   ESTABLISHED
+tcp4       0      0  192.168.144.237.49909  138.91.237.237.https   ESTABLISHED
+tcp4       0      0  192.168.144.237.49295  192.168.144.238.49159  ESTABLISHED
+tcp4       0      0  192.168.144.237.49853  ec2-34-236-30-20.https ESTABLISHED
+tcp4       0      0  192.168.144.237.49295  192.168.144.236.49175  ESTABLISHED
+tcp4       0      0  192.168.144.237.49729  52.114.88.29.https     ESTABLISHED
+tcp4       0      0  192.168.144.237.49657  52.247.210.161.https   ESTABLISHED
+tcp4       0      0  192.168.144.237.49626  40.97.133.114.https    ESTABLISHED
+tcp4       0      0  192.168.144.237.49620  40.97.133.114.https    ESTABLISHED
+tcp4       0      0  192.168.144.237.49616  40.97.133.114.https    ESTABLISHED
+tcp4       0      0  192.168.144.237.49612  40.97.133.114.https    ESTABLISHED
+tcp4       0      0  192.168.144.237.49465  52.114.142.24.https    ESTABLISHED
+tcp4       0      0  192.168.144.237.49442  52.114.142.93.https    ESTABLISHED
+tcp4       0      0  192.168.144.237.49439  131.107.52.147.https   ESTABLISHED
+tcp4       0      0  192.168.144.237.49405  ec2-54-183-182-1.https ESTABLISHED
+tcp4       0      0  192.168.144.237.49400  52.173.26.181.https    ESTABLISHED
+tcp4       0      0  192.168.144.237.49386  192.168.144.241.52939  ESTABLISHED
+tcp4       0      0  192.168.144.237.49295  192.168.144.241.53389  ESTABLISHED
+tcp4       0      0  192.168.144.237.49316  media-center.loc.51826 ESTABLISHED
+tcp4       0      0  192.168.144.237.49300  192.168.144.32.synchro ESTABLISHED
+tcp4       0      0  192.168.144.237.49299  17.249.44.91.5223      ESTABLISHED
+tcp4       0      0  192.168.144.237.49298  192.168.144.239.http   ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.49296 fe80::aede:48ff:.49205 ESTABLISHED
+tcp6       0      0  *.49295                *.*                    LISTEN     
+tcp4       0      0  *.49295                *.*                    LISTEN     
+tcp4       0      0  localhost.9142         *.*                    LISTEN     
+tcp4       0      0  localhost.afs3-fileser *.*                    LISTEN     
+tcp4       0      0  localhost.64674        *.*                    LISTEN     
+tcp4       0      0  localhost.7199         *.*                    LISTEN     
+tcp4       0      0  localhost.63743        *.*                    LISTEN     
+tcp4       0      0  *.61181                *.*                    LISTEN     
+tcp46      0      0  *.61180                *.*                    LISTEN     
+tcp4       0      0  localhost.30234        *.*                    LISTEN     
+tcp4       0      0  localhost.61178        *.*                    LISTEN     
+tcp4       0      0  *.61177                *.*                    LISTEN     
+tcp4       0      0  localhost.63342        *.*                    LISTEN     
+tcp4       0      0  localhost.6942         *.*                    LISTEN     
+tcp6       0      0  fe80::aede:48ff:.60951 fe80::aede:48ff:.49204 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.60950 fe80::aede:48ff:.49206 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.49161 fe80::aede:48ff:.49213 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.60949 fe80::aede:48ff:.59602 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.57791 fe80::aede:48ff:.49178 ESTABLISHED
+tcp6       0      0  danoble-mbp-4.lo.black fe80::f47c:5e10:.5439  ESTABLISHED
+tcp6       0      0  danoble-mbp-4.lo.1024  fe80::f47c:5e10:.1024  ESTABLISHED
+tcp6       0      0  danoble-mbp-4.lo.black fe80::f284:9588:.38616 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.50190 fe80::aede:48ff:.49185 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.64750 fe80::aede:48ff:.49185 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.64743 fe80::aede:48ff:.49185 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.60049 fe80::aede:48ff:.49185 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.53402 fe80::aede:48ff:.49185 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.50276 fe80::aede:48ff:.49185 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.62826 fe80::aede:48ff:.49185 ESTABLISHED
+tcp6       0      0  danoble-mbp-4.lo.1024  fe80::f284:9588:.1024  ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.61081 fe80::aede:48ff:.49185 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.57898 fe80::aede:48ff:.49185 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.61648 fe80::aede:48ff:.49185 ESTABLISHED
+tcp4       0      0  localhost.15393        *.*                    LISTEN     
+tcp4       0      0  localhost.15292        *.*                    LISTEN     
+tcp6       0      0  fe80::aede:48ff:.60407 fe80::aede:48ff:.49185 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.55537 fe80::aede:48ff:.49173 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.49675 fe80::aede:48ff:.49177 ESTABLISHED
+tcp4       0      0  localhost.49522        *.*                    LISTEN     
+tcp4       0      0  localhost.49493        *.*                    LISTEN     
+tcp6       0      0  localhost.57889        *.*                    LISTEN     
+tcp4       0      0  localhost.57889        *.*                    LISTEN     
+tcp4       0      0  localhost.4767         localhost.49395        ESTABLISHED
+tcp4       0      0  localhost.49395        localhost.4767         ESTABLISHED
+tcp4       0      0  localhost.4767         *.*                    LISTEN     
+tcp4       0      0  localhost.4380         *.*                    LISTEN     
+tcp4       0      0  localhost.49314        *.*                    LISTEN     
+tcp6       0      0  fe80::aede:48ff:.49255 fe80::aede:48ff:.49172 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.49165 fe80::aede:48ff:.49186 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.49164 fe80::aede:48ff:.49176 ESTABLISHED
+tcp6       0      0  fe80::aede:48ff:.49163 *.*                    LISTEN     
+tcp6       0      0  fe80::aede:48ff:.49162 *.*                    LISTEN     
+tcp6       0      0  fe80::aede:48ff:.49161 *.*                    LISTEN     
+tcp6       0      0  fe80::aede:48ff:.49160 *.*                    LISTEN     
+tcp4       0      0  *.62319                *.*                    LISTEN     
+tcp6       0      0  *.62319                *.*                    LISTEN     
+tcp4       0      0  *.ssh                  *.*                    LISTEN     
+tcp6       0      0  *.ssh                  *.*                    LISTEN     
+tcp4       0      0  192.168.144.237.50052  52.109.12.24.https     TIME_WAIT  
+tcp4       0      0  192.168.144.237.50056  104.16.47.63.https     TIME_WAIT  
+tcp4       0      0  localhost.50053        localhost.61181        TIME_WAIT  
+udp6       0      0  *.xserveraid           *.*                               
+udp6       0      0  *.63377                *.*                               
+udp4       0      0  *.63377                *.*                               
+udp6       0      0  *.57524                *.*                               
+udp4       0      0  *.57524                *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.xserveraid           *.*                               
+udp6       0      0  *.61413                *.*                               
+udp4       0      0  *.61413                *.*                               
+udp46      0      0  *.56106                *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.53076                *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp6       0      0  *.59006                *.*                               
+udp4       0      0  *.59006                *.*                               
+udp6       0      0  *.58673                *.*                               
+udp4       0      0  *.58673                *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp46      0      0  *.*                    *.*                               
+udp4       0      0  *.*                    *.*                               
+udp6       0      0  *.mdns                 *.*                               
+udp4       0      0  *.mdns                 *.*                               
+udp4       0      0  *.netbios-dgm          *.*                               
+udp4       0      0  *.netbios-ns           *.*                               
+icm4       0      0  *.*                    *.*                               
+Active Multipath Internet connections
+Proto/ID  Flags      Local Address          Foreign Address        (state)    
+Active LOCAL (UNIX) domain sockets
+Address          Type   Recv-Q Send-Q            Inode             Conn             Refs          Nextref Addr
+5720d8c768719f0f stream      0      0                0 5720d8c768719357                0                0
+5720d8c768719357 stream      4      0                0 5720d8c768719f0f                0                0
+5720d8c761feaea7 stream      0      0                0 5720d8c761fea6d7                0                0 /var/run/mDNSResponder
+5720d8c761fea6d7 stream      0      0                0 5720d8c761feaea7                0                0
+5720d8c761feb997 stream      0      0                0 5720d8c761fe9f07                0                0 /var/run/mDNSResponder
+5720d8c761fe9f07 stream      0      0                0 5720d8c761feb997                0                0
+5720d8c7626f4f0f stream      0      0                0 5720d8c7626f40ff                0                0
+5720d8c7626f40ff stream      0      0                0 5720d8c7626f4f0f                0                0
+5720d8c7626f53bf stream      0      0                0 5720d8c7626f44e7                0                0
+5720d8c7626f44e7 stream      0      0                0 5720d8c7626f53bf                0                0
+5720d8c7626f379f stream      0      0                0 5720d8c7626f3d17                0                0
+5720d8c7626f3d17 stream      0      0                0 5720d8c7626f379f                0                0
+5720d8c7626f2be7 stream      0      0                0 5720d8c7626f48cf                0                0
+5720d8c7626f48cf stream      0      0                0 5720d8c7626f2be7                0                0
+5720d8c7626f56df stream      0      0                0                0                0                0
+5720d8c7626f2e3f stream      0      0                0 5720d8c7626f441f                0                0 /var/run/mDNSResponder
+5720d8c7626f441f stream      0      0                0 5720d8c7626f2e3f                0                0
+5720d8c7626f2a57 stream      0      0                0 5720d8c7626f428f                0                0 /var/run/mDNSResponder
+5720d8c7626f428f stream      0      0                0 5720d8c7626f2a57                0                0
+5720d8c76871847f stream      0      0                0 5720d8c768719e47                0                0 /var/run/mDNSResponder
+5720d8c768719e47 stream      0      0                0 5720d8c76871847f                0                0
+5720d8c7782445af stream      0      0                0 5720d8c778242e3f                0                0 /var/run/mDNSResponder
+5720d8c778242e3f stream      0      0                0 5720d8c7782445af                0                0
+5720d8c761fea3b7 stream      0      0                0 5720d8c761fec487                0                0
+5720d8c761fec487 stream      0      0                0 5720d8c761fea3b7                0                0
+5720d8c761fea79f stream      0      0                0 5720d8c761fea547                0                0
+5720d8c761fea547 stream      0      0                0 5720d8c761fea79f                0                0
+5720d8c761344bef stream      0      0                0 5720d8c76c43d7a7                0                0
+5720d8c76c43d7a7 stream      0      0                0 5720d8c761344bef                0                0
+5720d8c76c43bea7 stream      0      0                0 5720d8c76c43c0ff                0                0
+5720d8c76c43c0ff stream      0      0                0 5720d8c76c43bea7                0                0
+5720d8c76c43ad77 stream      0      0                0 5720d8c76c43d3bf                0                0 /var/run/mDNSResponder
+5720d8c76c43d3bf stream      0      0                0 5720d8c76c43ad77                0                0
+5720d8c76c43b097 stream      0      0                0 5720d8c76c43aa57                0                0 /var/run/mDNSResponder
+5720d8c76c43aa57 stream      0      0                0 5720d8c76c43b097                0                0
+5720d8c76c43af07 stream      0      0                0 5720d8c76c43d54f                0                0 /var/run/mDNSResponder
+5720d8c76c43d54f stream      0      0                0 5720d8c76c43af07                0                0
+5720d8c768718f6f stream      0      0                0 5720d8c7687195af                0                0 /var/run/mDNSResponder
+5720d8c7687195af stream      0      0                0 5720d8c768718f6f                0                0
+5720d8c768718c4f stream      0      0                0 5720d8c768718d17                0                0 /var/run/mDNSResponder
+5720d8c768718d17 stream      0      0                0 5720d8c768718c4f                0                0
+5720d8c778244b27 stream      0      0                0                0                0                0
+5720d8c77824554f stream      0      0                0                0                0                0
+5720d8c7782440ff stream      0      0                0 5720d8c77824441f                0                0 /var/run/mDNSResponder
+5720d8c77824441f stream      0      0                0 5720d8c7782440ff                0                0
+5720d8c778243f6f stream      0      0                0 5720d8c7782441c7                0                0 /var/run/mDNSResponder
+5720d8c7782441c7 stream      0      0                0 5720d8c778243f6f                0                0
+5720d8c778244997 stream      0      0                0                0                0                0
+5720d8c7782436d7 stream      0      0                0                0                0                0
+5720d8c778242fcf stream      0      0                0                0                0                0
+5720d8c761fe9a57 stream      0      0                0                0                0                0
+5720d8c761fec3bf stream      0      0                0 5720d8c761feb357                0                0 /var/folders/lv/lz2_56px44zg_yl14n00hhm40000gn/T/vscode-5ac75cab0a2934459781d2cd79a78f016634864e.sock
+5720d8c761feb357 stream      0      0                0 5720d8c761fec3bf                0                0
+5720d8c761feb8cf stream      0      0 5720d8c759274a37                0                0                0 /var/folders/lv/lz2_56px44zg_yl14n00hhm40000gn/T/vscode-git-askpass-ad9741dbac99ea40119cb9495d5f69e0a78
+5720d8c761febe47 stream      0      0                0 5720d8c761fe9fcf                0                0 /var/folders/lv/lz2_56px44zg_yl14n00hhm40000gn/T/vscode-6e8325e4ad4bf6f6cd5784cf6d600f6a5c9f830c.sock
+5720d8c761fe9fcf stream      0      0                0 5720d8c761febe47                0                0
+5720d8c761feab87 stream      0      0                0 5720d8c761fea47f                0                0
+5720d8c761fea47f stream      0      0                0 5720d8c761feab87                0                0
+5720d8c761feb41f stream      0      0                0 5720d8c761febb27                0                0
+5720d8c761febb27 stream      0      0                0 5720d8c761feb41f                0                0
+5720d8c761feaddf stream      0      0                0 5720d8c761fea097                0                0
+5720d8c761fea097 stream      0      0                0 5720d8c761feaddf                0                0
+5720d8c761fea2ef stream      0      0                0 5720d8c761fead17                0                0
+5720d8c761fead17 stream      0      0                0 5720d8c761fea2ef                0                0
+5720d8c761fec167 stream      0      0                0 5720d8c761fe998f                0                0 /var/run/mDNSResponder
+5720d8c761fe998f stream      0      0                0 5720d8c761fec167                0                0
+5720d8c761febcb7 stream      0      0                0 5720d8c761fe98c7                0                0
+5720d8c761fe98c7 stream      0      0                0 5720d8c761febcb7                0                0
+5720d8c761feb807 stream      0      0                0 5720d8c753d342ef                0                0
+5720d8c753d342ef stream      0      0                0 5720d8c761feb807                0                0
+5720d8c76d874b27 stream      0      0                0 5720d8c76d872a57                0                0
+5720d8c76d872a57 stream      0      0                0 5720d8c76d874b27                0                0
+5720d8c76d872e3f stream      0      0                0 5720d8c76d8728c7                0                0
+5720d8c76d8728c7 stream      0      0                0 5720d8c76d872e3f                0                0
+5720d8c76d875617 stream      0      0 5720d8c771ef1e97                0                0                0 /var/folders/lv/lz2_56px44zg_yl14n00hhm40000gn/T/vscode-6e8325e4ad4bf6f6cd5784cf6d600f6a5c9f830c.sock
+5720d8c7626f3097 stream      0      0                0                0                0                0
+5720d8c7626f3b87 stream      0      0                0 5720d8c7626f5617                0                0 /var/folders/lv/lz2_56px44zg_yl14n00hhm40000gn/T/vscode-ipc-b24065d1-f390-4318-9e4a-974d80fb5a5f.sock
+5720d8c7626f5617 stream      0      0                0 5720d8c7626f3b87                0                0
+5720d8c7626f4677 stream      0      0                0 5720d8c7626f2d77                0                0
+5720d8c7626f2d77 stream      0      0                0 5720d8c7626f4677                0                0
+5720d8c7626f4bef stream      0      0                0 5720d8c7626f4d7f                0                0
+5720d8c7626f4d7f stream      0      0                0 5720d8c7626f4bef                0                0
+5720d8c7626f3547 stream      0      0                0 5720d8c7626f4a5f                0                0
+5720d8c7626f4a5f stream      0      0                0 5720d8c7626f3547                0                0
+5720d8c7626f392f stream      0      0                0 5720d8c7626f4997                0                0
+5720d8c7626f4997 stream      0      0                0 5720d8c7626f392f                0                0
+5720d8c7626f315f stream      0      0                0 5720d8c7626f3867                0                0 /Users/david-noble/Library/Application Support/Code/1.32.3-shared.sock
+5720d8c7626f3867 stream      0      0                0 5720d8c7626f315f                0                0
+5720d8c7626f3ea7 stream      0      0                0 5720d8c7626f45af                0                0
+5720d8c7626f45af stream      0      0                0 5720d8c7626f3ea7                0                0
+5720d8c7626f298f stream      0      0                0 5720d8c7626f36d7                0                0
+5720d8c7626f36d7 stream      0      0                0 5720d8c7626f298f                0                0
+5720d8c7626f2fcf stream      0      0                0 5720d8c7626f2b1f                0                0 /var/run/mDNSResponder
+5720d8c7626f2b1f stream      0      0                0 5720d8c7626f2fcf                0                0
+5720d8c7626f473f stream      0      0                0 5720d8c7626f32ef                0                0 /var/run/mDNSResponder
+5720d8c7626f32ef stream      0      0                0 5720d8c7626f473f                0                0
+5720d8c7626f39f7 stream      0      0                0 5720d8c7626f509f                0                0 /Users/david-noble/Library/Application Support/Code/1.32.3-shared.sock
+5720d8c7626f509f stream      0      0                0 5720d8c7626f39f7                0                0
+5720d8c7626f4b27 stream      0      0 5720d8c758bb45d7                0                0                0 /Users/david-noble/Library/Application Support/Code/1.32.3-shared.sock
+5720d8c7626f5487 stream      0      0                0 5720d8c7626f3ddf                0                0
+5720d8c7626f3ddf stream      0      0                0 5720d8c7626f5487                0                0
+5720d8c7626f3227 stream      0      0                0 5720d8c7626f4fd7                0                0
+5720d8c7626f4fd7 stream      0      0                0 5720d8c7626f3227                0                0
+5720d8c76d87347f stream      0      0 5720d8c771aebab7                0                0                0 /Users/david-noble/Library/Application Support/Code/1.32.3-main.sock
+5720d8c76d874f0f stream      0      0                0 5720d8c76d87522f                0                0
+5720d8c76d87522f stream      0      0                0 5720d8c76d874f0f                0                0
+5720d8c778242d77 stream      0      0                0 5720d8c778245167                0                0 /var/run/mDNSResponder
+5720d8c778245167 stream      0      0                0 5720d8c778242d77                0                0
+5720d8c778244e47 stream      0      0                0 5720d8c778242b1f                0                0
+5720d8c778242b1f stream      0      0                0 5720d8c778244e47                0                0
+5720d8c778243ea7 stream      0      0                0 5720d8c778244fd7                0                0
+5720d8c778244fd7 stream      0      0                0 5720d8c778243ea7                0                0
+5720d8c7782452f7 stream      0      0                0 5720d8c7782428c7                0                0
+5720d8c7782428c7 stream      0      0                0 5720d8c7782452f7                0                0
+5720d8c778244357 stream      0      0                0 5720d8c7782444e7                0                0
+5720d8c7782444e7 stream      0      0                0 5720d8c778244357                0                0
+5720d8c77824473f stream      0      0                0 5720d8c778244677                0                0 /var/run/mDNSResponder
+5720d8c778244677 stream      0      0                0 5720d8c77824473f                0                0
+5720d8c778243ddf stream      0      0                0 5720d8c7782453bf                0                0
+5720d8c7782453bf stream      0      0                0 5720d8c778243ddf                0                0
+5720d8c7782448cf stream      0      0 5720d8c771e2ae17                0                0                0 /var/folders/lv/lz2_56px44zg_yl14n00hhm40000gn/T/.com.microsoft.teams.M8QBMi/SS
+5720d8c761feb0ff stream      0      0                0 5720d8c761fe9b1f                0                0 /var/run/mDNSResponder
+5720d8c761fe9b1f stream      0      0                0 5720d8c761feb0ff                0                0
+5720d8c761fec22f stream      0      0                0                0                0                0
+5720d8c761fea92f stream      0      0                0                0                0                0
+5720d8c761fea867 stream      0      0                0                0                0                0
+5720d8c761fea227 stream      0      0                0 5720d8c761fec617                0                0
+5720d8c761fec617 stream      0      0                0 5720d8c761fea227                0                0
+5720d8c761feac4f stream      0      0                0                0                0                0 /Users/david-noble/Library/Application Support/Adobe/Acrobat/DC/Acrobat/Synchronizer/Notification
+5720d8c761feb73f stream      0      0                0 5720d8c761fec7a7                0                0 /var/run/mDNSResponder
+5720d8c761fec7a7 stream      0      0                0 5720d8c761feb73f                0                0
+5720d8c761feb5af stream      0      0                0 5720d8c761fe9d77                0                0
+5720d8c761fe9d77 stream      0      0                0 5720d8c761feb5af                0                0
+5720d8c761fe9caf stream      0      0                0                0                0                0 /Users/david-noble/Library/Application Support/Adobe/Acrobat/DC/Acrobat/Synchronizer/Notification
+5720d8c76d874e47 stream      0      0                0 5720d8c76d875167                0                0 /var/run/mDNSResponder
+5720d8c76d875167 stream      0      0                0 5720d8c76d874e47                0                0
+5720d8c761febbef stream      0      0                0 5720d8c761feb677                0                0 /var/run/mDNSResponder
+5720d8c761feb677 stream      0      0                0 5720d8c761febbef                0                0
+5720d8c76871a22f stream      0      0                0 5720d8c768718b87                0                0 /tmp/com.adobe.AdobeIPCBroker.ctrl-david-noble
+5720d8c768718b87 stream      0      0                0 5720d8c76871a22f                0                0
+5720d8c761344b27 stream      0      0                0 5720d8c761342be7                0                0 /tmp/com.adobe.AdobeIPCBroker.ctrl-david-noble
+5720d8c761342be7 stream      0      0                0 5720d8c761344b27                0                0
+5720d8c76d8741c7 stream      0      0                0 5720d8c76d872caf                0                0
+5720d8c76d872caf stream      0      0                0 5720d8c76d8741c7                0                0
+5720d8c76d873f6f stream      0      0                0 5720d8c76d8740ff                0                0
+5720d8c76d8740ff stream      0      0                0 5720d8c76d873f6f                0                0
+5720d8c76d874807 stream      0      0                0 5720d8c76d873ea7                0                0 /tmp/com.adobe.AdobeIPCBroker.ctrl-david-noble
+5720d8c76d873ea7 stream      0      0                0 5720d8c76d874807                0                0
+5720d8c76d8736d7 stream      0      0                0 5720d8c76d873547                0                0 /var/run/mDNSResponder
+5720d8c76d873547 stream      0      0                0 5720d8c76d8736d7                0                0
+5720d8c76d87360f stream      0      0                0 5720d8c76d87441f                0                0 /tmp/com.adobe.AdobeIPCBroker.ctrl-david-noble
+5720d8c76d87441f stream      0      0                0 5720d8c76d87360f                0                0
+5720d8c76d87428f stream      0      0                0 5720d8c76d8744e7                0                0 /tmp/com.adobe.AdobeIPCBroker.ctrl-david-noble
+5720d8c76d8744e7 stream      0      0                0 5720d8c76d87428f                0                0
+5720d8c76d8753bf stream      0      0                0 5720d8c76d874a5f                0                0 /tmp/com.adobe.AdobeIPCBroker.ctrl-david-noble
+5720d8c76d874a5f stream      0      0                0 5720d8c76d8753bf                0                0
+5720d8c76871a6df stream      0      0                0 5720d8c76871815f                0                0 /tmp/com.adobe.AdobeIPCBroker.ctrl-david-noble
+5720d8c76871815f stream      0      0                0 5720d8c76871a6df                0                0
+5720d8c768718227 stream      0      0                0 5720d8c76871a167                0                0 /tmp/com.adobe.AdobeIPCBroker.ctrl-david-noble
+5720d8c76871a167 stream      0      0                0 5720d8c768718227                0                0
+5720d8c7687198cf stream      0      0                0 5720d8c768717fcf                0                0 /tmp/com.adobe.AdobeIPCBroker.ctrl-david-noble
+5720d8c768719807 stream      0      0                0 5720d8c7687194e7                0                0 /tmp/com.adobe.AdobeIPCBroker.ctrl-david-noble
+5720d8c7687194e7 stream      0      0                0 5720d8c768719807                0                0
+5720d8c768717fcf stream      0      0                0 5720d8c7687198cf                0                0
+5720d8c76871a09f stream      0      0 5720d8c76d22e36f                0                0                0 /tmp/com.adobe.AdobeIPCBroker.ctrl-david-noble
+5720d8c778242a57 stream      0      0                0 5720d8c77824298f                0                0 /var/run/mDNSResponder
+5720d8c77824298f stream      0      0                0 5720d8c778242a57                0                0
+5720d8c778242be7 stream      0      0                0 5720d8c778245617                0                0 /var/run/mDNSResponder
+5720d8c778245617 stream      0      0                0 5720d8c778242be7                0                0
+5720d8c778245487 stream      0      0                0 5720d8c77824347f                0                0 /var/run/mDNSResponder
+5720d8c77824347f stream      0      0                0 5720d8c778245487                0                0
+5720d8c778244f0f stream      0      0                0 5720d8c77824360f                0                0 /var/run/mDNSResponder
+5720d8c77824360f stream      0      0                0 5720d8c778244f0f                0                0
+5720d8c778244807 stream      0      0                0 5720d8c778243867                0                0 /var/run/mDNSResponder
+5720d8c778243867 stream      0      0                0 5720d8c778244807                0                0
+5720d8c76d874fd7 stream      0      0                0 5720d8c76d872b1f                0                0 /var/run/mDNSResponder
+5720d8c76d872b1f stream      0      0                0 5720d8c76d874fd7                0                0
+5720d8c76d872be7 stream      0      0                0 5720d8c76d87298f                0                0 /var/run/mDNSResponder
+5720d8c76d87298f stream      0      0                0 5720d8c76d872be7                0                0
+5720d8c76d874997 stream      0      0                0 5720d8c76d874d7f                0                0 /var/run/mDNSResponder
+5720d8c76d874d7f stream      0      0                0 5720d8c76d874997                0                0
+5720d8c76d873227 stream      0      0                0 5720d8c76d872fcf                0                0 /var/run/mDNSResponder
+5720d8c76d872fcf stream      0      0                0 5720d8c76d873227                0                0
+5720d8c76d8739f7 stream      0      0                0 5720d8c76d87473f                0                0 /var/run/mDNSResponder
+5720d8c76d87473f stream      0      0                0 5720d8c76d8739f7                0                0
+5720d8c768717b1f stream      0      0                0 5720d8c768718ea7                0                0 /var/run/mDNSResponder
+5720d8c768718ea7 stream      0      0                0 5720d8c768717b1f                0                0
+5720d8c76c43a8c7 stream      0      0                0 5720d8c76c43a98f                0                0
+5720d8c76c43a98f stream      0      0                0 5720d8c76c43a8c7                0                0
+5720d8c76c43ab1f stream      0      0                0 5720d8c76c43abe7                0                0
+5720d8c76c43abe7 stream      0      0                0 5720d8c76c43ab1f                0                0
+5720d8c76c43ae3f stream      0      0                0 5720d8c76c43d487                0                0
+5720d8c76c43d487 stream      0      0                0 5720d8c76c43ae3f                0                0
+5720d8c76c43b15f stream      0      0                0 5720d8c76c43b227                0                0 /var/run/prl_pm_service.socket
+5720d8c76c43b227 stream      0      0                0 5720d8c76c43b15f                0                0
+5720d8c76c43ccb7 stream      0      0 5720d8c76cdac007                0                0                0 /Users/david-noble/Library/Application Support/Adobe/Acrobat/DC/Acrobat/Synchronizer/Commands
+5720d8c76c43b79f stream      0      0 5720d8c76ccede97                0                0                0 /Users/david-noble/Library/Application Support/Adobe/Acrobat/DC/Acrobat/Synchronizer/Notification
+5720d8c76c43b6d7 stream      0      0                0 5720d8c76c43cd7f                0                0
+5720d8c76c43cd7f stream      0      0                0 5720d8c76c43b6d7                0                0
+5720d8c76c43cfd7 stream      0      0                0 5720d8c76c43ce47                0                0
+5720d8c76c43ce47 stream      0      0                0 5720d8c76c43cfd7                0                0
+5720d8c76c43d09f stream      0      0                0 5720d8c76c43b867                0                0
+5720d8c76c43b867 stream      0      0                0 5720d8c76c43d09f                0                0
+5720d8c76c43b3b7 stream      0      0                0 5720d8c76c43cf0f                0                0
+5720d8c76c43cf0f stream      0      0                0 5720d8c76c43b3b7                0                0
+5720d8c76c43cbef stream      0      0 5720d8c76ccd1d9f                0                0                0 /var/folders/lv/lz2_56px44zg_yl14n00hhm40000gn/T/qtsingleapp-Parall-5611-1f5
+5720d8c76c43c997 stream      0      0                0 5720d8c76c43c8cf                0                0 /var/run/mDNSResponder
+5720d8c76c43c8cf stream      0      0                0 5720d8c76c43c997                0                0
+5720d8c76c43c807 stream      0      0                0 5720d8c76c43b92f                0                0 /var/run/mDNSResponder
+5720d8c76c43b92f stream      0      0                0 5720d8c76c43c807                0                0
+5720d8c76c43c73f stream      0      0                0 5720d8c76c43c677                0                0 /var/run/mDNSResponder
+5720d8c76c43c677 stream      0      0                0 5720d8c76c43c73f                0                0
+5720d8c76c43c5af stream      0      0                0 5720d8c76c43c4e7                0                0 /var/run/mDNSResponder
+5720d8c76c43c4e7 stream      0      0                0 5720d8c76c43c5af                0                0
+5720d8c76c43b9f7 stream      0      0                0 5720d8c76c43c28f                0                0 /var/run/mDNSResponder
+5720d8c76c43babf stream      0      0                0 5720d8c76c43c357                0                0 /var/run/mDNSResponder
+5720d8c76c43bb87 stream      0      0                0 5720d8c76c43bddf                0                0 /var/run/mDNSResponder
+5720d8c76c43c41f stream      0      0                0 5720d8c76c43bd17                0                0 /var/run/mDNSResponder
+5720d8c76c43c357 stream      0      0                0 5720d8c76c43babf                0                0
+5720d8c76c43c28f stream      0      0                0 5720d8c76c43b9f7                0                0
+5720d8c76c43bc4f stream      0      0                0 5720d8c76c43c1c7                0                0 /var/run/mDNSResponder
+5720d8c76c43bddf stream      0      0                0 5720d8c76c43bb87                0                0
+5720d8c76c43bd17 stream      0      0                0 5720d8c76c43c41f                0                0
+5720d8c76c43c1c7 stream      0      0                0 5720d8c76c43bc4f                0                0
+5720d8c76c43c037 stream      0      0                0 5720d8c76c43bf6f                0                0 /var/run/mDNSResponder
+5720d8c76c43bf6f stream      0      0                0 5720d8c76c43c037                0                0
+5720d8c76871798f stream      0      0                0 5720d8c768717a57                0                0 /var/run/mDNSResponder
+5720d8c768717a57 stream      0      0                0 5720d8c76871798f                0                0
+5720d8c768717be7 stream      0      0                0 5720d8c76871a617                0                0
+5720d8c76871a617 stream      0      0                0 5720d8c768717be7                0                0
+5720d8c76871a487 stream      0      0 5720d8c76be4f0ff                0                0                0 /Users/david-noble/Library/Parallels/.desktop_uiemu_interface
+5720d8c768717d77 stream      0      0                0 5720d8c76871a3bf                0                0 /var/run/mDNSResponder
+5720d8c76871a3bf stream      0      0                0 5720d8c768717d77                0                0
+5720d8c768717e3f stream      0      0                0                0                0                0
+5720d8c7687182ef stream      0      0                0 5720d8c768719fd7                0                0 /var/run/prl_disp_service.socket
+5720d8c768719fd7 stream      0      0                0 5720d8c7687182ef                0                0
+5720d8c7687183b7 stream      0      0 5720d8c76bbe33e7                0                0                0 /var/run/prl_disp_service.socket
+5720d8c7687186d7 stream      0      0 5720d8c76b7aad9f                0                0                0 /var/tmp/com.parallels.desktop.parental_control_socket2.david-noble
+5720d8c76871879f stream      0      0                0 5720d8c768718867                0                0
+5720d8c768718867 stream      0      0                0 5720d8c76871879f                0                0
+5720d8c76871892f stream      0      0 5720d8c76b6885d7                0                0                0 /var/tmp/prl_event_tap.socket_501
+5720d8c768719d7f stream      0      0                0 5720d8c768719cb7                0                0
+5720d8c768719cb7 stream      0      0                0 5720d8c768719d7f                0                0
+5720d8c768719bef stream      0      0                0 5720d8c768719b27                0                0
+5720d8c768719b27 stream      0      0                0 5720d8c768719bef                0                0
+5720d8c768719997 stream      0      0 5720d8c76ad313e7                0                0                0 /var/folders/lv/lz2_56px44zg_yl14n00hhm40000gn/T/qtsingleapp-Parall-c0ce-1f5
+5720d8c768719037 stream      0      0                0 5720d8c7687190ff                0                0 /var/run/prl_pm_service.socket
+5720d8c7687190ff stream      0      0                0 5720d8c768719037                0                0
+5720d8c761342f07 stream      0      0                0 5720d8c761342fcf                0                0 /var/run/mDNSResponder
+5720d8c761342fcf stream      0      0                0 5720d8c761342f07                0                0
+5720d8c761343097 stream      0      0                0 5720d8c76134315f                0                0 /var/run/mDNSResponder
+5720d8c76134315f stream      0      0                0 5720d8c761343097                0                0
+5720d8c7613432ef stream      0      0                0 5720d8c76134522f                0                0 /var/run/mDNSResponder
+5720d8c76134522f stream      0      0                0 5720d8c7613432ef                0                0
+5720d8c761343227 stream      0      0                0 5720d8c7613452f7                0                0 /var/run/mDNSResponder
+5720d8c7613452f7 stream      0      0                0 5720d8c761343227                0                0
+5720d8c761344e47 stream      0      0                0 5720d8c761344d7f                0                0
+5720d8c761344d7f stream      0      0                0 5720d8c761344e47                0                0
+5720d8c761343547 stream      0      0                0 5720d8c76134360f                0                0
+5720d8c76134360f stream      0      0                0 5720d8c761343547                0                0
+5720d8c7613436d7 stream      0      0                0 5720d8c76134379f                0                0
+5720d8c76134379f stream      0      0                0 5720d8c7613436d7                0                0
+5720d8c761344cb7 stream      0      0                0 5720d8c761343867                0                0
+5720d8c761343867 stream      0      0                0 5720d8c761344cb7                0                0
+5720d8c7613439f7 stream      0      0                0 5720d8c761343abf                0                0 /var/run/mDNSResponder
+5720d8c761343abf stream      0      0                0 5720d8c7613439f7                0                0
+5720d8c7613448cf stream      0      0                0 5720d8c761344807                0                0 /var/run/mDNSResponder
+5720d8c761344807 stream      0      0                0 5720d8c7613448cf                0                0
+5720d8c7613444e7 stream      0      0                0 5720d8c76134441f                0                0 /var/run/mDNSResponder
+5720d8c76134441f stream      0      0                0 5720d8c7613444e7                0                0
+5720d8c761343ea7 stream      0      0 5720d8c76753bd1f                0                0                0 /var/tmp/filesystemui.socket
+5720d8c761344357 stream      0      0 5720d8c76753b74f                0                0                0 /private/tmp/com.apple.launchd.P68ki72tw5/Render
+5720d8c76134428f stream      0      0 5720d8c76753b847                0                0                0 /private/tmp/com.apple.launchd.3FccMQBb3d/Listeners
+5720d8c753d363bf stream      0      0                0 5720d8c753d366df                0                0 /var/run/mDNSResponder
+5720d8c753d366df stream      0      0                0 5720d8c753d363bf                0                0
+5720d8c753d367a7 stream      0      0                0 5720d8c753d33a57                0                0
+5720d8c753d33a57 stream      0      0                0 5720d8c753d367a7                0                0
+5720d8c753d36487 stream      0      0                0 5720d8c753d3398f                0                0 /var/run/mDNSResponder
+5720d8c753d3398f stream      0      0                0 5720d8c753d36487                0                0
+5720d8c753d36167 stream      0      0 5720d8c7603ee17f                0                0                0 /var/run/prl_pm_service.socket
+5720d8c753d33fcf stream      0      0                0 5720d8c753d35e47                0                0 /var/run/mDNSResponder
+5720d8c753d35e47 stream      0      0                0 5720d8c753d33fcf                0                0
+5720d8c753d3415f stream      0      0                0 5720d8c753d34097                0                0 /var/run/mDNSResponder
+5720d8c753d34097 stream      0      0                0 5720d8c753d3415f                0                0
+5720d8c753d34227 stream      0      0                0 5720d8c753d35f0f                0                0
+5720d8c753d35f0f stream      0      0                0 5720d8c753d34227                0                0
+5720d8c753d3447f stream      0      0 5720d8c75f16f5d7                0                0                0 /var/run/displaypolicyd/state
+5720d8c753d35997 stream      0      0 5720d8c75ea731f7                0                0                0 /var/run/pppconfd
+5720d8c753d358cf stream      0      0 5720d8c75deee467                0                0                0 /var/run/com.docker.vmnetd.sock
+5720d8c753d35807 stream      0      0 5720d8c75de80657                0                0                0 /var/rpc/ncalrpc/srvsvc
+5720d8c753d3573f stream      0      0 5720d8c75de8074f                0                0                0 /var/rpc/ncacn_np/srvsvc
+5720d8c753d34b87 stream      0      0 5720d8c75de80e17                0                0                0 /var/run/usbmuxd
+5720d8c753d35677 stream      0      0 5720d8c75de80847                0                0                0 /var/rpc/ncalrpc/wkssvc
+5720d8c753d34c4f stream      0      0 5720d8c75de80d1f                0                0                0 /var/rpc/ncacn_np/wkssvc
+5720d8c753d355af stream      0      0 5720d8c75de8093f                0                0                0 /var/rpc/ncacn_np/mdssvc
+5720d8c753d34d17 stream      0      0 5720d8c75de80a37                0                0                0 /var/rpc/ncalrpc/lsarpc
+5720d8c753d354e7 stream      0      0 5720d8c75de80b2f                0                0                0 /var/rpc/ncacn_np/lsarpc
+5720d8c753d34ddf stream      0      0 5720d8c75de6a7c7                0                0                0 /var/run/mDNSResponder
+5720d8c753d34ea7 stream      0      0 5720d8c75de6a6cf                0                0                0 /var/run/systemkeychaincheck.socket
+5720d8c753d34f6f stream      0      0 5720d8c75de688c7                0                0                0 /private/var/run/.sim_diagnosticd_socket
+5720d8c753d35037 stream      0      0 5720d8c75de689bf                0                0                0 /var/run/portmap.socket
+5720d8c753d3541f stream      0      0 5720d8c75de181f7                0                0                0 /var/run/vpncontrol.sock
+5720d8c753d350ff stream      0      0 5720d8c75de01277                0                0                0 /var/rpc/ncalrpc/NETLOGON
+5720d8c753d35357 stream      0      0 5720d8c75ddeda37                0                0                0 /private/var/run/cupsd
+5720d8c7626f4037 dgram       0      0                0 5720d8c753d351c7                0 5720d8c77824522f
+5720d8c7626f33b7 dgram       0      0                0 5720d8c7626f3c4f 5720d8c7626f3c4f                0
+5720d8c7626f3c4f dgram       0      0                0 5720d8c7626f33b7 5720d8c7626f33b7                0
+5720d8c7782432ef dgram       0      0                0 5720d8c778244a5f 5720d8c778244a5f                0
+5720d8c778244a5f dgram       0      0                0 5720d8c7782432ef 5720d8c7782432ef                0
+5720d8c77824522f dgram       0      0                0 5720d8c753d351c7                0 5720d8c76d872d77
+5720d8c76d872d77 dgram       0      0                0 5720d8c753d351c7                0 5720d8c778243b87
+5720d8c778243b87 dgram       0      0                0 5720d8c753d351c7                0 5720d8c761fea9f7
+5720d8c761fea9f7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c761feb4e7
+5720d8c761feb4e7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c761fec2f7
+5720d8c761fec2f7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c761feb037
+5720d8c7626f4cb7 dgram       0      0                0 5720d8c7626f4e47 5720d8c7626f4e47                0
+5720d8c7626f4e47 dgram       0      0                0 5720d8c7626f4cb7 5720d8c7626f4cb7                0
+5720d8c761feb037 dgram       0      0                0 5720d8c753d351c7                0 5720d8c778243227
+5720d8c778243227 dgram       0      0                0 5720d8c753d351c7                0 5720d8c76d873ddf
+5720d8c76d873ddf dgram       0      0                0 5720d8c753d351c7                0 5720d8c768718abf
+5720d8c768718abf dgram       0      0                0 5720d8c753d351c7                0 5720d8c7626f347f
+5720d8c7626f347f dgram       0      0                0 5720d8c753d351c7                0 5720d8c7626f41c7
+5720d8c7626f41c7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c77824392f
+5720d8c77824392f dgram       0      0                0 5720d8c753d351c7                0 5720d8c761fe9be7
+5720d8c761fe9be7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c76d8756df
+5720d8c76d8756df dgram       0      0                0 5720d8c753d351c7                0 5720d8c761fe9e3f
+5720d8c761fe9e3f dgram       0      0                0 5720d8c753d351c7                0 5720d8c761fec09f
+5720d8c7626f554f dgram       0      0                0 5720d8c753d338c7 5720d8c753d338c7                0
+5720d8c753d338c7 dgram       0      0                0 5720d8c7626f554f 5720d8c7626f554f                0
+5720d8c761fec09f dgram       0      0                0 5720d8c753d351c7                0 5720d8c76d874357
+5720d8c76d87379f dgram       0      0                0 5720d8c76d874037 5720d8c76d874037                0
+5720d8c76d874037 dgram       0      0                0 5720d8c76d87379f 5720d8c76d87379f                0
+5720d8c76d874357 dgram       0      0                0 5720d8c753d351c7                0 5720d8c761fec54f
+5720d8c761342d77 dgram       0      0                0 5720d8c761342a57 5720d8c761342a57                0
+5720d8c761342a57 dgram       0      0                0 5720d8c761342d77 5720d8c761342d77                0
+5720d8c761fec54f dgram       0      0                0 5720d8c753d351c7                0 5720d8c778243097
+5720d8c778243097 dgram       0      0                0 5720d8c753d351c7                0 5720d8c77824315f
+5720d8c77824315f dgram       0      0                0 5720d8c753d351c7                0 5720d8c7782439f7
+5720d8c7782439f7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c77824379f
+5720d8c77824379f dgram       0      0                0 5720d8c753d351c7                0 5720d8c7782433b7
+5720d8c7782433b7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c778244cb7
+5720d8c778244cb7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c778243d17
+5720d8c778243d17 dgram       0      0                0 5720d8c753d351c7                0 5720d8c76d873d17
+5720d8c76d873d17 dgram       0      0                0 5720d8c753d351c7                0 5720d8c76d873b87
+5720d8c76d873b87 dgram       0      0                0 5720d8c753d351c7                0 5720d8c76d875487
+5720d8c76d8745af dgram       0      0                0 5720d8c76d873c4f 5720d8c76d873c4f                0
+5720d8c76d873c4f dgram       0      0                0 5720d8c76d8745af 5720d8c76d8745af                0
+5720d8c76d875487 dgram       0      0                0 5720d8c753d351c7                0 5720d8c76c43acaf
+5720d8c76d8732ef dgram       0      0                0 5720d8c76d873097 5720d8c76d873097                0
+5720d8c76d873097 dgram       0      0                0 5720d8c76d8732ef 5720d8c76d8732ef                0
+5720d8c76d87315f dgram       0      0                0 5720d8c76d874bef 5720d8c76d874bef                0
+5720d8c76d874bef dgram       0      0                0 5720d8c76d87315f 5720d8c76d87315f                0
+5720d8c76d8733b7 dgram       0      0                0 5720d8c76d8748cf 5720d8c76d8748cf                0
+5720d8c76d8748cf dgram       0      0                0 5720d8c76d8733b7 5720d8c76d8733b7                0
+5720d8c76d87392f dgram       0      0                0 5720d8c76d873867 5720d8c76d873867                0
+5720d8c76d873867 dgram       0      0                0 5720d8c76d87392f 5720d8c76d87392f                0
+5720d8c76c43d6df dgram       0      0                0 5720d8c76c43d617 5720d8c76c43d617                0
+5720d8c76c43d617 dgram       0      0                0 5720d8c76c43d6df 5720d8c76c43d6df                0
+5720d8c76c43acaf dgram       0      0                0 5720d8c753d351c7                0 5720d8c76c43d22f
+5720d8c76c43d22f dgram       0      0                0 5720d8c753d351c7                0 5720d8c76c43d167
+5720d8c76c43afcf dgram       0      0                0 5720d8c76c43d2f7 5720d8c76c43d2f7                0
+5720d8c76c43d2f7 dgram       0      0                0 5720d8c76c43afcf 5720d8c76c43afcf                0
+5720d8c76c43d167 dgram       0      0                0 5720d8c753d351c7                0 5720d8c76c43b47f
+5720d8c76c43b47f dgram       0      0                0 5720d8c753d351c7                0 5720d8c76c43ca5f
+5720d8c76c43b60f dgram       0      0                0 5720d8c76c43cb27 5720d8c76c43cb27                0
+5720d8c76c43cb27 dgram       0      0                0 5720d8c76c43b60f 5720d8c76c43b60f                0
+5720d8c76c43b2ef dgram       0      0                0 5720d8c76c43b547 5720d8c76c43b547                0
+5720d8c76c43b547 dgram       0      0                0 5720d8c76c43b2ef 5720d8c76c43b2ef                0
+5720d8c76c43ca5f dgram       0      0                0 5720d8c753d351c7                0 5720d8c7687178c7
+5720d8c7687178c7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c7613428c7
+5720d8c7613428c7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c753d343b7
+5720d8c753d343b7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c753d34547
+5720d8c753d34547 dgram       0      0                0 5720d8c753d351c7                0 5720d8c76871a54f
+5720d8c761344f0f dgram       0      0                0 5720d8c761344fd7 5720d8c761344fd7                0
+5720d8c761344fd7 dgram       0      0                0 5720d8c761344f0f 5720d8c761344f0f                0
+5720d8c76871a54f dgram       0      0                0 5720d8c753d351c7                0 5720d8c768717caf
+5720d8c768717caf dgram       0      0                0 5720d8c753d351c7                0 5720d8c768719677
+5720d8c768719a5f dgram       0      0                0 5720d8c7687189f7 5720d8c7687189f7                0
+5720d8c7687189f7 dgram       0      0                0 5720d8c768719a5f 5720d8c768719a5f                0
+5720d8c768719677 dgram       0      0                0 5720d8c753d351c7                0 5720d8c76871941f
+5720d8c76871941f dgram       0      0                0 5720d8c753d351c7                0 5720d8c768718ddf
+5720d8c768718ddf dgram       0      0                0 5720d8c753d351c7                0 5720d8c7687191c7
+5720d8c7687191c7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c7613456df
+5720d8c7613456df dgram       0      0                0 5720d8c753d351c7                0 5720d8c753d3492f
+5720d8c753d3492f dgram       0      0                0 5720d8c753d351c7                0 5720d8c761345617
+5720d8c76134554f dgram       0      0                0 5720d8c7613457a7 5720d8c7613457a7                0
+5720d8c7613457a7 dgram       0      0                0 5720d8c76134554f 5720d8c76134554f                0
+5720d8c761345617 dgram       0      0                0 5720d8c753d351c7                0 5720d8c761342e3f
+5720d8c761342e3f dgram       0      0                0 5720d8c753d351c7                0 5720d8c761342b1f
+5720d8c761342b1f dgram       0      0                0 5720d8c753d351c7                0 5720d8c7613433b7
+5720d8c761345487 dgram       0      0                0 5720d8c7613453bf 5720d8c7613453bf                0
+5720d8c7613453bf dgram       0      0                0 5720d8c761345487 5720d8c761345487                0
+5720d8c761345167 dgram       0      0                0 5720d8c76134509f 5720d8c76134509f                0
+5720d8c76134509f dgram       0      0                0 5720d8c761345167 5720d8c761345167                0
+5720d8c7613433b7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c76134347f
+5720d8c76134347f dgram       0      0                0 5720d8c753d351c7                0 5720d8c761344997
+5720d8c76134392f dgram       0      0                0 5720d8c761344a5f 5720d8c761344a5f                0
+5720d8c761344a5f dgram       0      0                0 5720d8c76134392f 5720d8c76134392f                0
+5720d8c761344997 dgram       0      0                0 5720d8c753d351c7                0 5720d8c76134473f
+5720d8c76134473f dgram       0      0                0 5720d8c753d351c7                0 5720d8c761343b87
+5720d8c761343b87 dgram       0      0                0 5720d8c753d351c7                0 5720d8c7613445af
+5720d8c7613445af dgram       0      0                0 5720d8c753d351c7                0 5720d8c761344677
+5720d8c761344677 dgram       0      0                0 5720d8c753d351c7                0 5720d8c761343c4f
+5720d8c761343c4f dgram       0      0                0 5720d8c753d351c7                0 5720d8c7613440ff
+5720d8c761343f6f dgram       0      0                0 5720d8c761344037 5720d8c761344037                0
+5720d8c761344037 dgram       0      0                0 5720d8c761343f6f 5720d8c761343f6f                0
+5720d8c7613440ff dgram       0      0                0 5720d8c753d351c7                0 5720d8c761343d17
+5720d8c761343d17 dgram       0      0                0 5720d8c753d351c7                0 5720d8c761343ddf
+5720d8c761343ddf dgram       0      0                0 5720d8c753d351c7                0 5720d8c753d34867
+5720d8c753d34867 dgram       0      0                0 5720d8c753d351c7                0 5720d8c753d362f7
+5720d8c753d362f7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c753d33b1f
+5720d8c753d3654f dgram       0      0                0 5720d8c753d33caf 5720d8c753d33caf                0
+5720d8c753d33caf dgram       0      0                0 5720d8c753d3654f 5720d8c753d3654f                0
+5720d8c753d33be7 dgram       0      0                0 5720d8c753d36617 5720d8c753d36617                0
+5720d8c753d36617 dgram       0      0                0 5720d8c753d33be7 5720d8c753d33be7                0
+5720d8c753d33b1f dgram       0      0                0 5720d8c753d351c7                0 5720d8c753d3622f
+5720d8c753d3622f dgram       0      0                0 5720d8c753d351c7                0 5720d8c753d33f07
+5720d8c753d33f07 dgram       0      0                0 5720d8c753d351c7                0 5720d8c753d33d77
+5720d8c753d33d77 dgram       0      0                0 5720d8c753d351c7                0 5720d8c753d35fd7
+5720d8c753d3609f dgram       0      0                0 5720d8c753d33e3f 5720d8c753d33e3f                0
+5720d8c753d33e3f dgram       0      0                0 5720d8c753d3609f 5720d8c753d3609f                0
+5720d8c753d35fd7 dgram       0      0                0 5720d8c753d351c7                0 5720d8c753d35bef
+5720d8c753d35d7f dgram       0      0                0 5720d8c753d35cb7 5720d8c753d35cb7                0
+5720d8c753d35cb7 dgram       0      0                0 5720d8c753d35d7f 5720d8c753d35d7f                0
+5720d8c753d35bef dgram       0      0                0 5720d8c753d351c7                0 5720d8c753d3479f
+5720d8c753d3479f dgram       0      0                0 5720d8c753d351c7                0 5720d8c753d3528f
+5720d8c753d3460f dgram       0      0                0 5720d8c753d346d7 5720d8c753d346d7                0
+5720d8c753d346d7 dgram       0      0                0 5720d8c753d3460f 5720d8c753d3460f                0
+5720d8c753d35b27 dgram       0      0                0 5720d8c753d35a5f 5720d8c753d35a5f                0
+5720d8c753d35a5f dgram       0      0                0 5720d8c753d35b27 5720d8c753d35b27                0
+5720d8c753d349f7 dgram       0      0                0 5720d8c753d34abf 5720d8c753d34abf                0
+5720d8c753d34abf dgram       0      0                0 5720d8c753d349f7 5720d8c753d349f7                0
+5720d8c753d3528f dgram       0      0                0 5720d8c753d351c7                0                0
+5720d8c753d351c7 dgram       0      0 5720d8c753d160ff                0 5720d8c7626f4037                0 /private//var/run/syslog
+Registered kernel control modules
+id       flags    pcbcount rcvbuf   sndbuf   name 
+       1        9        0   131072   131072 com.apple.flow-divert 
+       2        1        0    16384     2048 com.apple.nke.sockwall 
+       3        9        0   524288   524288 com.apple.content-filter 
+       4        1        0    65536    65536 com.apple.net.necp_control 
+       5        1       12    65536    65536 com.apple.net.netagent 
+       6        9        4   524288   524288 com.apple.net.utun_control 
+       7        1        0    65536    65536 com.apple.net.ipsec_control 
+       8        0       91     8192     2048 com.apple.netsrc 
+       9       18        5     8192     2048 com.apple.network.statistics 
+       a        5        0     8192     2048 com.apple.network.tcp_ccdebug 
+       b        1        0     8192     2048 com.apple.network.advisory 
+       c        4        0    65536     2048 com.apple.uart.BLTH 
+       d        4        0     8192     2048 com.apple.uart.sk.BLTH 
+       e        0        0     8192     8192 com.apple.fileutil.kext.stateful.ctl 
+       f        0        6     8192     2048 com.apple.fileutil.kext.stateless.ctl 
+      10        0        1    65536    65536 com.paloaltonetworks.kext.pangpd 
+Active kernel event sockets
+Proto Recv-Q Send-Q vendor  class subcla
+kevt       0      0      1      1      2
+kevt       0      0      1      6      1
+kevt       0      0      1      1      0
+kevt       0      0      1      6      1
+kevt       0      0      1      1     11
+kevt       0      0      1      6      1
+kevt       0      0      1      6      1
+kevt       0      0      1      6      1
+kevt       0      0      1      6      1
+kevt       0      0      1      6      1
+kevt       0      0      1      6      1
+kevt       0      0      1      6      1
+kevt       0      0      1      6      1
+kevt       0      0      1      6      1
+kevt       0      0      1      6      1
+kevt       0      0      1      1      6
+kevt       0      0      1      1      1
+kevt       0      0      1      6      1
+kevt       0      0      1      1      2
+kevt       0      0      1      1      2
+kevt       0      0      1      3      3
+kevt       0      0      1      1      7
+kevt       0      0      1      1      1
+kevt       0      0      1      1      0
+Active kernel control sockets
+Proto Recv-Q Send-Q   unit     id name
+kctl       0      0      1      5 com.apple.net.netagent
+kctl       0      0      2      5 com.apple.net.netagent
+kctl       0      0      3      5 com.apple.net.netagent
+kctl       0      0      4      5 com.apple.net.netagent
+kctl       0      0      5      5 com.apple.net.netagent
+kctl       0      0      6      5 com.apple.net.netagent
+kctl       0      0      7      5 com.apple.net.netagent
+kctl       0      0      8      5 com.apple.net.netagent
+kctl       0      0     10      5 com.apple.net.netagent
+kctl       0      0     11      5 com.apple.net.netagent
+kctl       0      0     12      5 com.apple.net.netagent
+kctl       0      0     13      5 com.apple.net.netagent
+kctl       0      0      1      6 com.apple.net.utun_control
+kctl       0      0      2      6 com.apple.net.utun_control
+kctl       0      0      3      6 com.apple.net.utun_control
+kctl       0      0      4      6 com.apple.net.utun_control
+kctl       0      0      1      8 com.apple.netsrc
+kctl       0      0      2      8 com.apple.netsrc
+kctl       0      0      3      8 com.apple.netsrc
+kctl       0      0      4      8 com.apple.netsrc
+kctl       0      0      5      8 com.apple.netsrc
+kctl       0      0      6      8 com.apple.netsrc
+kctl       0      0      7      8 com.apple.netsrc
+kctl       0      0      8      8 com.apple.netsrc
+kctl       0      0      9      8 com.apple.netsrc
+kctl       0      0     10      8 com.apple.netsrc
+kctl       0      0     11      8 com.apple.netsrc
+kctl       0      0     12      8 com.apple.netsrc
+kctl       0      0     13      8 com.apple.netsrc
+kctl       0      0     14      8 com.apple.netsrc
+kctl       0      0     15      8 com.apple.netsrc
+kctl       0      0     16      8 com.apple.netsrc
+kctl       0      0     17      8 com.apple.netsrc
+kctl       0      0     18      8 com.apple.netsrc
+kctl       0      0     19      8 com.apple.netsrc
+kctl       0      0     20      8 com.apple.netsrc
+kctl       0      0     21      8 com.apple.netsrc
+kctl       0      0     22      8 com.apple.netsrc
+kctl       0      0     23      8 com.apple.netsrc
+kctl       0      0     24      8 com.apple.netsrc
+kctl       0      0     25      8 com.apple.netsrc
+kctl       0      0     26      8 com.apple.netsrc
+kctl       0      0     27      8 com.apple.netsrc
+kctl       0      0     28      8 com.apple.netsrc
+kctl       0      0     29      8 com.apple.netsrc
+kctl       0      0     30      8 com.apple.netsrc
+kctl       0      0     31      8 com.apple.netsrc
+kctl       0      0     32      8 com.apple.netsrc
+kctl       0      0     33      8 com.apple.netsrc
+kctl       0      0     34      8 com.apple.netsrc
+kctl       0      0     35      8 com.apple.netsrc
+kctl       0      0     36      8 com.apple.netsrc
+kctl       0      0     37      8 com.apple.netsrc
+kctl       0      0     38      8 com.apple.netsrc
+kctl       0      0     39      8 com.apple.netsrc
+kctl       0      0     40      8 com.apple.netsrc
+kctl       0      0     41      8 com.apple.netsrc
+kctl       0      0     42      8 com.apple.netsrc
+kctl       0      0     43      8 com.apple.netsrc
+kctl       0      0     44      8 com.apple.netsrc
+kctl       0      0     45      8 com.apple.netsrc
+kctl       0      0     46      8 com.apple.netsrc
+kctl       0      0     47      8 com.apple.netsrc
+kctl       0      0     48      8 com.apple.netsrc
+kctl       0      0     49      8 com.apple.netsrc
+kctl       0      0     50      8 com.apple.netsrc
+kctl       0      0     51      8 com.apple.netsrc
+kctl       0      0     52      8 com.apple.netsrc
+kctl       0      0     53      8 com.apple.netsrc
+kctl       0      0     54      8 com.apple.netsrc
+kctl       0      0     55      8 com.apple.netsrc
+kctl       0      0     56      8 com.apple.netsrc
+kctl       0      0     57      8 com.apple.netsrc
+kctl       0      0     58      8 com.apple.netsrc
+kctl       0      0     59      8 com.apple.netsrc
+kctl       0      0     60      8 com.apple.netsrc
+kctl       0      0     61      8 com.apple.netsrc
+kctl       0      0     62      8 com.apple.netsrc
+kctl       0      0     63      8 com.apple.netsrc
+kctl       0      0     64      8 com.apple.netsrc
+kctl       0      0     65      8 com.apple.netsrc
+kctl       0      0     66      8 com.apple.netsrc
+kctl       0      0     67      8 com.apple.netsrc
+kctl       0      0     68      8 com.apple.netsrc
+kctl       0      0     69      8 com.apple.netsrc
+kctl       0      0     70      8 com.apple.netsrc
+kctl       0      0     71      8 com.apple.netsrc
+kctl       0      0     72      8 com.apple.netsrc
+kctl       0      0     73      8 com.apple.netsrc
+kctl       0      0     74      8 com.apple.netsrc
+kctl       0      0     75      8 com.apple.netsrc
+kctl       0      0     76      8 com.apple.netsrc
+kctl       0      0     77      8 com.apple.netsrc
+kctl       0      0     78      8 com.apple.netsrc
+kctl       0      0     79      8 com.apple.netsrc
+kctl       0      0     80      8 com.apple.netsrc
+kctl       0      0     81      8 com.apple.netsrc
+kctl       0      0     82      8 com.apple.netsrc
+kctl       0      0     83      8 com.apple.netsrc
+kctl       0      0     84      8 com.apple.netsrc
+kctl       0      0     85      8 com.apple.netsrc
+kctl       0      0     86      8 com.apple.netsrc
+kctl       0      0     87      8 com.apple.netsrc
+kctl       0      0     88      8 com.apple.netsrc
+kctl       0      0     89      8 com.apple.netsrc
+kctl       0      0     90      8 com.apple.netsrc
+kctl       0      0     91      8 com.apple.netsrc
+kctl       0      0      1      9 com.apple.network.statistics
+kctl       0      0      2      9 com.apple.network.statistics
+kctl       0      0      3      9 com.apple.network.statistics
+kctl       0      0      4      9 com.apple.network.statistics
+kctl       0      0      5      9 com.apple.network.statistics
+kctl       0      0      1     15 com.apple.fileutil.kext.stateless.ctl
+kctl       0      0      2     15 com.apple.fileutil.kext.stateless.ctl
+kctl       0      0      3     15 com.apple.fileutil.kext.stateless.ctl
+kctl       0      0      4     15 com.apple.fileutil.kext.stateless.ctl
+kctl       0      0      5     15 com.apple.fileutil.kext.stateless.ctl
+kctl       0      0      6     15 com.apple.fileutil.kext.stateless.ctl
+kctl       0      0      1     16 com.paloaltonetworks.kext.pangpd
