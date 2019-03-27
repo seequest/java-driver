@@ -1,4 +1,4 @@
-CREATE KEYSPACE keyspace2 WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '4'} AND durable_writes = true;
+CREATE KEYSPACE keyspace1 WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '4'} AND durable_writes = true;
 
 CREATE TABLE keyspace1.counter1 (
     key blob PRIMARY KEY
