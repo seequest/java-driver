@@ -5,8 +5,10 @@ set -o errexit -o nounset
 
 declare -r source=$(ls ${script_root}/target/azure-cosmosdb-cassandra-gateway-*-service.tar.gz)
 declare -r target=~/local/opt/$(basename ${source%-service.tar.gz})
+declare -r keystore=${target}/etc/azure-cosmosdb-cassandra-gateway.truststore.PKCS12
 
 rm -rf "${target}"
 cd ~/local/opt
 tar -xvf "${source}"
 mkdir -p "${target}/etc"
+keytool -noprompt -keystore "$keystore" -storepass cassandra.localproxy -storetype PKCS12 -alias cosmos-sdk-cassandra -importcert -file "$script_root/cosmos-sdk-cassandra.cert"
