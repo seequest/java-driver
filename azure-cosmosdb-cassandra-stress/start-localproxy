@@ -9,4 +9,4 @@ declare -r cassandra_port=10350
 set -o errexit -o nounset -o xtrace
 
 JAVA_TOOL_OPTIONS="-Djavax.net.ssl.trustStore='$service_home/etc/azure-cosmosdb-cassandra-gateway.truststore.PKCS12' -Djavax.net.ssl.trustStorePassword=cassandra.localproxy -Djavax.net.ssl.trustStoreType=PKCS12" \
-"${service_home}/bin/azure-cosmosdb-cassandra-gateway" -Dcosmos.gatewayService.host=${cassandra_host} -Dcosmos.gatwayService.port=${cassandra_port}
+"${service_home}/bin/azure-cosmosdb-cassandra-gateway" -D"cosmos.gatewayService.host=${cassandra_host}" -D"cosmos.gatwayService.port=${cassandra_port}"
