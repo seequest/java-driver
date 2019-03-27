@@ -1,0 +1,40 @@
+;; cosmos-sdk-cassandra.cassandra.cosmos.azure.com 10350 -u cosmos-sdk-cassandra -p "obMFvyk4rPKevxVVLEkTLCPnCP0PlDL26N7e0MFTYxZMuKixcaMdpwiSxM1mQIpZCk5wpDacVh2NGU8zaLPJXw==" --ssl
+[cql]
+;; A version of CQL to use (this should almost never be set)
+; version = 3.2.1
+
+[authentication]
+;; If Cassandra has auth enabled, fill out these options
+username = cosmos-sdk-cassandra
+password = obMFvyk4rPKevxVVLEkTLCPnCP0PlDL26N7e0MFTYxZMuKixcaMdpwiSxM1mQIpZCk5wpDacVh2NGU8zaLPJXw==
+;;keyspace = ks1
+
+[certfiles]
+; 192.168.1.3 = ~/keys/cassandra01.cert
+; 192.168.1.4 = ~/keys/cassandra02.cert
+
+[connection]
+hostname = localhost
+port = 9042
+ssl = false
+
+;; A timeout in seconds for opening new connections
+; timeout = 10
+
+;; A timeout in seconds for executing queries
+; request_timeout = 10
+
+[ssl]
+; certfile = ~/local/opt/cassandra/cassandra.local.cert
+validate = false
+version = TLSv1_2
+
+;; To be provided when require_client_auth=true
+;userkey = ~/key.pem
+
+;; To be provided when require_client_auth=true
+;usercert = ~/cert.pem
+
+[tracing]
+;; The max number of seconds to wait for a trace to complete
+; max_trace_wait = 10.0
