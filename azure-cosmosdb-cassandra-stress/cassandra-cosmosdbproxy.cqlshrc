@@ -19,7 +19,7 @@ port = 9042
 ssl = false
 
 ;; A timeout in seconds for opening new connections
-; timeout = 10
+timeout = 60
 
 ;; A timeout in seconds for executing queries
 ; request_timeout = 10

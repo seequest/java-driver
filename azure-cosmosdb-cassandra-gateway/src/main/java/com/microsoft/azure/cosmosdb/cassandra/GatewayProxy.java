@@ -276,7 +276,7 @@ class GatewayProxy implements AutoCloseable {
                       context.channel().read();
                     } else {
                       logger.info(
-                          "{} WRITE to {} failed due to {}",
+                          "{} WRITE to inbound channel {} failed due to {}",
                           future.channel(),
                           this.inboundChannel,
                           future.cause().toString());
