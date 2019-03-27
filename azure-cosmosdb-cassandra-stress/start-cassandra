@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+cd ~/local/opt/cassandra/bin
+./cassandra -f
+
+# ~/local/opt/cassandra/bin/cqlsh cosmos-sdk-cassandra.cassandra.cosmos.azure.com 10350 -u cosmos-sdk-cassandra -p "obMFvyk4rPKevxVVLEkTLCPnCP0PlDL26N7e0MFTYxZMuKixcaMdpwiSxM1mQIpZCk5wpDacVh2NGU8zaLPJXw==" --ssl
