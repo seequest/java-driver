@@ -26,6 +26,7 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.core.SocketOptions;
 import com.datastax.driver.core.exceptions.NoHostAvailableException;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,18 +70,10 @@ public class Stress {
                 .ofType(Integer.class)
                 .defaultsTo(50);
             accepts("async", "Make asynchronous requests instead of blocking ones");
-            accepts("ip", "The hosts ip to connect to")
+            accepts("authority", "The username:password@host:port identifying a connection point")
                 .withRequiredArg()
                 .ofType(String.class)
                 .defaultsTo("127.0.0.1");
-            accepts("report-file", "The name of csv file to use for reporting results")
-                .withRequiredArg()
-                .ofType(String.class)
-                .defaultsTo("last.csv");
-            accepts("print-delay", "The delay in seconds at which to report on the console")
-                .withRequiredArg()
-                .ofType(Integer.class)
-                .defaultsTo(5);
             accepts("compression", "Use compression (SNAPPY)");
             accepts(
                     "connections-per-host",
@@ -92,6 +85,15 @@ public class Stress {
                 .withValuesConvertedBy(new ConsistencyLevelConverter())
                 .ofType(ConsistencyLevel.class)
                 .defaultsTo(ConsistencyLevel.LOCAL_ONE);
+            accepts("print-delay", "The delay in seconds at which to report on the console")
+                .withRequiredArg()
+                .ofType(Integer.class)
+                .defaultsTo(5);
+            accepts("report-file", "The name of csv file to use for reporting results")
+                .withRequiredArg()
+                .ofType(String.class)
+                .defaultsTo("last.csv");
+            accepts("ssl", "Use SSL to encrypt data on the wire");
           }
         };
     String msg =
@@ -234,6 +236,46 @@ public class Stress {
     Stresser stresser = Stresser.forCommandLineArguments(args);
     OptionSet options = stresser.getOptions();
 
+    final String authority = String.valueOf(options.valueOf("authority"));
+    final String[] credentials;
+    final String hostPort;
+    final String host;
+    final int port;
+
+    int index = authority.indexOf('@');
+
+    if (index == -1) {
+      hostPort = authority;
+      credentials = null;
+    } else {
+      credentials = authority.substring(0, index).split(":", 2);
+      hostPort = authority.substring(index + 1);
+    }
+
+    if (hostPort.charAt(0) == '[') {
+      index = hostPort.indexOf(']');
+      assert index > 1;
+      host = hostPort.substring(1, index++);
+
+      if (index == hostPort.length()) {
+        port = 9042;
+      } else {
+        assert hostPort.charAt(index) == ':';
+        port = Integer.parseUnsignedInt(hostPort.substring(index + 1));
+      }
+    } else {
+      index = hostPort.indexOf(':');
+      if (index == -1) {
+        host = hostPort;
+        port = 9042;
+      } else {
+        host = hostPort.substring(0, index);
+        port = Integer.parseUnsignedInt(hostPort.substring(index + 1));
+      }
+    }
+
+    InetSocketAddress socketAddress = new InetSocketAddress(host, port);
+
     int requests = options.has("n") ? (Integer) options.valueOf("n") : -1;
     int concurrency = (Integer) options.valueOf("t");
     ConsistencyLevel consistencyLevel = (ConsistencyLevel) options.valueOf("consistency-level");
@@ -258,6 +300,9 @@ public class Stress {
     pools.setMaxConnectionsPerHost(HostDistance.REMOTE, maxConnections);
 
     System.out.println("Initializing stress test:");
+    System.out.println("  socket address: " + socketAddress);
+    System.out.println(
+        "  credentials: " + (credentials == null ? "" : credentials[0] + ":" + credentials[1]));
     System.out.println("  request count:        " + (requests == -1 ? "unlimited" : requests));
     System.out.println(
         "  concurrency:          " + concurrency + " (" + iterations + " requests/thread)");
@@ -265,16 +310,26 @@ public class Stress {
     System.out.println("  per-host connections: " + maxConnections);
     System.out.println("  compression:          " + options.has("compression"));
     System.out.println("  consistency-level:    " + consistencyLevel.name());
+    System.out.println("  ssl:                  " + options.has("ssl"));
 
     try {
       // Create session to hosts
-      Cluster cluster =
+      Cluster.Builder builder =
           new Cluster.Builder()
-              .addContactPoints(String.valueOf(options.valueOf("ip")))
+              .addContactPointsWithPorts(socketAddress)
               .withPoolingOptions(pools)
               .withSocketOptions(new SocketOptions().setTcpNoDelay(true))
-              .withQueryOptions(new QueryOptions().setConsistencyLevel(consistencyLevel))
-              .build();
+              .withQueryOptions(new QueryOptions().setConsistencyLevel(consistencyLevel));
+
+      if (credentials != null) {
+        builder.withCredentials(credentials[0], credentials[1]);
+      }
+
+      if (options.has("ssl")) {
+        builder.withSSL();
+      }
+
+      Cluster cluster = builder.build();
 
       if (options.has("compression"))
         cluster
