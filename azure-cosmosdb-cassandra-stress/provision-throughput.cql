@@ -11,5 +11,4 @@ CREATE TABLE keyspace1.standard1 (
     "C2" blob,
     "C3" blob,
     "C4" blob
-) WITH cosmosdb_provisioned_throughput=350000;
-
+) WITH cosmosdb_provisioned_throughput=100000;
