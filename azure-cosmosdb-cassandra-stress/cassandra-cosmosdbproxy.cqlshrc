@@ -1,4 +1,10 @@
-;; cosmos-sdk-cassandra.cassandra.cosmos.azure.com 10350 -u cosmos-sdk-cassandra -p "obMFvyk4rPKevxVVLEkTLCPnCP0PlDL26N7e0MFTYxZMuKixcaMdpwiSxM1mQIpZCk5wpDacVh2NGU8zaLPJXw==" --ssl
+;; USAGE
+;; This command:
+;;   cqlsh -cqlshrc cassandra-cosmosdbproxy.cqlshrc
+;; is equivalent to this command:
+;;   cqlsh localhost 9042 -u cosmos-sdk-cassandra -p "obMFvyk4rPKevxVVLEkTLCPnCP0PlDL26N7e0MFTYxZMuKixcaMdpwiSxM1mQIpZCk5wpDacVh2NGU8zaLPJXw=="
+;; assuming--of course--that ~/.cassandra/cqlshrc does not introduce additional settings.
+
 [cql]
 ;; A version of CQL to use (this should almost never be set)
 ; version = 3.2.1
