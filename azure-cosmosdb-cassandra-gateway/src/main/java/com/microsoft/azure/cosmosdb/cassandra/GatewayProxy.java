@@ -203,7 +203,7 @@ class GatewayProxy implements AutoCloseable {
                   logger.info("{} READ from {}", future.channel(), inboundChannel);
                   inboundChannel.read();
                 } else {
-                  logger.info("{} CLOSE due to {}", future.channel(), future.cause().toString());
+                  logger.info("{} {}", future.channel(), future.cause().getMessage());
                   inboundChannel.close();
                 }
               });
