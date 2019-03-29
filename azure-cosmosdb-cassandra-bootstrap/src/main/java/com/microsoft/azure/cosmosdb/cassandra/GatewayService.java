@@ -19,6 +19,7 @@ package com.microsoft.azure.cosmosdb.cassandra;
 import static com.google.common.base.Preconditions.checkState;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.AbstractService;
 import com.google.common.util.concurrent.Service;
 import io.netty.util.concurrent.GlobalEventExecutor;
@@ -28,8 +29,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -41,7 +44,8 @@ final class GatewayService extends AbstractService {
 
   private static final String className = GatewayService.class.getCanonicalName();
   private static final String displayName = "Cosmos DB Cassandra Gateway service";
-  private static final Logger logger = getLogger(GatewayService.className);
+  private static final Stopwatch lifetime = Stopwatch.createStarted();
+  private static final Logger logger = getLogger(className);
   private static final ProcessBuilder serviceProcess;
 
   static {
@@ -78,6 +82,27 @@ final class GatewayService extends AbstractService {
         os.startsWith("Windows")
             ? new ProcessBuilder("cmd.exe", "/c", servicePath.toString()).inheritIO()
             : new ProcessBuilder(servicePath.toString()).inheritIO();
+
+    serviceProcess
+        .environment()
+        .put(
+            "JAVA_OPTS",
+            Arrays.stream(
+                    new String[] {
+                      "cosmos.gatewayService.host",
+                      "cosmos.gatewayService.port",
+                      "cosmos.gatewayProxy.host",
+                      "cosmos.gatewayProxy.port",
+                      "javax.net.ssl.trustStore",
+                      "javax.net.ssl.trustStoreType",
+                      "javax.net.ssl.trustStorePassword",
+                    })
+                .reduce(
+                    "",
+                    (result, name) -> {
+                      String value = System.getProperty(name);
+                      return value == null ? result : result + " -D" + name + '=' + value;
+                    }));
 
     if (!servicePath.exists()) {
 
@@ -149,13 +174,26 @@ final class GatewayService extends AbstractService {
         logger.error("cannot decompress {} due to {}", resourceName, error.toString());
       }
     }
+
+    logger.info("INITIALIZED: {} ms", lifetime.elapsed(TimeUnit.MILLISECONDS));
   }
 
   private Process process;
 
   GatewayService() {
+
     this.addListener(new GatewayService.Listener(), GlobalEventExecutor.INSTANCE);
-    process = null;
+
+    Runtime.getRuntime()
+        .addShutdownHook(
+            new Thread(
+                () -> {
+                  synchronized (this) {
+                    if (this.process != null && this.process.isAlive()) {
+                      this.process.destroyForcibly();
+                    }
+                  }
+                }));
   }
 
   String displayName() {

@@ -16,11 +16,13 @@
 
 package com.microsoft.azure.cosmosdb.cassandra;
 
+import com.google.common.base.Stopwatch;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import java.lang.instrument.Instrumentation;
 import java.net.SocketAddress;
+import java.util.concurrent.TimeUnit;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtMethod;
@@ -84,10 +86,10 @@ public final class GatewayBootstrap extends Bootstrap {
         service.awaitTerminated();
         break;
       case TERMINATED:
-        break;
     }
-
+    Stopwatch stopwatch = Stopwatch.createStarted();
     service.startAsync().awaitRunning();
+    logger.info("SERVICE START TIME: {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
   }
 
   public static final class JavaAgent {
