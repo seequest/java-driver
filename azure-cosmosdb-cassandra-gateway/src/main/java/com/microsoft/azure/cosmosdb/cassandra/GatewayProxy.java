@@ -127,7 +127,7 @@ class GatewayProxy implements AutoCloseable {
                             (ChannelFuture bind) -> {
                               if (bind.isSuccess()) {
                                 final Channel channel = bind.channel();
-                                logger.info("{} listening", channel);
+                                logger.info("{} LISTENING", channel);
                                 channel
                                     .closeFuture()
                                     .addListener(
@@ -200,7 +200,6 @@ class GatewayProxy implements AutoCloseable {
           (ChannelFutureListener)
               future -> {
                 if (future.isSuccess()) {
-                  logger.info("{} READ from {}", future.channel(), inboundChannel);
                   inboundChannel.read();
                 } else {
                   logger.info("{} {}", future.channel(), future.cause().getMessage());
@@ -272,11 +271,10 @@ class GatewayProxy implements AutoCloseable {
               (ChannelFutureListener)
                   future -> {
                     if (future.isSuccess()) {
-                      logger.info("{} READ", future.channel());
                       context.channel().read();
                     } else {
                       logger.info(
-                          "{} WRITE to inbound channel {} failed due to {}",
+                          "{} write to inbound channel {} failed due to {}",
                           future.channel(),
                           this.inboundChannel,
                           future.cause().toString());
