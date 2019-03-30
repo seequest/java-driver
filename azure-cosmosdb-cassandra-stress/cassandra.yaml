@@ -1030,9 +1030,9 @@ request_scheduler: org.apache.cassandra.scheduler.NoScheduler
 #
 server_encryption_options:
     internode_encryption: none
-    keystore: /Users/david-noble/local/opt/cassandra/conf/cassandra-keystore.PKCS12
+    keystore: /Users/david-noble/local/opt/cassandra/conf/cassandra-keystore.p12
     keystore_password: cassandra.local
-    truststore: /Users/david-noble/local/opt/cassandra/conf/cassandra-truststore.PKCS12
+    truststore: /Users/david-noble/local/opt/cassandra/conf/cassandra-truststore.p12
     truststore_password: cassandra.local
     # More advanced defaults below:
     # protocol: TLS
@@ -1044,7 +1044,7 @@ server_encryption_options:
 
 # enable or disable client/server encryption.
 client_encryption_options:
-    keystore: /Users/david-noble/local/opt/cassandra/conf/cassandra-keystore.PKCS12
+    keystore: /Users/david-noble/local/opt/cassandra/conf/cassandra-keystore.p12
     keystore_password: cassandra.local
     store_type: PKCS12
     enabled: true
@@ -1133,7 +1133,7 @@ transparent_data_encryption_options:
     key_provider: 
       - class_name: org.apache.cassandra.security.JKSKeyProvider
         parameters: 
-          - keystore: /Users/david-noble/local/opt/cassandra/conf/cassandra-keystore.PKCS12
+          - keystore: /Users/david-noble/local/opt/cassandra/conf/cassandra-keystore.p12
             keystore_password: cassandra.local
             store_type: PKCS12
             key_password: cassandra.local

@@ -5,7 +5,7 @@ set -o errexit -o nounset
 
 declare -r source=$(ls ${script_root}/target/azure-cosmosdb-cassandra-gateway-*-service.tar.gz)
 declare -r target=~/local/opt/$(basename ${source%-service.tar.gz})
-declare -r keystore=${target}/etc/azure-cosmosdb-cassandra-gateway.truststore.PKCS12
+declare -r keystore=${target}/etc/azure-cosmosdb-cassandra-gateway.truststore.p12
 
 rm -rf "${target}"
 cd ~/local/opt

@@ -56,10 +56,10 @@ openssl pkcs12 -export -in cassandra.local.cert -inkey cassandra.local.key -name
 
 keytool -noprompt -importkeystore \
     -srckeystore cassandra.local.pfx -srcstorepass cassandra.local -srcstoretype PKCS12 \
-    -destkeystore conf/cassandra-keystore.PKCS12 -deststorepass cassandra.local -deststoretype PKCS12
+    -destkeystore conf/cassandra-keystore.p12 -deststorepass cassandra.local -deststoretype PKCS12
 
 keytool -noprompt -importcert \
-    -keystore conf/cassandra-truststore.PKCS12 -storepass cassandra.local -storetype PKCS12 \
+    -keystore conf/cassandra-truststore.p12 -storepass cassandra.local -storetype PKCS12 \
     -file cassandra.local.cert -alias cassandra.local 
 
 mv conf/cassandra.yaml conf/cassandra.default.yaml
