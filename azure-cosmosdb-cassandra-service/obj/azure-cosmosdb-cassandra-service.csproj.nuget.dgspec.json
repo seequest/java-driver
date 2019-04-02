@@ -1,0 +1,81 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\MS\\cassandra-java-driver\\azure-cosmosdb-cassandra-service\\azure-cosmosdb-cassandra-service.csproj": {}
+  },
+  "projects": {
+    "C:\\MS\\cassandra-java-driver\\azure-cosmosdb-cassandra-service\\azure-cosmosdb-cassandra-service.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\MS\\cassandra-java-driver\\azure-cosmosdb-cassandra-service\\azure-cosmosdb-cassandra-service.csproj",
+        "projectName": "azure-cosmosdb-cassandra-service",
+        "projectPath": "C:\\MS\\cassandra-java-driver\\azure-cosmosdb-cassandra-service\\azure-cosmosdb-cassandra-service.csproj",
+        "packagesPath": "C:\\Users\\danoble\\.nuget\\packages\\",
+        "outputPath": "C:\\MS\\cassandra-java-driver\\azure-cosmosdb-cassandra-service\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\danoble\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "http://www.myget.org/F/azure-appservice/api/v2": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://msazure.pkgs.visualstudio.com/DefaultCollection/_apis/packaging/Official/nuget/index.json": {},
+          "https://msblox.pkgs.visualstudio.com/DefaultCollection/_packaging/AzureGenevaMonitoring/nuget/v3/index.json": {},
+          "https://msdata.pkgs.visualstudio.com/DefaultCollection/_packaging/SQLDS_DocumentDB/nuget/v3/index.json": {},
+          "https://msdata.pkgs.visualstudio.com/DefaultCollection/_packaging/SQLDS_Shared/nuget/v3/index.json": {},
+          "https://msdata.pkgs.visualstudio.com/DefaultCollection/_packaging/SQL_Toolset/nuget/v3/index.json": {},
+          "https://ossmsft.pkgs.visualstudio.com/DefaultCollection/_packaging/OSS_ALL/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp2.1": {
+          "dependencies": {
+            "Microsoft.AspNetCore.App": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.1.1, )",
+              "autoReferenced": true
+            },
+            "Microsoft.AspNetCore.Razor.Design": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.1.2, )"
+            },
+            "Microsoft.NETCore.App": {
+              "target": "Package",
+              "version": "[2.1.0, )",
+              "autoReferenced": true
+            },
+            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
+              "target": "Package",
+              "version": "[1.4.10, )"
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    }
+  }
+}

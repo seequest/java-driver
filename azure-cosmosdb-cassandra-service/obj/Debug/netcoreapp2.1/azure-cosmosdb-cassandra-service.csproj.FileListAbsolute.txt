@@ -1,0 +1,3 @@
+C:\Data\MS\cassandra-java-driver\azure-cosmosdb-cassandra-service\azure-cosmosdb-cassandra-service\obj\Debug\netcoreapp2.1\azure-cosmosdb-cassandra-service.csproj.CoreCompileInputs.cache
+C:\Data\MS\cassandra-java-driver\azure-cosmosdb-cassandra-service\azure-cosmosdb-cassandra-service\obj\Debug\netcoreapp2.1\azure-cosmosdb-cassandra-service.AssemblyInfoInputs.cache
+C:\Data\MS\cassandra-java-driver\azure-cosmosdb-cassandra-service\azure-cosmosdb-cassandra-service\obj\Debug\netcoreapp2.1\azure-cosmosdb-cassandra-service.AssemblyInfo.cs
