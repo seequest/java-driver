@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //---------------------------------------------------------------------------------------
 
-namespace Microsoft.Azure.Cosmos
+namespace Microsoft.Azure.Cosmos.Cassandra
 {
     using System;
     using System.Collections.Concurrent;
@@ -10,12 +10,12 @@ namespace Microsoft.Azure.Cosmos
     using System.Configuration;
     using System.Linq;
     using System.Threading.Tasks;
-    using CosmosDB;
+    using Microsoft.Azure.CosmosDB;
 
     /// <summary>
     ///     Cassandra service configuration provider that works through application configuration file.
     /// </summary>
-    internal sealed class ServiceConfigurationProvider : ICosmosDBConfigProvider
+    internal sealed class CosmosConnectorConfigurationProvider : ICosmosDBConfigProvider
     {
         private static readonly HashSet<string> DocumentClientKeys =
             new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -31,7 +31,7 @@ namespace Microsoft.Azure.Cosmos
         private readonly string scopeName;
         private ICosmosDBConfigProvider parent;
 
-        public ServiceConfigurationProvider()
+        public CosmosConnectorConfigurationProvider()
         {
             var currentExeConfiguration =
                 ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -39,12 +39,12 @@ namespace Microsoft.Azure.Cosmos
             this.keyValueConfigurations.Add(currentExeConfiguration.AppSettings.Settings);
         }
 
-        public ServiceConfigurationProvider(List<Configuration> exeConfiguration)
+        public CosmosConnectorConfigurationProvider(List<Configuration> exeConfiguration)
         {
             this.keyValueConfigurations.AddRange(exeConfiguration.Select(config => config.AppSettings.Settings));
         }
 
-        private ServiceConfigurationProvider(string scopeName, ICosmosDBConfigProvider parent,
+        private CosmosConnectorConfigurationProvider(string scopeName, ICosmosDBConfigProvider parent,
             List<KeyValueConfigurationCollection> keyValueConfigurations,
             ConcurrentDictionary<string, string> addedKeys)
         {
@@ -59,7 +59,7 @@ namespace Microsoft.Azure.Cosmos
         public Task<ICosmosDBConfigProvider> GetConfigurationGroupAsync(string configurationGroupName)
         {
             return Task.FromResult<ICosmosDBConfigProvider>(
-                new ServiceConfigurationProvider(configurationGroupName, this, this.keyValueConfigurations,
+                new CosmosConnectorConfigurationProvider(configurationGroupName, this, this.keyValueConfigurations,
                     this.addedKeys));
         }
 

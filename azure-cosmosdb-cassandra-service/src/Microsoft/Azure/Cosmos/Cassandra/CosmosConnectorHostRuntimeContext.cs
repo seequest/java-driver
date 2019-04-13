@@ -2,15 +2,15 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------
 
-namespace Microsoft.Azure.Cosmos
+namespace Microsoft.Azure.Cosmos.Cassandra
 {
     using System.Net;
-    using CosmosDB;
+    using Microsoft.Azure.CosmosDB;
 
     /// <summary>
     ///     Runtime context for test host.
     /// </summary>
-    internal sealed class ServiceHostRuntimeContext : ICosmosDBHostRuntimeContext
+    internal sealed class CosmosConnectorHostRuntimeContext : ICosmosDBHostRuntimeContext
     {
         public string IPAddressOrFQDN => IPAddress.Loopback.ToString();
 

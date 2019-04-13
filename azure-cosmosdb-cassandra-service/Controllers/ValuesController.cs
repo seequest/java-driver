@@ -5,7 +5,7 @@
 namespace Microsoft.Azure.CosmosDB.Cassandra.Controllers
 {
     using System.Collections.Generic;
-    using AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]
     [ApiController]

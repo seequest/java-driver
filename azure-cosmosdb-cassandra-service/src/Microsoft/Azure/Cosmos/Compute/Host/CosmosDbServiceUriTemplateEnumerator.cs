@@ -15,7 +15,7 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
         private readonly CosmosDBServiceResolver serviceResolver;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CosmosDbServiceUriTemplateEnumerator"/> class
+        ///     Initializes a new instance of the <see cref="CosmosDbServiceUriTemplateEnumerator" /> class
         /// </summary>
         public CosmosDbServiceUriTemplateEnumerator(CosmosDBServiceResolver serviceResolver)
         {
@@ -25,7 +25,7 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
         /// <inheritdoc />
         public IEnumerable<ICosmosDBUriTemplate> GetRegisteredUriTemplates(string transportScheme)
         {
-            foreach (ICosmosDBUriTemplate uriTemplate in this.serviceResolver.GetRegisteredUriTemplates())
+            foreach (var uriTemplate in this.serviceResolver.GetRegisteredUriTemplates())
             {
                 if (string.Equals(
                     uriTemplate.Scheme,

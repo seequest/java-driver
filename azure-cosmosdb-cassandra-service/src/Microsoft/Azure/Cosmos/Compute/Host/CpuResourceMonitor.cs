@@ -8,7 +8,6 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
     {
         public CpuResourceMonitor()
             : base("Processor", "% Processor Time", "_Total")
-        {
-        }
+        { }
     }
 }

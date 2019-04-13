@@ -7,9 +7,10 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
     using System;
     using System.Globalization;
     using System.Net;
-    using CosmosDB;
-    using CosmosDB.Diagnostics;
-    using Documents;
+    using Microsoft.Azure.Cosmos.Cassandra;
+    using Microsoft.Azure.CosmosDB;
+    using Microsoft.Azure.CosmosDB.Diagnostics;
+    using Microsoft.Azure.Documents;
 
     internal static class EmulatorHelper
     {
@@ -48,12 +49,12 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
             var prefix = string.Format(CultureInfo.InvariantCulture, Ipv6UriTemplate, protocol,
                 // ReSharper disable once HeapView.BoxingAllocation
                 ipv6ServiceTunneledAddress.ToString(), endpointPort);
-            
+
             var listenerUriIPv6 = new Uri(prefix, UriKind.Absolute);
-            
+
             CosmosDBTrace.TraceInformation(
                 $"Started listening for {endpointName} on address: {listenerUriIPv6}");
-            
+
             return new[] {listenerUri, listenerUriIPv6};
         }
     }

@@ -13,13 +13,12 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
         private readonly string categoryName;
         private readonly string counterName;
         private readonly string instanceName;
-        private PerformanceCounter performanceCounter;
         private LoadMetric currentLoad;
+        private PerformanceCounter performanceCounter;
 
         protected PerfCounterResourceMonitor(string categoryName, string counterName)
             : this(categoryName, counterName, null)
-        {
-        }
+        { }
 
         protected PerfCounterResourceMonitor(string categoryName, string counterName, string instanceName)
         {
@@ -29,11 +28,13 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
             this.Name = string.Format(CultureInfo.InvariantCulture, "\\{0}\\{1}", this.categoryName, this.counterName);
         }
 
+        protected string Name { get; set; }
+
         public LoadMetric CurrentLoad
         {
             get
             {
-                float? value = this.GetCurrentValue();
+                var value = this.GetCurrentValue();
                 if (value.HasValue)
                 {
                     if (this.currentLoad == null)
@@ -50,16 +51,14 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
             }
         }
 
-        protected string Name { get; set; }
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
 
         public override string ToString()
         {
             return this.Name;
-        }
-
-        public void Dispose()
-        {
-            this.Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -89,7 +88,7 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
             {
                 if (PerformanceCounterCategory.Exists(this.categoryName))
                 {
-                    PerformanceCounterCategory category = new PerformanceCounterCategory(this.categoryName);
+                    var category = new PerformanceCounterCategory(this.categoryName);
                     if (category.CounterExists(this.counterName))
                     {
                         if (string.IsNullOrEmpty(this.instanceName))
@@ -98,11 +97,8 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
                         }
                         else if (category.InstanceExists(this.instanceName))
                         {
-                            this.performanceCounter = new PerformanceCounter(this.categoryName, this.counterName, this.instanceName);
-                        }
-                        else
-                        {
-                            // Category and Counter exist but Instance does not yet
+                            this.performanceCounter =
+                                new PerformanceCounter(this.categoryName, this.counterName, this.instanceName);
                         }
                     }
                 }

@@ -8,11 +8,12 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using CosmosDB;
-    using CosmosDB.Diagnostics;
-    using CosmosDB.ServiceCommon;
-    using CosmosDB.UriMatch;
-    using Extensions.DependencyInjection;
+    using Microsoft.Azure.Cosmos.Cassandra;
+    using Microsoft.Azure.CosmosDB;
+    using Microsoft.Azure.CosmosDB.Diagnostics;
+    using Microsoft.Azure.CosmosDB.ServiceCommon;
+    using Microsoft.Azure.CosmosDB.UriMatch;
+    using Microsoft.Extensions.DependencyInjection;
 
     internal class CosmosDBServiceResolver : ICosmosDBServiceResolver
     {
@@ -68,7 +69,7 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
 
             CosmosDBTrace.TraceError("No service resolved for uri {0}", requestUri.AbsoluteUri);
 
-            throw new ApplicationException();  //InternalServerErrorException(RMResources.InternalServerError);
+            throw new ApplicationException(); //InternalServerErrorException(RMResources.InternalServerError);
         }
 
         [SuppressMessage("ReSharper", "HeapView.BoxingAllocation")]

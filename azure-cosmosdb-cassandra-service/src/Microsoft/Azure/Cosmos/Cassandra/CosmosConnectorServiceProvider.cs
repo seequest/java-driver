@@ -2,40 +2,41 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //-------------------------------------------------------------------------------------------------------------------------------
 
-namespace Microsoft.Azure.Cosmos.Compute.Host
+namespace Microsoft.Azure.Cosmos.Cassandra
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Net;
-    
-    using Cassandra.Service;
-    using CosmosDB;
-    using CosmosDB.Common;
-    using CosmosDB.Diagnostics;
-    using CosmosDB.ServiceCommon;
-    using CosmosDB.StateManagement;
-    using CosmosDB.UriMatch;
-    using CosmosDB.Utilities;
-    using Documents;
-    using Documents.Client;
-    using IO;
-    using Runtime;
+    using Microsoft.Azure.Cosmos.Cassandra.Service;
+    using Microsoft.Azure.Cosmos.Compute.Host;
+    using Microsoft.Azure.Cosmos.Compute.Runtime;
+    using Microsoft.Azure.CosmosDB;
+    using Microsoft.Azure.CosmosDB.Common;
+    using Microsoft.Azure.CosmosDB.Diagnostics;
+    using Microsoft.Azure.CosmosDB.ServiceCommon;
+    using Microsoft.Azure.CosmosDB.StateManagement;
+    using Microsoft.Azure.CosmosDB.UriMatch;
+    using Microsoft.Azure.CosmosDB.Utilities;
+    using Microsoft.Azure.Documents;
+    using Microsoft.Azure.Documents.Client;
+    using Microsoft.IO;
 
-    internal sealed class CassandraCosmosConnector : IServiceProvider, IDisposable
+    internal sealed class CosmosConnectorServiceProvider : IServiceProvider, IDisposable
     {
+        private const string IpRangeListByRegionSettingsFileName = "IpRangeListByRegion.json";
         private const int MaxBufferPoolSize = 100 * 1024 * 1024;
         private const int MaxTransportBufferSize = 2 * 1024 * 1024;
-        private const string IpRangeListByRegionSettingsFileName = "IpRangeListByRegion.json";
 
         private readonly ICosmosDBAuthorizer authorizer;
         private readonly IBackendAuthenticator backendAuthenticator;
         private readonly IBufferManager bufferManager;
-
+        private readonly FirewallAuthorizer firewallAuthorizer;
         private readonly ICosmosDBConfigProvider hostConfigurationProvider;
-        private readonly ICosmosDBDataProvider hostDataProvider;
         private readonly ICosmosDBHostRuntimeContext hostRuntimeContext;
+        private readonly bool isEmulated;
+        private readonly INetworkIPRangePolicy networkIpRangePolicy;
         private readonly CosmosDBRequestPipeline pipeline;
         private readonly NodeResourceGovernor resourceGovernor;
         private readonly CosmosDbServiceUriTemplateEnumerator servicePortResolver;
@@ -44,28 +45,23 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
         private readonly IStoreClientFactory storeClientFactory;
         private readonly RecyclableMemoryStreamManager streamManager;
         private readonly TimerPool timerPool;
-        private string computeGatewayKey;
-        private readonly FirewallAuthorizer firewallAuthorizer;
-        private bool isDisposed;
-        private readonly bool isEmulated;
-        private readonly bool isLocalEmulator;
-        private readonly INetworkIPRangePolicy networkIpRangePolicy;
 
-        public CassandraCosmosConnector(ICosmosDBConfigProvider hostConfigProvider,
+        private string computeGatewayKey;
+        private bool isDisposed;
+
+        public CosmosConnectorServiceProvider(ICosmosDBConfigProvider hostConfigProvider,
             ICosmosDBDataProvider hostDataProvider, IStateManagerFactory stateManagerFactory,
             ICosmosDBHostRuntimeContext hostRuntimeContext)
             : this(hostConfigProvider, hostDataProvider, new TenantConfigBasedAuthenticator(), stateManagerFactory,
                 hostRuntimeContext)
         { }
 
-        private CassandraCosmosConnector(ICosmosDBConfigProvider hostConfigProvider,
+        private CosmosConnectorServiceProvider(ICosmosDBConfigProvider hostConfigProvider,
             ICosmosDBDataProvider hostDataProvider, IBackendAuthenticator authenticator,
             IStateManagerFactory stateManagerFactory, ICosmosDBHostRuntimeContext hostRuntimeContext)
         {
             this.hostConfigurationProvider = hostConfigProvider;
-            this.hostDataProvider = hostDataProvider;
             this.isEmulated = this.hostConfigurationProvider.IsEmulated();
-            this.isLocalEmulator = this.hostConfigurationProvider.IsLocalEmulator();
             this.serviceResolver = new CosmosDBServiceResolver(this);
             this.servicePortResolver = new CosmosDbServiceUriTemplateEnumerator(this.serviceResolver);
             this.timerPool = new TimerPool(1);
@@ -83,13 +79,14 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
             this.hostRuntimeContext = hostRuntimeContext;
 
             // Shared store client factory is controlled by a configuration setting
+
             if (this.hostConfigurationProvider.IsSharedStoreClientFactoryEnabled())
             {
                 CosmosDBTrace.TraceInformation("Compute gateway process is using a shared store client factory");
 
                 var userAgentContainer = new UserAgentContainer
                 {
-                    Suffix = nameof(CassandraCosmosConnector)
+                    Suffix = nameof(CosmosConnectorServiceProvider)
                 };
 
                 // A single store client factory will be shared among all document clients created in process.
@@ -100,7 +97,7 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
                     this.hostConfigurationProvider.SharedStoreClientFactoryRequestTimeoutInSeconds(),
                     this.hostConfigurationProvider.SharedStoreClientFactoryMaxConcurrentConnectionOpenRequests(),
                     userAgentContainer,
-                    null, // The compute uses DocumentClientEventSource.Instance but it's not exposed on netstandard2.0
+                    null, // The compute gateway test code uses DocumentClientEventSource.Instance but it's not exposed on netstandard2.0
                     null,
                     this.hostConfigurationProvider.SharedStoreClientFactoryOpenConnectionTimeoutInSeconds(),
                     this.hostConfigurationProvider.SharedStoreClientFactoryIdleConnectionTimeoutInSeconds(),
@@ -116,15 +113,14 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
             if (!string.IsNullOrEmpty(hostConfigProvider.RegionName()))
             {
                 // Subscribe for notifications about changes to data package that contains IPRangeFilter file
-                this.hostDataProvider.OnDataChanged += this.OnDataChanged;
+                hostDataProvider.OnDataChanged += this.OnDataChanged;
+                var dataPath = hostDataProvider.DataPath;
 
-                // Check if we have data path
-                var initialDataPath = this.hostDataProvider.DataPath;
-                if (!string.IsNullOrEmpty(this.hostDataProvider.DataPath))
+                if (!string.IsNullOrEmpty(dataPath))
                 {
                     // Perform initialization
                     this.OnDataChanged(this,
-                        new CosmosDBDataProviderEventArgs(CosmosDBDataProviderEventType.Added, initialDataPath));
+                        new CosmosDBDataProviderEventArgs(CosmosDBDataProviderEventType.Added, dataPath));
                 }
             }
 
@@ -242,13 +238,12 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
 
         private void Initialize()
         {
-            var defaultHttpTransportName = this.hostConfigurationProvider.GetProtocol();
-            var defaultWebSocketTransportName = this.hostConfigurationProvider.GetWebSocketProtocol();
+            // This code MUST match ServiceStartup code
+            // If ComputeLocalHost is true we bind to localhost
+            // Otherwise, if we are running in emulated mode--this means AllowNetworkAccess is true--we bind to 0.0.0.0
 
-            // This code MUST match ServiceStartup code.
-            // Essentially, if ComputeLocalHost is true we bind to localhost
-            // Otherwise, if we are running in emulated mode - this means AllowNetworkAccess is true. Therefore, we bind to 0.0.0.0.
             IPAddress address;
+
             if (this.hostConfigurationProvider.ComputeLocalHostOnlyString())
             {
                 address = IPAddress.Loopback;
@@ -258,10 +253,7 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
                 address = this.isEmulated ? IPAddress.Any : IPAddress.Parse(this.hostRuntimeContext.IPAddressOrFQDN);
             }
 
-            if (this.hostConfigurationProvider.IsCassandraTcpEndpointEnabled())
-            {
-                this.RegisterServiceForCassandra(address);
-            }
+            this.RegisterServiceForCassandra(address);
         }
 
 
@@ -311,6 +303,7 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
             try
             {
                 var computeGatewayKeyFromConfig = this.GetComputeGatewayKeyFromConfig();
+
                 if (!string.Equals(this.computeGatewayKey, computeGatewayKeyFromConfig, StringComparison.Ordinal))
                 {
                     this.computeGatewayKey = computeGatewayKeyFromConfig;
@@ -329,9 +322,7 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
                 : this.hostConfigurationProvider.PrimaryComputeGatewayKey();
         }
 
-        /// <summary>
-        ///     Notification handler for changes to data package on the file system.
-        /// </summary>
+        /// <summary>Notification handler for changes to data package on the file system</summary>
         /// <param name="sender">Sender of the notification.</param>
         /// <param name="args">Details of the change.</param>
         private void OnDataChanged(object sender, CosmosDBDataProviderEventArgs args)

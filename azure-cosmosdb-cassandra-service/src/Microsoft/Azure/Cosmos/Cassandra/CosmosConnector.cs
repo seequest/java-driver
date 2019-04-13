@@ -11,49 +11,45 @@ namespace Microsoft.Azure.Cosmos.Cassandra
     using System.Globalization;
     using System.Linq;
     using System.Net;
-    using System.Net.NetworkInformation;
-    using System.Net.Sockets;
     using System.Threading;
     using System.Threading.Tasks;
-    using Compute.Host;
-    using Compute.Runtime;
-    using Compute.Runtime.Transport;
-    using Connectors.Cassandra.Service;
-    using CosmosDB;
-    using CosmosDB.Diagnostics;
-    using CosmosDB.StateManagement;
-    using CosmosDB.Transport;
-    using CosmosDB.Transport.Http;
-    using Documents;
+    using Microsoft.Azure.Cosmos.Compute.Host;
+    using Microsoft.Azure.Cosmos.Compute.Runtime;
+    using Microsoft.Azure.Cosmos.Compute.Runtime.Transport;
+    using Microsoft.Azure.Cosmos.Connectors.Cassandra.Service;
+    using Microsoft.Azure.CosmosDB;
+    using Microsoft.Azure.CosmosDB.Diagnostics;
+    using Microsoft.Azure.CosmosDB.StateManagement;
+    using Microsoft.Azure.CosmosDB.Transport;
+    using Microsoft.Azure.CosmosDB.Transport.Http;
+    using Microsoft.Azure.Documents;
 
-    [SuppressMessage("Microsoft.Design",
-        "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "TODO")]
-    internal sealed class CassandraCosmosConnector
+    [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
+    internal sealed class CosmosConnector
     {
         private const string Ipv6UriTemplate = "{0}://[{1}]:{2}/";
         private const string Ipv4UriTemplate = "{0}://{1}:{2}/";
+
         private readonly CassandraConnectorService cassandraConnectorService;
         private readonly List<ITransportHandler> transportHandlers;
 
-        [SuppressMessage("Microsoft.Reliability",
-            "CA2000:Dispose objects before losing scope", Justification = "TODO")]
-        public CassandraCosmosConnector(ICosmosDBConfigProvider configurationProvider,
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        public CosmosConnector(ICosmosDBConfigProvider configurationProvider,
             ICosmosDBDataProvider dataProvider,
             IStateManagerFactory stateManagerFactory, ICosmosDBHostRuntimeContext runtimeContext)
             : this(configurationProvider,
-                new Compute.Host.CassandraCosmosConnector(configurationProvider, dataProvider, stateManagerFactory, runtimeContext),
+                new CosmosConnectorServiceProvider(configurationProvider, dataProvider, stateManagerFactory,
+                    runtimeContext),
                 runtimeContext)
         { }
 
-        [SuppressMessage("Microsoft.Reliability",
-            "CA2000:Dispose objects before losing scope", Justification = "TODO")]
-        internal CassandraCosmosConnector(ICosmosDBConfigProvider configurationProvider,
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("ReSharper", "HeapView.BoxingAllocation")]
+        internal CosmosConnector(ICosmosDBConfigProvider configurationProvider,
             IServiceProvider hostServiceProvider,
             ICosmosDBHostRuntimeContext runtimeContext)
         {
-            RntbdExtensions.InitializeRntbdSettings(configurationProvider, originalSettings: null,
-                currentSettings: out var currentSettings);
-
+            RntbdExtensions.InitializeRntbdSettings(configurationProvider, null, out var currentSettings);
             this.HostServiceProvider = hostServiceProvider;
             IPAddress address;
 
@@ -71,12 +67,10 @@ namespace Microsoft.Azure.Cosmos.Cassandra
             var ep = new IPEndPoint(address, configurationProvider.HttpEndPointPort());
             var protocol = configurationProvider.GetProtocol();
             var prefix = string.Format(CultureInfo.InvariantCulture, Ipv4UriTemplate, protocol,
-                // ReSharper disable once HeapView.BoxingAllocation
                 ep.Address, ep.Port);
 
             var probeEP = new IPEndPoint(address, configurationProvider.HttpEndPointProbePort());
             var probePrefix = string.Format(CultureInfo.InvariantCulture, "http://{0}:{1}/", probeEP.Address,
-                // ReSharper disable once HeapView.BoxingAllocation
                 probeEP.Port);
 
             CosmosDBTrace.TraceInformation("Started listening on address: " + prefix);
@@ -86,7 +80,7 @@ namespace Microsoft.Azure.Cosmos.Cassandra
             var listenerUriProbe = new Uri(probePrefix, UriKind.Absolute);
 
             Uri[] httpListenerUris = {listenerUri, listenerUriProbe};
-            bool isVNetFilterFeatureEnabled = configurationProvider.IsVnetFilterFeatureEnabled();
+            var isVNetFilterFeatureEnabled = configurationProvider.IsVnetFilterFeatureEnabled();
             if (isVNetFilterFeatureEnabled)
             {
                 var listenerUriIPv6 =
@@ -109,10 +103,10 @@ namespace Microsoft.Azure.Cosmos.Cassandra
                     EmulatorHelper.GetEmulatedListeners(configurationProvider, address, isVNetFilterFeatureEnabled);
             }
 
-            string sslCertificateThumbprint = configurationProvider.RuntimeEndpointSslCertThumbprint();
+            var sslCertificateThumbprint = configurationProvider.RuntimeEndpointSslCertThumbprint();
 
-            int? tcpKeepAliveTimeInMilliseconds = configurationProvider.GetTcpKeepAliveTimeInMilliseconds();
-            int? tcpKeepAliveIntervalInMilliseconds = configurationProvider.GetKeepAliveIntervalInMilliseconds();
+            var tcpKeepAliveTimeInMilliseconds = configurationProvider.GetTcpKeepAliveTimeInMilliseconds();
+            var tcpKeepAliveIntervalInMilliseconds = configurationProvider.GetKeepAliveIntervalInMilliseconds();
 
             this.transportHandlers = new List<ITransportHandler>(2)
             {
@@ -121,8 +115,8 @@ namespace Microsoft.Azure.Cosmos.Cassandra
                     httpListenerUris,
                     configurationProvider.ShouldForceShutdown()),
                 new CosmosDBTcpRuntime(
-                    enableTcp: configurationProvider.EnableTcp(),
-                    isEmulated: configurationProvider.IsEmulated(),
+                    configurationProvider.EnableTcp(),
+                    configurationProvider.IsEmulated(),
                     shouldEnableIPv6RequestHandler: isVNetFilterFeatureEnabled,
                     shouldForceShutdown: configurationProvider.ShouldForceShutdown(),
                     sslCertificateThumbprint: sslCertificateThumbprint,
@@ -137,7 +131,7 @@ namespace Microsoft.Azure.Cosmos.Cassandra
 
         public Task OpenAsync()
         {
-            List<Task> openTasks = this.transportHandlers
+            var openTasks = this.transportHandlers
                 .Select(handler => handler.OpenAsync(this.HostServiceProvider, CancellationToken.None)).ToList();
 
             if (this.cassandraConnectorService != null)
@@ -150,7 +144,7 @@ namespace Microsoft.Azure.Cosmos.Cassandra
 
         public Task CloseAsync()
         {
-            List<Task> closeTasks = this.transportHandlers.Select(handler => handler.CloseAsync(CancellationToken.None))
+            var closeTasks = this.transportHandlers.Select(handler => handler.CloseAsync(CancellationToken.None))
                 .ToList();
 
             if (this.cassandraConnectorService != null)
@@ -161,6 +155,7 @@ namespace Microsoft.Azure.Cosmos.Cassandra
             return Task.WhenAll(closeTasks);
         }
 
+        [SuppressMessage("ReSharper", "HeapView.BoxingAllocation")]
         private static Uri GetIPv6ListenerUri(bool isEmulated, string protocol, int port)
         {
             if (!NetUtil.GetIPv6ServiceTunnelAddress(isEmulated, out var ipv6ServiceTunneledAddress))
@@ -170,7 +165,6 @@ namespace Microsoft.Azure.Cosmos.Cassandra
 
             var prefix = string.Format(CultureInfo.InvariantCulture, Ipv6UriTemplate,
                 protocol,
-                // ReSharper disable once HeapView.BoxingAllocation
                 ipv6ServiceTunneledAddress.ToString(), port);
 
             return new Uri(prefix, UriKind.Absolute);

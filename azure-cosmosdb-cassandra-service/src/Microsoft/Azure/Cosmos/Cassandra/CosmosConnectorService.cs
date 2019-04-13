@@ -7,57 +7,58 @@ namespace Microsoft.Azure.Cosmos.Cassandra
     using System;
     using System.IO;
     using System.Threading.Tasks;
-    using CosmosDB;
+    using Microsoft.Azure.CosmosDB;
 
-    internal sealed class CassandraService
+    internal sealed class CosmosConnectorService
     {
-        private readonly CassandraCosmosConnector _connector;
+        private readonly CosmosConnector connector;
         private readonly ICosmosDBDataProvider dataProvider;
 
-        public CassandraService(ICosmosDBConfigProvider configurationProvider,
+        public CosmosConnectorService(
+            ICosmosDBConfigProvider configurationProvider,
             ICosmosDBDataProvider dataProvider = null,
             IServiceProvider hostServiceProvider = null)
         {
-            this.ConfigurationProvider = configurationProvider ?? new ServiceConfigurationProvider();
-            this.dataProvider = dataProvider ?? new ServiceDataProvider();
+            this.ConfigurationProvider = configurationProvider ?? new CosmosConnectorConfigurationProvider();
+            this.dataProvider = dataProvider ?? new CosmosConnectorDataProvider();
 
-            ICosmosDBHostRuntimeContext hostRuntimeContext = new ServiceHostRuntimeContext();
+            ICosmosDBHostRuntimeContext hostRuntimeContext = new CosmosConnectorHostRuntimeContext();
 
             if (hostServiceProvider == null)
             {
-                this._connector = new CassandraCosmosConnector(this.ConfigurationProvider, this.dataProvider,
-                    stateManagerFactory: null,
-                    runtimeContext: hostRuntimeContext);
+                this.connector = new CosmosConnector(this.ConfigurationProvider, this.dataProvider,
+                    null,
+                    hostRuntimeContext);
             }
             else
             {
-                this._connector =
-                    new CassandraCosmosConnector(this.ConfigurationProvider, hostServiceProvider, hostRuntimeContext);
+                this.connector =
+                    new CosmosConnector(this.ConfigurationProvider, hostServiceProvider, hostRuntimeContext);
             }
 
-            this.UpdateHostsFile();
+            UpdateHostsFile();
         }
 
-        internal ICosmosDBConfigProvider ConfigurationProvider { get; }
+        private ICosmosDBConfigProvider ConfigurationProvider { get; }
 
-        internal IServiceProvider HostServiceProvider => this._connector.HostServiceProvider;
+        public IServiceProvider HostServiceProvider => this.connector.HostServiceProvider;
 
         public void Start()
         {
-            this._connector.OpenAsync().Wait();
+            this.connector.OpenAsync().Wait();
         }
 
         public void Close()
         {
-            this._connector.CloseAsync().Wait();
+            this.connector.CloseAsync().Wait();
         }
 
         public Task CloseAsync()
         {
-            return this._connector.CloseAsync();
+            return this.connector.CloseAsync();
         }
 
-        private void UpdateHostsFile()
+        private static void UpdateHostsFile()
         {
             var hostsFilePath =
                 Path.Combine(Environment.GetEnvironmentVariable("windir"), @"system32\drivers\etc\hosts");

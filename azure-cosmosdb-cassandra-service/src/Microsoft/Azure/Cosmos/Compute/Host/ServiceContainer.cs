@@ -9,8 +9,8 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
 
     internal sealed class ServiceContainer : IServiceProvider
     {
-        private readonly IServiceProvider hostProvider;
         private readonly ICosmosDBService cosmosDBService;
+        private readonly IServiceProvider hostProvider;
 
         public ServiceContainer(IServiceProvider hostProvider, ICosmosDBService service)
         {

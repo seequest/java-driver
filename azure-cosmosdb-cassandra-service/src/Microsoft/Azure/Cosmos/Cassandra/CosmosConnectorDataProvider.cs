@@ -7,12 +7,12 @@ namespace Microsoft.Azure.Cosmos
     using System;
     using System.IO;
     using System.Reflection;
-    using CosmosDB;
+    using Microsoft.Azure.CosmosDB;
 
     /// <summary>
     ///     Data provider for test environment where package is co-located with binaries.
     /// </summary>
-    internal sealed class ServiceDataProvider : ICosmosDBDataProvider
+    internal sealed class CosmosConnectorDataProvider : ICosmosDBDataProvider
     {
 //#pragma warning disable 67
 

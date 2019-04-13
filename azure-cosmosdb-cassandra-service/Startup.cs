@@ -4,11 +4,11 @@
 
 namespace Microsoft.Azure.Cosmos.Cassandra
 {
-    using AspNetCore.Builder;
-    using AspNetCore.Hosting;
-    using AspNetCore.Mvc;
-    using Extensions.Configuration;
-    using Extensions.DependencyInjection;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
 
     public class Startup
     {

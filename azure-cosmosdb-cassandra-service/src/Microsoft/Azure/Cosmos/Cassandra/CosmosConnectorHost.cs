@@ -10,10 +10,10 @@ namespace Microsoft.Azure.Cosmos.Cassandra
     using System.Diagnostics;
     using System.IO;
     using System.Threading.Tasks;
-    using AspNetCore;
-    using AspNetCore.Hosting;
+    using Microsoft.AspNetCore;
+    using Microsoft.AspNetCore.Hosting;
 
-    public static class ServiceHost
+    public static class CosmosConnectorHost
     {
         public static void Main(string[] args)
         {
@@ -25,7 +25,7 @@ namespace Microsoft.Azure.Cosmos.Cassandra
                 {
                     ExeConfigFilename =
                         Path.ChangeExtension(
-                            Path.Combine(Path.GetDirectoryName(typeof(ServiceHost).Assembly.Location),
+                            Path.Combine(Path.GetDirectoryName(typeof(CosmosConnectorHost).Assembly.Location),
                                 AppDomain.CurrentDomain.FriendlyName), ".config")
                 };
 
@@ -35,7 +35,8 @@ namespace Microsoft.Azure.Cosmos.Cassandra
                     ConfigurationManager.OpenMappedExeConfiguration(configurationFileMap, ConfigurationUserLevel.None)
                 };
 
-                var computeService = new CassandraService(new ServiceConfigurationProvider(configurations));
+                var computeService =
+                    new CosmosConnectorService(new CosmosConnectorConfigurationProvider(configurations));
                 var completionTask = new TaskCompletionSource<object>();
 
                 Console.CancelKeyPress += (sender, e) =>
