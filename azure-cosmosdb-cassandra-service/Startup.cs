@@ -2,19 +2,19 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------
 
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Microsoft.Azure.CosmosDB.Cassandra
+namespace Microsoft.Azure.Cosmos.Cassandra
 {
+    using AspNetCore.Builder;
+    using AspNetCore.Hosting;
+    using AspNetCore.Mvc;
+    using Extensions.Configuration;
+    using Extensions.DependencyInjection;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         private IConfiguration Configuration { get; }
