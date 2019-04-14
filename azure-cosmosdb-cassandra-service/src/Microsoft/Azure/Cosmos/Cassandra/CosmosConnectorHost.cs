@@ -10,8 +10,6 @@ namespace Microsoft.Azure.Cosmos.Cassandra
     using System.Diagnostics;
     using System.IO;
     using System.Threading.Tasks;
-    using Microsoft.AspNetCore;
-    using Microsoft.AspNetCore.Hosting;
 
     public static class CosmosConnectorHost
     {
@@ -56,17 +54,10 @@ namespace Microsoft.Azure.Cosmos.Cassandra
                 completionTask.Task.Wait();
                 computeService.Close();
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                Trace.WriteLine($"Unhandled Exception in console service host {ex}");
+                Trace.WriteLine($"Unhandled Exception in console service host {error}");
             }
-
-            CreateWebHostBuilder(args).Build().Run();
-        }
-
-        private static IWebHostBuilder CreateWebHostBuilder(string[] args)
-        {
-            return WebHost.CreateDefaultBuilder(args).UseStartup<Startup>();
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
     using Microsoft.Azure.CosmosDB;
     using Microsoft.Azure.CosmosDB.Diagnostics;
     using Microsoft.Azure.Documents;
+    using Microsoft.Extensions.DependencyInjection;
 
     internal sealed class NodeResourceGovernor : IResourceGovernor
     {
@@ -21,7 +22,7 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
 
         public NodeResourceGovernor(IServiceProvider serviceProvider)
         {
-            this.timerPool = (TimerPool) serviceProvider.GetService(typeof(TimerPool));
+            this.timerPool = serviceProvider.GetService<TimerPool>();
             this.resourceMonitors = new List<IResourceMonitor>
             {
                 new CpuResourceMonitor(),

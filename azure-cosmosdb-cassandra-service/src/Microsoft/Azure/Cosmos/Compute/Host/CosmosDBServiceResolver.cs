@@ -18,9 +18,7 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
     internal class CosmosDBServiceResolver : ICosmosDBServiceResolver
     {
         private readonly IServiceProvider hostProvider;
-
         private readonly bool isLocalEmulator;
-
         private readonly Dictionary<string, IServiceProvider> serviceMapBySchemeAndPort;
 
         private readonly Dictionary<string, Dictionary<ICosmosDBUriTemplate, IServiceProvider>>
@@ -31,15 +29,18 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
         public CosmosDBServiceResolver(IServiceProvider hostProvider)
         {
             this.hostProvider = hostProvider;
+            
             this.serviceMapBySchemeAndUri =
                 new Dictionary<string, Dictionary<ICosmosDBUriTemplate, IServiceProvider>>(StringComparer
                     .OrdinalIgnoreCase);
+            
             this.serviceMapBySchemeAndPort = new Dictionary<string, IServiceProvider>(StringComparer.OrdinalIgnoreCase);
 
             var configProvider = hostProvider.GetService<ICosmosDBConfigProvider>();
             this.isLocalEmulator = configProvider?.IsLocalEmulator() ?? false;
         }
 
+        [SuppressMessage("ReSharper", "HeapView.BoxingAllocation")]
         public IServiceProvider ResolveService(IServiceProvider hostProvider, Uri requestUri)
         {
             IServiceProvider serviceProvider = null;
@@ -75,9 +76,7 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
         [SuppressMessage("ReSharper", "HeapView.BoxingAllocation")]
         public void RegisterService(ICosmosDBService service)
         {
-            var serviceContainer = new ServiceContainer(
-                this.hostProvider,
-                service);
+            var serviceContainer = new ServiceContainer(this.hostProvider, service);
 
             foreach (var listenUri in service.TransportListenUris)
             {
@@ -97,8 +96,7 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
                     }
                 }
 
-                Dictionary<ICosmosDBUriTemplate, IServiceProvider> serviceMapByUriTemplate;
-                if (!this.serviceMapBySchemeAndUri.TryGetValue(listenUri.Scheme, out serviceMapByUriTemplate))
+                if (!this.serviceMapBySchemeAndUri.TryGetValue(listenUri.Scheme, out var serviceMapByUriTemplate))
                 {
                     serviceMapByUriTemplate = new Dictionary<ICosmosDBUriTemplate, IServiceProvider>();
                     this.serviceMapBySchemeAndUri[listenUri.Scheme] = serviceMapByUriTemplate;

@@ -9,19 +9,19 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
 
     internal sealed class ServiceContainer : IServiceProvider
     {
-        private readonly ICosmosDBService cosmosDBService;
+        private readonly ICosmosDBService cosmosDbService;
         private readonly IServiceProvider hostProvider;
 
         public ServiceContainer(IServiceProvider hostProvider, ICosmosDBService service)
         {
-            this.cosmosDBService = service;
+            this.cosmosDbService = service;
             this.hostProvider = hostProvider;
         }
 
         public object GetService(Type serviceType)
         {
             return serviceType == typeof(ICosmosDBService)
-                ? this.cosmosDBService
+                ? this.cosmosDbService
                 : this.hostProvider.GetService(serviceType);
         }
     }
