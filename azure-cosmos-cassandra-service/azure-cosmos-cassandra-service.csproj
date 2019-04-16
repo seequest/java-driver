@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <LangVersion>latest</LangVersion>
+    <PlatformTarget>x64</PlatformTarget>
+    <RootNamespace>Microsoft.Azure.Cosmos.Cassandra</RootNamespace>
+    <RuntimeIdentifiers>osx-x64;linux-x64;win-x64</RuntimeIdentifiers>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <UserSecretsId>9bf88296-f8dd-4c26-a208-0fb5b29901c9</UserSecretsId>
+    <VersionPrefix>2.2.0</VersionPrefix>
+    <VersionSuffix>prototype</VersionSuffix>
+    <OutputType>Exe</OutputType>
+    <!--CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies-->
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.Cosmos.Cassandra" Version="2.2.0-prototype" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.4.10" />
+  </ItemGroup>
+
+</Project>
