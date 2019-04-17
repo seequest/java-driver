@@ -27,7 +27,7 @@ namespace Microsoft.Azure.Cosmos.Cassandra
     using ComputeEventSource = Microsoft.Azure.Cosmos.Posix.Diagnostics.ComputeEventSource;
 
     #elif Windows_NT
-    using ComputeEventSource = Microsoft.Azure.Cosmos.Diagnostics.ComputeEventSource;
+    using ComputeEventSource = Microsoft.Azure.CosmosDB.Diagnostics.ComputeEventSource;
 
     #else
     #error Expected one of these compilation symbol sets to be defined: Darwin, POSIX; Linux, POSIX; or Windows_NT
