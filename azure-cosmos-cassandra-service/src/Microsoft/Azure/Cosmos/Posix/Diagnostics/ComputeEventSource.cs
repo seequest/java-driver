@@ -7,6 +7,9 @@ namespace Microsoft.Azure.Cosmos.Posix.Diagnostics
     using System;
     using global::Microsoft.Azure.CosmosDB.Diagnostics;
 
+    /// <summary>
+    /// Drop-in replacement for Microsoft.Azure.CosmosDB.Diagnostics.ComputeEventSource
+    /// </summary>
     public class ComputeEventSource : IComputeEventSource
     {
         public static readonly IComputeEventSource Log = new ComputeEventSource();
