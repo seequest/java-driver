@@ -91,6 +91,13 @@ namespace Microsoft.Azure.Cosmos.Cassandra
             return string.IsNullOrEmpty(value) ? namingConfigRefreshIntervalInSeconds : int.Parse(value);
         }
 
+        public static bool EnablePerformanceCounters(this ICosmosDBConfigProvider provider)
+        {
+            var value = GetValue(CosmosConnectorHostConfigurationKeys.EnablePerformanceCounters, provider);
+            BoolTryParseNoReturn(value, out var enablePerformanceCounters);
+            return enablePerformanceCounters;
+        }
+        
         public static bool IsHttpEndPointEnabled(this ICosmosDBConfigProvider provider)
         {
             var isHttpEndPointEnabledString =

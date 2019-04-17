@@ -68,8 +68,8 @@ namespace Microsoft.Azure.Cosmos.Cassandra
             this.resourceGovernor = new NodeResourceGovernor(this);
             this.isDisposed = false;
             this.authorizer = new CosmosDBAuthorizer();
-            this.firewallAuthorizer = new FirewallAuthorizer(this.hostConfigurationProvider.IsEmulated());
-            this.pipeline = new CosmosDBRequestPipeline(this, hostConfigProvider.IsEmulated());
+            this.firewallAuthorizer = new FirewallAuthorizer(hostConfigProvider.IsEmulated());
+            this.pipeline = new CosmosDBRequestPipeline(this, hostConfigProvider.IsEmulated(), hostConfigProvider.EnablePerformanceCounters());
             this.bufferManager = BufferManager.Create(MaxBufferPoolSize, MaxTransportBufferSize, false);
             this.streamManager = new RecyclableMemoryStreamManager();
             this.backendAuthenticator = authenticator;
@@ -203,7 +203,7 @@ namespace Microsoft.Azure.Cosmos.Cassandra
 
             if (serviceType == typeof(IComputeEventSource))
             {
-                return ComputeEventSource.Log;
+                return null;  // TODO: DANOBLE: Add drop-in replacement for ComputeEventSource.Log;
             }
 
             if (serviceType == typeof(FirewallAuthorizer))

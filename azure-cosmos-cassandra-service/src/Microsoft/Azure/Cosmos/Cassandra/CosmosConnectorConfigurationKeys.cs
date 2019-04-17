@@ -7,6 +7,11 @@ namespace Microsoft.Azure.Cosmos.Cassandra
     internal static class CosmosConnectorHostConfigurationKeys
     {
         /// <summary>
+        ///     Name of configuration property that indicates whether performance counters should be enabled.
+        /// </summary>
+        public const string EnablePerformanceCounters = "enablePerformanceCounters";
+
+        /// <summary>
         ///     Name of configuration property inside service settings that indicates whether compute gateway should bind to local
         ///     host interface only rather than expose port to extra-machine traffic.
         /// </summary>
