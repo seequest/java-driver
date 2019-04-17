@@ -35,16 +35,19 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
             get
             {
                 var value = this.GetCurrentValue();
-                if (value.HasValue)
+                
+                if (!value.HasValue)
                 {
-                    if (this.currentLoad == null)
-                    {
-                        this.currentLoad = new LoadMetric(this.Name, value.Value);
-                    }
-                    else
-                    {
-                        this.currentLoad.Value = value.Value;
-                    }
+                    return this.currentLoad;
+                }
+
+                if (this.currentLoad == null)
+                {
+                    this.currentLoad = new LoadMetric(this.Name, value.Value);
+                }
+                else
+                {
+                    this.currentLoad.Value = value.Value;
                 }
 
                 return this.currentLoad;
@@ -63,13 +66,11 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!disposing)
             {
-                if (this.performanceCounter != null)
-                {
-                    this.performanceCounter.Dispose();
-                }
+                return;
             }
+            this.performanceCounter?.Dispose();
         }
 
         protected virtual float? GetCurrentValue()
@@ -84,24 +85,31 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
 
         private bool TryInitializeCounter()
         {
-            if (this.performanceCounter == null)
+            if (this.performanceCounter != null)
             {
-                if (PerformanceCounterCategory.Exists(this.categoryName))
-                {
-                    var category = new PerformanceCounterCategory(this.categoryName);
-                    if (category.CounterExists(this.counterName))
-                    {
-                        if (string.IsNullOrEmpty(this.instanceName))
-                        {
-                            this.performanceCounter = new PerformanceCounter(this.categoryName, this.counterName);
-                        }
-                        else if (category.InstanceExists(this.instanceName))
-                        {
-                            this.performanceCounter =
-                                new PerformanceCounter(this.categoryName, this.counterName, this.instanceName);
-                        }
-                    }
-                }
+                return this.performanceCounter != null;
+            }
+
+            if (!PerformanceCounterCategory.Exists(this.categoryName))
+            {
+                return this.performanceCounter != null;
+            }
+
+            var category = new PerformanceCounterCategory(this.categoryName);
+            
+            if (!category.CounterExists(this.counterName))
+            {
+                return this.performanceCounter != null;
+            }
+
+            if (string.IsNullOrEmpty(this.instanceName))
+            {
+                this.performanceCounter = new PerformanceCounter(this.categoryName, this.counterName);
+            }
+            else if (category.InstanceExists(this.instanceName))
+            {
+                this.performanceCounter =
+                    new PerformanceCounter(this.categoryName, this.counterName, this.instanceName);
             }
 
             return this.performanceCounter != null;

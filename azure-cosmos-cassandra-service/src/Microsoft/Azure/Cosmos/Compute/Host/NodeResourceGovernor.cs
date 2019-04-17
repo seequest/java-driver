@@ -87,7 +87,7 @@ namespace Microsoft.Azure.Cosmos.Compute.Host
             }
             catch (Exception ex)
             {
-                CosmosDBTrace.TraceError("Unexpted exception in Noderesource governor runasyn {0}", ex);
+                CosmosDBTrace.TraceError("Unexpected exception in Noderesource governor runasyn {0}", ex);
             }
             finally
             {

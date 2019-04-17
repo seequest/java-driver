@@ -1,4 +1,4 @@
-/azure-cosmosdb-cassandra-service/bin/
+/azure-cosmos-cassandra-service/bin/
 /driver-core/dependency-reduced-pom.xml
 cobertura-history/
 obj/
@@ -9,9 +9,12 @@ testing/
 .java-version
 .settings
 .project
+.vscode
 doc
 docs
 notes
 .DS_Store
+*.DotSettings
 *.iml
+*.sln
 *.user
