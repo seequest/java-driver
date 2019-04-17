@@ -33,12 +33,12 @@
   <Choose>
     <When Condition=" '$(OS)' == 'Darwin' ">
       <PropertyGroup>
-        <DefineConstants>Darwin;$(DefineConstants)</DefineConstants>
+        <DefineConstants>Darwin;POSIX;$(DefineConstants)</DefineConstants>
       </PropertyGroup>
     </When>
     <When Condition=" '$(OS)' == 'Linux' ">
       <PropertyGroup>
-        <DefineConstants>Linux;$(DefineConstants)</DefineConstants>
+        <DefineConstants>Linux;POSIX;$(DefineConstants)</DefineConstants>
       </PropertyGroup>
     </When>
     <When Condition=" '$(OS)' == 'Windows_NT' ">

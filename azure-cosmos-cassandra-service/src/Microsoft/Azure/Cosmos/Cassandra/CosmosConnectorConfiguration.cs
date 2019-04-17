@@ -12,6 +12,11 @@ namespace Microsoft.Azure.Cosmos.Cassandra
     internal static class CosmosConnectorConfiguration
     {
         /// <summary>
+        /// Default Cassandra Endpoint port number for native protocol clients
+        /// </summary>
+        private const int DefaultCassandraEndPointPort = 9042;
+        
+        /// <summary>
         ///     Default value from DocumentClient.
         /// </summary>
         private const int SharedStoreClientFactoryMaxConcurrentConnectionOpenRequestsPerProcessor = 25;
@@ -138,9 +143,8 @@ namespace Microsoft.Azure.Cosmos.Cassandra
 
         public static int CassandraEndPointPort(this ICosmosDBConfigProvider provider)
         {
-            var cassandraEndPointPortString =
-                GetValue(CosmosConnectorHostConfigurationKeys.CassandraEndPointPort, provider);
-            return int.Parse(cassandraEndPointPortString);
+            var value = GetValue(CosmosConnectorHostConfigurationKeys.CassandraEndPointPort, provider);
+            return value == null ? DefaultCassandraEndPointPort : int.Parse(value);
         }
 
         /// <summary>

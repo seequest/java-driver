@@ -22,6 +22,17 @@ namespace Microsoft.Azure.Cosmos.Cassandra
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
     using Microsoft.IO;
+    
+    #if POSIX
+    using ComputeEventSource = Microsoft.Azure.Cosmos.Posix.Diagnostics.ComputeEventSource;
+
+    #elif Windows_NT
+    using ComputeEventSource = Microsoft.Azure.Cosmos.Diagnostics.ComputeEventSource;
+
+    #else
+    #error Expected one of these compilation symbol sets to be defined: Darwin, POSIX; Linux, POSIX; or Windows_NT
+
+    #endif
 
     internal sealed class CosmosConnectorServiceProvider : IServiceProvider, IDisposable
     {
@@ -69,7 +80,8 @@ namespace Microsoft.Azure.Cosmos.Cassandra
             this.isDisposed = false;
             this.authorizer = new CosmosDBAuthorizer();
             this.firewallAuthorizer = new FirewallAuthorizer(hostConfigProvider.IsEmulated());
-            this.pipeline = new CosmosDBRequestPipeline(this, hostConfigProvider.IsEmulated(), hostConfigProvider.EnablePerformanceCounters());
+            this.pipeline = new CosmosDBRequestPipeline(this, hostConfigProvider.IsEmulated(),
+                hostConfigProvider.EnablePerformanceCounters());
             this.bufferManager = BufferManager.Create(MaxBufferPoolSize, MaxTransportBufferSize, false);
             this.streamManager = new RecyclableMemoryStreamManager();
             this.backendAuthenticator = authenticator;
@@ -203,7 +215,7 @@ namespace Microsoft.Azure.Cosmos.Cassandra
 
             if (serviceType == typeof(IComputeEventSource))
             {
-                return null;  // TODO: DANOBLE: Add drop-in replacement for ComputeEventSource.Log;
+                return ComputeEventSource.Log;
             }
 
             if (serviceType == typeof(FirewallAuthorizer))
